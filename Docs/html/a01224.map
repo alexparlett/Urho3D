@@ -1,0 +1,11 @@
+<map id="Urho3D::HttpRequest" name="Urho3D::HttpRequest">
+<area shape="rect" id="node2" href="$a00232.html" title="Base class for intrusively reference&#45;counted objects. These are noncopyable and non&#45;assignable." alt="" coords="265,5,404,32"/>
+<area shape="rect" id="node3" href="$a00231.html" title="Reference count structure." alt="" coords="12,39,137,65"/>
+<area shape="rect" id="node6" href="$a00267.html" title="Urho3D::SharedArrayPtr\l\&lt; unsigned char \&gt;" alt="" coords="255,57,414,98"/>
+<area shape="rect" id="node4" href="$a00112.html" title="Abstract stream for reading." alt="" coords="266,123,403,149"/>
+<area shape="rect" id="node5" href="$a00297.html" title="Operating system thread." alt="" coords="279,173,390,200"/>
+<area shape="rect" id="node7" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::String \&gt;" alt="" coords="253,225,416,266"/>
+<area shape="rect" id="node8" href="$a00312.html" title="Vector base class." alt="" coords="6,232,143,259"/>
+<area shape="rect" id="node9" href="$a00285.html" title="String class." alt="" coords="282,329,387,356"/>
+<area shape="rect" id="node10" href="$a00184.html" title="Operating system mutual exclusion primitive." alt="" coords="281,380,388,407"/>
+</map>

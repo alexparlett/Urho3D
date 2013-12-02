@@ -1,0 +1,6 @@
+<map id="Urho3D::UI::SetModalElement" name="Urho3D::UI::SetModalElement">
+<area shape="rect" id="node2" href="$a00321.html#ab2c046329a404e867e228d9bdc7c0e05" title="Set modal flag. When the modal flag is set, the focused window needs to be dismissed first to allow o..." alt="" coords="246,35,423,61"/>
+<area shape="rect" id="node3" href="$a00302.html#aa7966075651b12fe5bc1dae57a5bb636" title="Handle keypress event." alt="" coords="472,5,656,32"/>
+<area shape="rect" id="node5" href="$a00321.html#acdeedb354b6ae43442750e747c68610b" title="Register object factory." alt="" coords="479,57,649,98"/>
+<area shape="rect" id="node4" href="$a00302.html#a2c011c43ca66ff4270e98601e4f9c4cf" title="Construct." alt="" coords="705,5,807,32"/>
+</map>

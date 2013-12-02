@@ -1,0 +1,11 @@
+<map id="Urho3D::View::AllocateScreenBuffers" name="Urho3D::View::AllocateScreenBuffers">
+<area shape="rect" id="node2" href="$a00237.html#a3a7c4f50c5887e1d74f30b6350a2619c" title="Return parent texture." alt="" coords="280,5,437,46"/>
+<area shape="rect" id="node3" href="$a00293.html#a2f053f59f1001c8c85c9382d07900211" title="Return texture format." alt="" coords="267,71,450,97"/>
+<area shape="rect" id="node4" href="$a00136.html#a7319deb2784231d90a38c51a4287894a" title="Return the API&#45;specific RGBA texture format." alt="" coords="245,121,472,148"/>
+<area shape="rect" id="node5" href="$a00136.html#a3e11b8cf77a0792fbe9f71298ecbb486" title="Return the API&#45;specific RGB texture format." alt="" coords="249,172,468,199"/>
+<area shape="rect" id="node6" href="$a00316.html#a51de0741e3610b97ca16ca1f3c9fce8a" title="Check if a command reads the rendered scene." alt="" coords="249,223,469,249"/>
+<area shape="rect" id="node10" href="$a00293.html#af0adf78530abb05a692b52c0df297c9f" title="Return whether is using sRGB sampling and writing." alt="" coords="269,273,448,300"/>
+<area shape="rect" id="node7" href="$a00285.html#a69ac7aadaa628fc05fc96abde992fcdc" title="Return whether the string is empty." alt="" coords="528,197,675,224"/>
+<area shape="rect" id="node8" href="$a00285.html#a30d9382c1a0c355253038fb976bbaba5" title="Return comparision result with a string." alt="" coords="520,248,683,275"/>
+<area shape="rect" id="node9" href="$a00285.html#a6b405eba451da6c0f216a8649adf79aa" title="Return the C string." alt="" coords="731,248,885,275"/>
+</map>

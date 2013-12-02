@@ -1,0 +1,6 @@
+<map id="Urho3D::Light::GetDirLightTransform" name="Urho3D::Light::GetDirLightTransform">
+<area shape="rect" id="node2" href="$a00077.html#a7112f5b622eb75c70c5a44a4a6dc4d47" title="Return frustum near and far sizes." alt="" coords="225,5,439,32"/>
+<area shape="rect" id="node3" href="$a00077.html#acc01c6201d2489565fa9e9b4966e23ad" title="Return near clip distance." alt="" coords="488,31,680,57"/>
+<area shape="rect" id="node4" href="$a00077.html#a2ce91bcd0b92b35b95ae8fe81950dab3" title="Return far clip distance." alt="" coords="240,107,424,133"/>
+<area shape="rect" id="node5" href="$a00077.html#a0dd3b8b6da4b74d1f828619f8610ed1f" title="Return orthographic flag." alt="" coords="229,157,435,184"/>
+</map>

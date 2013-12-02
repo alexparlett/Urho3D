@@ -1,0 +1,26 @@
+<map id="Urho3D::UI::SetModalElement" name="Urho3D::UI::SetModalElement">
+<area shape="rect" id="node2" href="$a00198.html#abc59a1d0b1bb4c67ed06d220c3c81c4a" title="Return type hash." alt="" coords="246,5,410,32"/>
+<area shape="rect" id="node3" href="$a00304.html#a8f37f6947eb234aa829791950c5a1790" title="Return parent element." alt="" coords="1279,78,1417,119"/>
+<area shape="rect" id="node4" href="$a00304.html#a78b11afb8372b05bc6660e7faa8a0947" title="Set a user variable." alt="" coords="259,239,397,281"/>
+<area shape="rect" id="node5" href="$a00304.html#a77fd78016a84c237c101fd363560c406" title="Find child index. Return M_MAX_UNSIGNED if not found." alt="" coords="259,305,397,346"/>
+<area shape="rect" id="node6" href="$a00304.html#a716e59972776da716fb58ccdbb67aece" title="Set parent element. Same as parent&#45;&gt;InsertChild(index, this)." alt="" coords="259,174,397,215"/>
+<area shape="rect" id="node19" href="$a00304.html#a2427709a7f3082f54ace336b17491fb3" title="Return a user variable." alt="" coords="259,370,397,411"/>
+<area shape="rect" id="node22" href="$a00306.html#a480bcdd5bc80492fafa36c0d00340b26" title="Return pointer or null on type mismatch." alt="" coords="251,436,405,463"/>
+<area shape="rect" id="node23" href="$a00306.html#a83c65b30946cd3b226b0a018c8962c7f" title="Return unsigned int or zero on type mismatch." alt="" coords="247,487,409,513"/>
+<area shape="rect" id="node24" href="$a00304.html#a18cc52d320a11084881c887ea9db9727" title="Return all user variables." alt="" coords="259,538,397,579"/>
+<area shape="rect" id="node25" href="$a00140.html#a3add264fee0501af663e1689968f9993" title="Erase a pair by key. Return true if was found." alt="" coords="247,604,409,631"/>
+<area shape="rect" id="node7" href="$a00304.html#afca95d8f1971fbbdcf725f715cc8c7a9" title="Insert a child element into a specific position in the child list." alt="" coords="469,311,606,353"/>
+<area shape="rect" id="node8" href="$a00304.html#a3dcde71270ecb76924e19cd6e0667e59" title="Return default style." alt="" coords="858,419,995,461"/>
+<area shape="rect" id="node9" href="$a00304.html#a49a86d0ee7b5d788ec48183668a82d4d" title="Remove from the parent element. If no other shared pointer references exist, causes immediate deletio..." alt="" coords="666,341,803,382"/>
+<area shape="rect" id="node15" href="$a00304.html#ad18ecc5e79b04d47079bdc979eed8240" title="Mark screen position as needing an update." alt="" coords="666,158,803,199"/>
+<area shape="rect" id="node16" href="$a00285.html#a69ac7aadaa628fc05fc96abde992fcdc" title="Return whether the string is empty." alt="" coords="853,511,1000,537"/>
+<area shape="rect" id="node17" href="$a00304.html#affa64ab2ceb254b85add7bb1332a9cd9" title="Set style from an XML file. Find the style element by name. If the style file is not explicitly provi..." alt="" coords="666,458,803,499"/>
+<area shape="rect" id="node18" href="$a00304.html#a769c46ee7ca54cbaf367aa93cf7f3ea3" title="Verify that child elements have proper alignment for layout mode." alt="" coords="664,223,805,265"/>
+<area shape="rect" id="node14" href="$a00304.html#a7cba78373c23a734a1ccd2d4a27d8cb0" title="Manually update layout. Should not be necessary in most cases, but is provided for completeness..." alt="" coords="1061,311,1198,353"/>
+<area shape="rect" id="node12" href="$a00304.html#a696f2c9d35d4b2e262b2c666bceda61f" title="Return root element." alt="" coords="1061,107,1198,149"/>
+<area shape="rect" id="node11" href="$a00304.html#ac6787671e32acfe72f1f195dc3464cc2" title="Get element which should send child added / removed events." alt="" coords="1048,479,1211,521"/>
+<area shape="rect" id="node13" href="$a00198.html#a32020dbf77c196b9777eca479e8abb36" title="Send event to all subscribers." alt="" coords="1259,377,1437,404"/>
+<area shape="rect" id="node10" href="$a00304.html#a9ccf68e4882157d8fc2489ea9b10a658" title="Remove a child element. Starting search at specified index if provided." alt="" coords="858,341,995,382"/>
+<area shape="rect" id="node20" href="$a00140.html#a9dc4e5c0ad1feb3eec2d2f1f1714698d" title="Return iterator to the pair with key, or end iterator if not found." alt="" coords="459,377,615,404"/>
+<area shape="rect" id="node21" href="$a00140.html#a47eb201d8441d4e4be8626e615cb562d" title="Return iterator to the end." alt="" coords="461,428,614,455"/>
+</map>

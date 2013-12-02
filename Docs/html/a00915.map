@@ -1,0 +1,13 @@
+<map id="Urho3D::BatchQueue" name="Urho3D::BatchQueue">
+<area shape="rect" id="node2" href="$a00140.html" title="Urho3D::HashMap\&lt; unsigned\l short, unsigned short \&gt;" alt="" coords="701,57,888,98"/>
+<area shape="rect" id="node3" href="$a00138.html" title="Hash set/map base class." alt="" coords="514,129,643,156"/>
+<area shape="rect" id="node7" href="$a00140.html" title="Urho3D::HashMap\&lt; unsigned,\l unsigned \&gt;" alt="" coords="699,122,890,163"/>
+<area shape="rect" id="node8" href="$a00140.html" title="Urho3D::HashMap\&lt; Urho3D\l::BatchGroupKey, Urho3D\l::BatchGroup \&gt;" alt="" coords="705,188,884,244"/>
+<area shape="rect" id="node4" href="$a00141.html" title="Hash set/map node base class." alt="" coords="241,73,399,100"/>
+<area shape="rect" id="node5" href="$a00046.html" title="Allocator memory block." alt="" coords="243,163,397,189"/>
+<area shape="rect" id="node6" href="$a00047.html" title="Allocator node." alt="" coords="5,163,157,189"/>
+<area shape="rect" id="node9" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::BatchGroup * \&gt;" alt="" coords="713,269,876,310"/>
+<area shape="rect" id="node10" href="$a00312.html" title="Vector base class." alt="" coords="510,341,647,368"/>
+<area shape="rect" id="node11" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Batch \&gt;" alt="" coords="723,334,867,375"/>
+<area shape="rect" id="node12" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Batch * \&gt;" alt="" coords="723,399,867,441"/>
+</map>

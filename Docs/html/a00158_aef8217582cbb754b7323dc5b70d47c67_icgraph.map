@@ -1,0 +1,10 @@
+<map id="Urho3D::Light::GetDirLightTransform" name="Urho3D::Light::GetDirLightTransform">
+<area shape="rect" id="node2" href="$a00158.html#a3b3648ecb50a410286b5be3b9fa4ddfc" title="Return light volume model transform." alt="" coords="225,63,394,105"/>
+<area shape="rect" id="node3" href="$a00234.html#a408789b2d93f27c7884360b7ecccec55" title="Optimize a light by marking it to the stencil buffer and setting a stencil test." alt="" coords="443,5,623,46"/>
+<area shape="rect" id="node5" href="$a00316.html#a9fa4e0593945674a5ab2b52ac89e785a" title="Construct batches from the drawable objects." alt="" coords="447,71,619,97"/>
+<area shape="rect" id="node7" href="$a00316.html#aad3ec16bf264ae329528b17f79db267d" title="Set up a light volume rendering batch." alt="" coords="450,122,617,163"/>
+<area shape="rect" id="node4" href="$a00068.html#a28183ed7d8a5ea20961c67265610f6ef" title="Draw with forward light optimizations." alt="" coords="697,5,839,46"/>
+<area shape="rect" id="node6" href="$a00316.html#a50c3fe5d5c2b3040e13925aa277a8d93" title="Update and cull objects and construct rendering batches." alt="" coords="695,71,841,97"/>
+<area shape="rect" id="node8" href="$a00316.html#a2dd8e9237f495ba4ec4a69b195988cfa" title="Execute render commands." alt="" coords="673,122,863,163"/>
+<area shape="rect" id="node9" href="$a00316.html#a124582e02f0e82ba799467b20b162436" title="Render batches." alt="" coords="913,129,1058,156"/>
+</map>

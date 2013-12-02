@@ -1,0 +1,8 @@
+<map id="Urho3D::TriangleMeshData" name="Urho3D::TriangleMeshData">
+<area shape="rect" id="node2" href="$a00080.html" title="Base class for collision shape geometry data." alt="" coords="605,96,808,123"/>
+<area shape="rect" id="node3" href="$a00232.html" title="Base class for intrusively reference&#45;counted objects. These are noncopyable and non&#45;assignable." alt="" coords="296,7,435,33"/>
+<area shape="rect" id="node4" href="$a00231.html" title="Reference count structure." alt="" coords="12,7,137,33"/>
+<area shape="rect" id="node5" href="$a00285.html" title="String class." alt="" coords="313,96,418,123"/>
+<area shape="rect" id="node8" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::SharedPtr\&lt; Urho3D::Geometry \&gt; \&gt;" alt="" coords="253,198,477,239"/>
+<area shape="rect" id="node9" href="$a00312.html" title="Vector base class." alt="" coords="6,205,143,232"/>
+</map>

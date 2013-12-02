@@ -1,0 +1,7 @@
+<map id="Urho3D::ResourceGroup" name="Urho3D::ResourceGroup">
+<area shape="rect" id="node2" href="$a00140.html" title="Urho3D::HashMap\&lt; Urho3D\l::StringHash, Urho3D::\lSharedPtr\&lt; Urho3D::Resource \&gt; \&gt;" alt="" coords="119,309,335,365"/>
+<area shape="rect" id="node3" href="$a00138.html" title="Hash set/map base class." alt="" coords="162,232,291,259"/>
+<area shape="rect" id="node4" href="$a00141.html" title="Hash set/map node base class." alt="" coords="5,104,163,131"/>
+<area shape="rect" id="node5" href="$a00046.html" title="Allocator memory block." alt="" coords="249,104,404,131"/>
+<area shape="rect" id="node6" href="$a00047.html" title="Allocator node." alt="" coords="251,5,403,32"/>
+</map>

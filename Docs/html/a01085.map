@@ -1,0 +1,8 @@
+<map id="Urho3D::StaticModelGroup" name="Urho3D::StaticModelGroup">
+<area shape="rect" id="node2" href="$a00282.html" title="Static model component." alt="" coords="22,379,161,405"/>
+<area shape="rect" id="node3" href="$a00114.html" title="Base class for visible components." alt="" coords="30,304,153,331"/>
+<area shape="rect" id="node4" href="$a00084.html" title="Base class for components. Components can be created to scene nodes." alt="" coords="23,229,160,256"/>
+<area shape="rect" id="node5" href="$a00257.html" title="Base class for objects with automatic serialization through attributes." alt="" coords="23,155,160,181"/>
+<area shape="rect" id="node6" href="$a00198.html" title="Base class for objects with type identification, subsystem access and event sending/receiving capabil..." alt="" coords="37,80,147,107"/>
+<area shape="rect" id="node7" href="$a00232.html" title="Base class for intrusively reference&#45;counted objects. These are noncopyable and non&#45;assignable." alt="" coords="23,5,161,32"/>
+</map>

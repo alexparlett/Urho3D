@@ -1,0 +1,26 @@
+<map id="Urho3D::Shader::Load" name="Urho3D::Shader::Load">
+<area shape="rect" id="node2" href="$a00112.html#a33caea30e323600e37922bc4215261cd" title="Return name of the stream." alt="" coords="241,177,378,218"/>
+<area shape="rect" id="node3" href="$a00263.html#a26e7c023bbc854a86d4ce722b632059f" title="Parse from an XML element. Return true if successful." alt="" coords="235,242,384,283"/>
+<area shape="rect" id="node15" href="$a00263.html#a3efa530f47c8b98846f7c4dd0f96b155" title="Return error message if parsing failed." alt="" coords="235,377,384,418"/>
+<area shape="rect" id="node16" href="$a00240.html#a86a3c2dcfe91852a70ba129989b41a6a" title="Return name." alt="" coords="701,573,888,600"/>
+<area shape="rect" id="node17" href="$a00259.html#a461d39b561d39f3a791d42b0ff434bc4" title="Process source code and include files. Return true if successful." alt="" coords="207,620,412,647"/>
+<area shape="rect" id="node25" href="$a00240.html#a965ad58111e131f7725edec44358c75e" title="Set memory use in bytes, possibly approximate." alt="" coords="200,671,419,697"/>
+<area shape="rect" id="node4" href="$a00308.html#a06762e9e70b9851f54a845555f28cd4b" title="Return size of vector." alt="" coords="725,392,864,419"/>
+<area shape="rect" id="node5" href="$a00285.html#ac6f0b2fb0bce5afbeb088c7cb15abbe1" title="Clear the string." alt="" coords="489,5,631,32"/>
+<area shape="rect" id="node7" href="$a00325.html#a07b4b8753884e62d7ca8ab40d7b4a912" title="Return child element, or null if missing." alt="" coords="722,195,867,237"/>
+<area shape="rect" id="node9" href="$a00325.html#a0f9070917f31e8b8ef0755a787b4941a" title="Return attribute, or empty if missing." alt="" coords="722,261,867,302"/>
+<area shape="rect" id="node11" href="$a00285.html#a69ac7aadaa628fc05fc96abde992fcdc" title="Return whether the string is empty." alt="" coords="721,64,868,91"/>
+<area shape="rect" id="node12" href="$a00263.html#a88367a11dafd0bb6ccde997859a218bc" title="Parse options for a shader." alt="" coords="485,158,635,199"/>
+<area shape="rect" id="node14" href="$a00263.html#ace657e79f389af60fc3608044d1cdc36" title="Construct shader combinations from the options." alt="" coords="485,326,635,367"/>
+<area shape="rect" id="node13" href="$a00325.html#aa151f57fcb4eca0607acc2412a5eda5b" title="Return next sibling element." alt="" coords="722,130,867,171"/>
+<area shape="rect" id="node6" href="$a00285.html#aed2d8d23da6f2403c7aaa20082036f88" title="Resize the string." alt="" coords="720,5,869,32"/>
+<area shape="rect" id="node8" href="$a00285.html#a6b405eba451da6c0f216a8649adf79aa" title="Return the C string." alt="" coords="936,203,1091,229"/>
+<area shape="rect" id="node10" href="$a00325.html#ac4d343320eace4e61d92e2ad30b80bc1" title="Return attribute as C string, or null if missing." alt="" coords="941,261,1086,302"/>
+<area shape="rect" id="node18" href="$a00241.html#a94659e6c04c0bb9791019913b7866252" title="Return whether a file exists by name." alt="" coords="713,817,876,858"/>
+<area shape="rect" id="node19" href="$a00241.html#ad7e4af193a42aee59f07236b532f2df6" title="Store a dependency for a resource. If a dependency file changes, the resource will be reloaded..." alt="" coords="468,697,652,738"/>
+<area shape="rect" id="node20" href="$a00241.html#a21a4cb02435d1721c18ddc25f34a7231" title="Open and return a file from the resource load paths or from inside a package file. If not found, use a fallback search with absolute path. Return null if fails." alt="" coords="479,762,641,803"/>
+<area shape="rect" id="node21" href="$a00308.html#a083b39861b996df82f811a9a4ebff109" title="Add an element at the end." alt="" coords="489,828,631,855"/>
+<area shape="rect" id="node22" href="$a00308.html#a76da1334013d652c918044123e08d927" title="Erase a range of elements." alt="" coords="487,544,633,571"/>
+<area shape="rect" id="node23" href="$a00308.html#a59348abb9b8a78f19208613d45431fc9" title="Insert an element at position." alt="" coords="487,595,633,621"/>
+<area shape="rect" id="node24" href="$a00267.html#ac0a9f7d0728fa3ba9be5889f44f7ac46" title="Return the raw pointer." alt="" coords="467,645,653,672"/>
+</map>

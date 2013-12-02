@@ -1,0 +1,9 @@
+<map id="Urho3D::Input::ResetState" name="Urho3D::Input::ResetState">
+<area shape="rect" id="node2" href="$a00142.html#a27cc394541aad050f3a48c503c65e364" title="Clear the set." alt="" coords="247,5,403,32"/>
+<area shape="rect" id="node3" href="$a00198.html#a32020dbf77c196b9777eca479e8abb36" title="Send event to all subscribers." alt="" coords="477,56,654,83"/>
+<area shape="rect" id="node4" href="$a00149.html#a243227daecf2b0e920fa51b916f67c89" title="Handle a mouse button change." alt="" coords="224,107,427,133"/>
+<area shape="rect" id="node5" href="$a00149.html#acecabdaba17f8aaa9477b720311dccf4" title="Return the currently held down qualifiers." alt="" coords="475,107,655,133"/>
+<area shape="rect" id="node6" href="$a00149.html#a4e9e717f2dd16b24d8afe81027687ef8" title="Check if a qualifier key is held down." alt="" coords="705,107,911,133"/>
+<area shape="rect" id="node7" href="$a00149.html#a8995ff227b84083c0b1a9050bb211357" title="Check if a key is held down." alt="" coords="960,107,1141,133"/>
+<area shape="rect" id="node8" href="$a00142.html#a2f418238fbfa023388fb141c2759534a" title="Return whether contains a key." alt="" coords="1189,107,1365,133"/>
+</map>

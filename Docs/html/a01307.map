@@ -1,0 +1,8 @@
+<map id="Urho3D::SceneResolver" name="Urho3D::SceneResolver">
+<area shape="rect" id="node2" href="$a00140.html" title="Urho3D::HashMap\&lt; unsigned,\l Urho3D::WeakPtr\&lt; Urho3D\l::Component \&gt; \&gt;" alt="" coords="691,47,882,103"/>
+<area shape="rect" id="node3" href="$a00138.html" title="Hash set/map base class." alt="" coords="510,113,639,140"/>
+<area shape="rect" id="node7" href="$a00140.html" title="Urho3D::HashMap\&lt; unsigned,\l Urho3D::WeakPtr\&lt; Urho3D\l::Node \&gt; \&gt;" alt="" coords="691,127,882,183"/>
+<area shape="rect" id="node4" href="$a00141.html" title="Hash set/map node base class." alt="" coords="241,73,399,100"/>
+<area shape="rect" id="node5" href="$a00046.html" title="Allocator memory block." alt="" coords="243,163,397,189"/>
+<area shape="rect" id="node6" href="$a00047.html" title="Allocator node." alt="" coords="5,163,157,189"/>
+</map>

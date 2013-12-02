@@ -1,0 +1,10 @@
+<map id="Urho3D::AnimatedModel::UpdateBoneBoundingBox" name="Urho3D::AnimatedModel::UpdateBoneBoundingBox">
+<area shape="rect" id="node2" href="$a00270.html#a9906a8792ea89023870b6db38bb994ef" title="Return number of bones." alt="" coords="251,5,427,46"/>
+<area shape="rect" id="node3" href="$a00192.html#acbf5c9951a685acdbe75d1d39eeb7045" title="Return world space transform matrix." alt="" coords="229,71,448,97"/>
+<area shape="rect" id="node4" href="$a00177.html#adbf4f5c122e4dbee49ab99550cc70315" title="Return inverse." alt="" coords="273,122,405,163"/>
+<area shape="rect" id="node5" href="$a00270.html#ab0956a7e86b964eff60a7bc442e41f1e" title="Return all bones." alt="" coords="246,188,431,215"/>
+<area shape="rect" id="node6" href="$a00308.html#aa20f23bae4cf1d7cda06f6c3b47c7504" title="Return iterator to the beginning." alt="" coords="265,239,412,265"/>
+<area shape="rect" id="node7" href="$a00308.html#af79ffb0683568b08fe130ee028bfd1ef" title="Return iterator to the end." alt="" coords="271,289,407,316"/>
+<area shape="rect" id="node8" href="$a00074.html#a4befcf3c67e94eb2f1924e1179b09bd2" title="Merge a point." alt="" coords="265,341,412,382"/>
+<area shape="rect" id="node9" href="$a00192.html#a92372a305fa427e9ce58df7f37a684ba" title="Return position in world space." alt="" coords="235,407,442,433"/>
+</map>

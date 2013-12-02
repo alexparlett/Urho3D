@@ -1,0 +1,10 @@
+<map id="Urho3D::StaticModel" name="Urho3D::StaticModel">
+<area shape="rect" id="node7" href="$a00048.html" title="Animated model component." alt="" coords="5,453,165,480"/>
+<area shape="rect" id="node8" href="$a00271.html" title="Static model component with fixed position in relation to the camera." alt="" coords="190,453,303,480"/>
+<area shape="rect" id="node9" href="$a00284.html" title="Renders several object instances while culling and receiving light as one unit. Can be used as a CPU&#45;..." alt="" coords="327,453,501,480"/>
+<area shape="rect" id="node2" href="$a00114.html" title="Base class for visible components." alt="" coords="185,304,308,331"/>
+<area shape="rect" id="node3" href="$a00084.html" title="Base class for components. Components can be created to scene nodes." alt="" coords="178,229,315,256"/>
+<area shape="rect" id="node4" href="$a00257.html" title="Base class for objects with automatic serialization through attributes." alt="" coords="178,155,315,181"/>
+<area shape="rect" id="node5" href="$a00198.html" title="Base class for objects with type identification, subsystem access and event sending/receiving capabil..." alt="" coords="192,80,301,107"/>
+<area shape="rect" id="node6" href="$a00232.html" title="Base class for intrusively reference&#45;counted objects. These are noncopyable and non&#45;assignable." alt="" coords="177,5,316,32"/>
+</map>

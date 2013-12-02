@@ -1,0 +1,5 @@
+<map id="Urho3D::AttributeAccessor" name="Urho3D::AttributeAccessor">
+<area shape="rect" id="node3" href="$a00061.html" title="Template implementation of the attribute accessor invoke helper class." alt="" coords="5,155,179,197"/>
+<area shape="rect" id="node4" href="$a00230.html" title="Template implementation of the attribute accessor invoke helper class using const references..." alt="" coords="203,155,396,197"/>
+<area shape="rect" id="node2" href="$a00232.html" title="Base class for intrusively reference&#45;counted objects. These are noncopyable and non&#45;assignable." alt="" coords="127,5,265,32"/>
+</map>

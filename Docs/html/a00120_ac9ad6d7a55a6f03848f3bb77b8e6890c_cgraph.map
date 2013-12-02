@@ -1,0 +1,6 @@
+<map id="Urho3D::File::Read" name="Urho3D::File::Read">
+<area shape="rect" id="node2" href="$a00267.html#ac0a9f7d0728fa3ba9be5889f44f7ac46" title="Return the raw pointer." alt="" coords="181,5,368,32"/>
+<area shape="rect" id="node3" href="$a00112.html#a779317ca224e8350cf9b10ec4cb65145" title="Read a 16&#45;bit unsigned integer." alt="" coords="206,57,343,98"/>
+<area shape="rect" id="node5" href="$a00120.html#a978a7d787f3d4946ef28a7d54c1adf4c" title="Return the file name." alt="" coords="198,123,351,149"/>
+<area shape="rect" id="node4" href="$a00112.html#ae82036f72896194adc1cd02f3b03509b" title="Read bytes from the stream. Return number of bytes actually read." alt="" coords="417,57,554,98"/>
+</map>

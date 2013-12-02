@@ -1,0 +1,11 @@
+<map id="Urho3D::Connection::GetAddress" name="Urho3D::Connection::GetAddress">
+<area shape="rect" id="node2" href="$a00088.html#a2ac2dd3c4384146af1c528e6aadd0c48" title="Return an address:port string." alt="" coords="189,169,325,210"/>
+<area shape="rect" id="node3" href="$a00088.html#afced676df11b5ac349a054ec61ce97e9" title="Process a LoadScene message from the server. Called by Network." alt="" coords="421,5,560,46"/>
+<area shape="rect" id="node6" href="$a00088.html#afd98f952dcdeea8ef142bc6c7004c698" title="Process a SceneChecksumError message from the server. Called by Network." alt="" coords="391,70,590,111"/>
+<area shape="rect" id="node7" href="$a00088.html#a0a9e39346bc1f85b9186d3258a178ac1" title="Process a scene update message from the server. Called by Network." alt="" coords="415,135,567,177"/>
+<area shape="rect" id="node8" href="$a00088.html#a1c702780a42ef4fd2365fb2698db6509" title="Process package download related messages. Called by Network." alt="" coords="400,201,581,242"/>
+<area shape="rect" id="node9" href="$a00088.html#ae3093aef92fc9b1a487449fd888194a9" title="Process a SceneLoaded message from the client. Called by Network." alt="" coords="414,266,567,307"/>
+<area shape="rect" id="node10" href="$a00189.html#a366a386e4ef18d0fcf732a56b1c1060b" title="Handle a client disconnection." alt="" coords="373,332,608,359"/>
+<area shape="rect" id="node4" href="$a00088.html#a3eaca6b184877eeb85a6f77a90f4d497" title="Process a message from the server or client. Called by Network." alt="" coords="656,135,792,177"/>
+<area shape="rect" id="node5" href="$a00189.html#ab623aa1da3bd00052c7f90c1e42962fd" title="Handle a kNet message from either a client or the server." alt="" coords="841,143,1055,169"/>
+</map>

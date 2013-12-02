@@ -1,0 +1,26 @@
+<map id="Urho3D::Batch" name="Urho3D::Batch">
+<area shape="rect" id="node2" href="$a00159.html" title="Queue for light related draw calls." alt="" coords="549,425,720,452"/>
+<area shape="rect" id="node8" href="$a00158.html" title="Light component." alt="" coords="901,341,1000,368"/>
+<area shape="rect" id="node3" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::ShadowBatchQueue \&gt;" alt="" coords="253,389,416,430"/>
+<area shape="rect" id="node4" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Light * \&gt;" alt="" coords="263,193,407,234"/>
+<area shape="rect" id="node9" href="$a00114.html" title="Base class for visible components." alt="" coords="1246,151,1370,177"/>
+<area shape="rect" id="node5" href="$a00068.html" title="Queue that contains both instanced and non&#45;instanced draw calls." alt="" coords="263,505,406,532"/>
+<area shape="rect" id="node6" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Batch \&gt;" alt="" coords="5,373,149,414"/>
+<area shape="rect" id="node7" href="$a00294.html" title="2D texture resource." alt="" coords="269,455,400,481"/>
+<area shape="rect" id="node11" href="$a00329.html" title="Component that describes global rendering properties" alt="" coords="1599,232,1699,259"/>
+<area shape="rect" id="node10" href="$a00084.html" title="Base class for components. Components can be created to scene nodes." alt="" coords="566,368,703,395"/>
+<area shape="rect" id="node16" href="$a00077.html" title="Camera component." alt="" coords="893,400,1009,427"/>
+<area shape="rect" id="node12" href="$a00320.html" title="Urho3D::WeakPtr\&lt; Urho3D\l::Zone \&gt;" alt="" coords="1913,225,2087,266"/>
+<area shape="rect" id="node13" href="$a00074.html" title="Three&#45;dimensional axis&#45;aligned bounding box." alt="" coords="877,5,1024,32"/>
+<area shape="rect" id="node14" href="$a00082.html" title="RGBA color." alt="" coords="584,313,685,340"/>
+<area shape="rect" id="node15" href="$a00177.html" title="3x4 matrix for scene node transform calculations." alt="" coords="571,573,698,600"/>
+<area shape="rect" id="node17" href="$a00133.html" title="Defines one or more vertex buffers, an index buffer and a draw range." alt="" coords="1586,579,1713,605"/>
+<area shape="rect" id="node18" href="$a00198.html" title="Base class for objects with type identification, subsystem access and event sending/receiving capabil..." alt="" coords="1253,520,1363,547"/>
+<area shape="rect" id="node19" href="$a00267.html" title="Urho3D::SharedArrayPtr\l\&lt; unsigned char \&gt;" alt="" coords="1229,571,1387,613"/>
+<area shape="rect" id="node20" href="$a00268.html" title="Urho3D::SharedPtr\&lt;\l Urho3D::IndexBuffer \&gt;" alt="" coords="1233,637,1383,678"/>
+<area shape="rect" id="node21" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::SharedPtr\&lt; Urho3D::VertexBuffer \&gt; \&gt;" alt="" coords="1189,702,1427,743"/>
+<area shape="rect" id="node22" href="$a00218.html" title="Urho3D::PODVector\&lt;\l unsigned \&gt;" alt="" coords="1236,454,1380,495"/>
+<area shape="rect" id="node23" href="$a00174.html" title="Describes how to render 3D geometries." alt="" coords="1591,528,1708,555"/>
+<area shape="rect" id="node24" href="$a00265.html" title="Vertex or pixel shader on the GPU." alt="" coords="1568,636,1731,663"/>
+<area shape="rect" id="node25" href="$a00213.html" title="Material rendering pass, which defines shaders and render state." alt="" coords="1600,687,1699,713"/>
+</map>

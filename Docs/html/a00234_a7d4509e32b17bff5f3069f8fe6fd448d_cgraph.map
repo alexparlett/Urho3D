@@ -1,0 +1,23 @@
+<map id="Urho3D::Renderer::GetShadowMap" name="Urho3D::Renderer::GetShadowMap">
+<area shape="rect" id="node2" href="$a00158.html#af45d4adeed71b11d7b505004bb526811" title="Return light type." alt="" coords="285,5,467,32"/>
+<area shape="rect" id="node3" href="$a00158.html#a4bf62991616e9a38efe521f8ad27fb1f" title="Return shadow map focus parameters." alt="" coords="290,57,462,98"/>
+<area shape="rect" id="node4" href="$a00158.html#aaa05c515672ed24c9bce8818ba005eeb" title="Return shadow resolution." alt="" coords="290,122,462,163"/>
+<area shape="rect" id="node5" href="$a00077.html#ac362ac9c057c3546e19cedaf23185438" title="Return view matrix." alt="" coords="291,239,461,265"/>
+<area shape="rect" id="node8" href="$a00077.html#a2ec28df0c7d7d50f17eb6af6d41ccfad" title="Return API&#45;specific projection matrix." alt="" coords="275,340,477,367"/>
+<area shape="rect" id="node9" href="$a00084.html#aaf7a7d9aea4ae4bcc527a5f0c33f3f1a" title="Return scene node." alt="" coords="305,391,447,433"/>
+<area shape="rect" id="node6" href="$a00192.html#a92372a305fa427e9ce58df7f37a684ba" title="Return position in world space." alt="" coords="527,213,734,240"/>
+<area shape="rect" id="node10" href="$a00158.html#a2b7ae39dce58fc351f4a4c693aa8cc4f" title="Return range." alt="" coords="295,457,457,484"/>
+<area shape="rect" id="node11" href="$a00074.html#afd34713236804d7207ce7fd709e99db9" title="Define from another bounding box." alt="" coords="303,509,449,550"/>
+<area shape="rect" id="node12" href="$a00158.html#a973fe2a585b847ca605abd52201bbced" title="Return spotlight frustum." alt="" coords="289,289,463,316"/>
+<area shape="rect" id="node14" href="$a00131.html#a6d92b5a77b61ecfe80b3e1294656c6ad" title="Return transformed by a 3x3 matrix." alt="" coords="278,575,474,601"/>
+<area shape="rect" id="node19" href="$a00074.html#a74321dc939044750fb994e1cef136f11" title="Return projected by a 4x4 projection matrix." alt="" coords="303,626,449,667"/>
+<area shape="rect" id="node21" href="$a00229.html#a5e990bcf9bf576f6cc39bf722841d7cf" title="Return size." alt="" coords="311,692,441,719"/>
+<area shape="rect" id="node22" href="$a00268.html#a921bd6b5a659b42c9f660a083640eb8f" title="Reset to null and release the object reference." alt="" coords="309,743,443,785"/>
+<area shape="rect" id="node7" href="$a00192.html#aa0f97335ff8b25e10e0a89ee9a87a253" title="Return rotation in world space." alt="" coords="526,264,735,291"/>
+<area shape="rect" id="node13" href="$a00131.html#ae3bb6685c4a3500651952fe03e6442ae" title="Define with projection parameters and a transform matrix." alt="" coords="551,315,711,341"/>
+<area shape="rect" id="node15" href="$a00131.html#a07e681ce8be0bf8746b0e2630bf38582" title="Update the planes. Called internally." alt="" coords="529,575,733,601"/>
+<area shape="rect" id="node16" href="$a00217.html#a17f585cedc9d8957198ae2d8990d4029" title="Define from 3 vertices." alt="" coords="784,575,931,601"/>
+<area shape="rect" id="node17" href="$a00310.html#a37cee8661514bc13c71c67f1308308ea" title="Calculate cross product." alt="" coords="979,549,1178,576"/>
+<area shape="rect" id="node18" href="$a00310.html#a8e105f7e81efd8f80910eb7c7a098ab7" title="Return normalized to unit length." alt="" coords="986,600,1171,627"/>
+<area shape="rect" id="node20" href="$a00229.html#a31dd9880cc9d0dda98cb34976bb3bd80" title="Merge a point." alt="" coords="561,633,701,660"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="Urho3D::NavigationMesh::GetTileGeometry" name="Urho3D::NavigationMesh::GetTileGeometry">
+<area shape="rect" id="node2" href="$a00188.html#a602be9b482a0a9b7917bb13fd3b02cbf" title="Build one tile of the navigation mesh. Return true if successful." alt="" coords="216,5,379,46"/>
+<area shape="rect" id="node3" href="$a00188.html#a38f762e87f10300096e08666fbafb443" title="Rebuild the navigation mesh. Return true if successful." alt="" coords="427,5,589,46"/>
+</map>

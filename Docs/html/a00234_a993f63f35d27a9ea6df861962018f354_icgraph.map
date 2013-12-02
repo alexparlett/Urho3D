@@ -1,0 +1,7 @@
+<map id="Urho3D::Renderer::Update" name="Urho3D::Renderer::Update">
+<area shape="rect" id="node2" href="$a00234.html#adf594e7a524f6e003e8370cf23dbee13" title="Handle render update event." alt="" coords="225,23,394,65"/>
+<area shape="rect" id="node3" href="$a00234.html#ae0d765a240f7cf5f829ddc95cb2729c9" title="Initialize when screen mode initially set." alt="" coords="443,31,619,57"/>
+<area shape="rect" id="node4" href="$a00234.html#a8e41f9dda2e33e9e208c5ccfd0d1c6ac" title="Construct." alt="" coords="885,31,1067,57"/>
+<area shape="rect" id="node5" href="$a00234.html#ade42fa3aa8f7f48620bffc61ab32c635" title="Handle screen mode event." alt="" coords="667,23,837,65"/>
+<area shape="rect" id="node6" href="$a00234.html#a7a91e0ca6c82f08417b234d46eae56d4" title="Handle graphics features (re)check event. Event only sent by D3D9Graphics class." alt="" coords="667,89,837,130"/>
+</map>

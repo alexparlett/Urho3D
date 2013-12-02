@@ -1,0 +1,8 @@
+<map id="Urho3D::DecalSet::OnWorldBoundingBoxUpdate" name="Urho3D::DecalSet::OnWorldBoundingBoxUpdate">
+<area shape="rect" id="node2" href="$a00107.html#a4aa0e1f86e0dd27837ff102eac4b5dcb" title="Recalculate the local&#45;space bounding box." alt="" coords="252,5,436,46"/>
+<area shape="rect" id="node5" href="$a00074.html#aa75dc3b9cce0c3c6ea4e34e4f8f125c2" title="Return transformed by a 3x3 matrix." alt="" coords="271,70,417,111"/>
+<area shape="rect" id="node6" href="$a00192.html#acbf5c9951a685acdbe75d1d39eeb7045" title="Return world space transform matrix." alt="" coords="235,136,453,163"/>
+<area shape="rect" id="node4" href="$a00074.html#a4befcf3c67e94eb2f1924e1179b09bd2" title="Merge a point." alt="" coords="501,125,648,166"/>
+<area shape="rect" id="node7" href="$a00192.html#a92372a305fa427e9ce58df7f37a684ba" title="Return position in world space." alt="" coords="241,237,447,264"/>
+<area shape="rect" id="node3" href="$a00074.html#afef3c1bfa3910387adb4f5992371a8dd" title="Clear to undefined state." alt="" coords="501,5,648,46"/>
+</map>

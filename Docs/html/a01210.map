@@ -1,0 +1,26 @@
+<map id="Urho3D::OffMeshConnection" name="Urho3D::OffMeshConnection">
+<area shape="rect" id="node2" href="$a00084.html" title="Base class for components. Components can be created to scene nodes." alt="" coords="1745,565,1882,592"/>
+<area shape="rect" id="node3" href="$a00257.html" title="Base class for objects with automatic serialization through attributes." alt="" coords="1179,817,1317,844"/>
+<area shape="rect" id="node12" href="$a00192.html" title="Scene node that may contain components and child nodes." alt="" coords="1531,520,1632,547"/>
+<area shape="rect" id="node4" href="$a00198.html" title="Base class for objects with type identification, subsystem access and event sending/receiving capabil..." alt="" coords="804,764,913,791"/>
+<area shape="rect" id="node23" href="$a00088.html" title="Connection to a remote network host." alt="" coords="1180,704,1316,731"/>
+<area shape="rect" id="node5" href="$a00232.html" title="Base class for intrusively reference&#45;counted objects. These are noncopyable and non&#45;assignable." alt="" coords="240,757,379,784"/>
+<area shape="rect" id="node7" href="$a00094.html" title="Urho3D execution context. Provides access to subsystems, object factories and attributes, and event receivers." alt="" coords="473,808,588,835"/>
+<area shape="rect" id="node6" href="$a00231.html" title="Reference count structure." alt="" coords="5,203,131,229"/>
+<area shape="rect" id="node25" href="$a00320.html" title="Urho3D::WeakPtr\&lt; Urho3D\l::Node \&gt;" alt="" coords="1726,423,1901,465"/>
+<area shape="rect" id="node8" href="$a00162.html" title="Urho3D::LinkedList\l\&lt; Urho3D::EventHandler \&gt;" alt="" coords="446,691,615,733"/>
+<area shape="rect" id="node9" href="$a00140.html" title="Hash map template class." alt="" coords="773,1007,944,1033"/>
+<area shape="rect" id="node10" href="$a00191.html" title="Per&#45;object attribute state for network replication, allocated on demand." alt="" coords="784,713,933,740"/>
+<area shape="rect" id="node11" href="$a00140.html" title="Urho3D::HashMap\&lt; ShortString\lHash, Variant \&gt;" alt="" coords="430,594,631,635"/>
+<area shape="rect" id="node14" href="$a00246.html" title="Root scene node, represents the whole scene." alt="" coords="1759,489,1867,516"/>
+<area shape="rect" id="node13" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Node * \&gt;" alt="" coords="1176,974,1320,1015"/>
+<area shape="rect" id="node15" href="$a00285.html" title="String class." alt="" coords="806,265,911,292"/>
+<area shape="rect" id="node16" href="$a00223.html" title="Rotation represented as a four&#45;dimensional normalized vector." alt="" coords="1181,147,1315,173"/>
+<area shape="rect" id="node17" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::WeakPtr\&lt; Urho3D::Component \&gt; \&gt;" alt="" coords="1135,198,1361,239"/>
+<area shape="rect" id="node18" href="$a00313.html" title="Dynamically sized buffer that can be read and written to as a stream." alt="" coords="788,663,929,689"/>
+<area shape="rect" id="node19" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::SharedPtr\&lt; Urho3D::Component \&gt; \&gt;" alt="" coords="1131,327,1365,369"/>
+<area shape="rect" id="node20" href="$a00310.html" title="Three&#45;dimensional vector." alt="" coords="801,956,916,983"/>
+<area shape="rect" id="node21" href="$a00286.html" title="32&#45;bit hash value for a string." alt="" coords="1181,432,1315,459"/>
+<area shape="rect" id="node22" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::SharedPtr\&lt; Urho3D::Node \&gt; \&gt;" alt="" coords="1149,483,1347,525"/>
+<area shape="rect" id="node24" href="$a00177.html" title="3x4 matrix for scene node transform calculations." alt="" coords="1185,653,1311,680"/>
+</map>

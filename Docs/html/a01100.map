@@ -1,0 +1,26 @@
+<map id="Urho3D::LightQueryResult" name="Urho3D::LightQueryResult">
+<area shape="rect" id="node2" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Drawable * \&gt;" alt="" coords="973,655,1120,697"/>
+<area shape="rect" id="node3" href="$a00312.html" title="Vector base class." alt="" coords="491,681,629,708"/>
+<area shape="rect" id="node19" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Light * \&gt;" alt="" coords="796,733,940,774"/>
+<area shape="rect" id="node20" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::SourceBatch \&gt;" alt="" coords="787,615,949,657"/>
+<area shape="rect" id="node4" href="$a00077.html" title="Camera component." alt="" coords="810,388,926,415"/>
+<area shape="rect" id="node16" href="$a00114.html" title="Base class for visible components." alt="" coords="1175,537,1299,564"/>
+<area shape="rect" id="node5" href="$a00084.html" title="Base class for components. Components can be created to scene nodes." alt="" coords="491,573,629,600"/>
+<area shape="rect" id="node6" href="$a00257.html" title="Base class for objects with automatic serialization through attributes." alt="" coords="6,1025,143,1052"/>
+<area shape="rect" id="node7" href="$a00192.html" title="Scene node that may contain components and child nodes." alt="" coords="292,579,393,605"/>
+<area shape="rect" id="node8" href="$a00310.html" title="Three&#45;dimensional vector." alt="" coords="17,147,132,173"/>
+<area shape="rect" id="node11" href="$a00217.html" title="Surface in three&#45;dimensional space." alt="" coords="291,119,395,145"/>
+<area shape="rect" id="node10" href="$a00131.html" title="Convex constructed of 6 planes." alt="" coords="501,119,619,145"/>
+<area shape="rect" id="node14" href="$a00074.html" title="Three&#45;dimensional axis&#45;aligned bounding box." alt="" coords="795,329,941,356"/>
+<area shape="rect" id="node9" href="$a00177.html" title="3x4 matrix for scene node transform calculations." alt="" coords="11,535,138,561"/>
+<area shape="rect" id="node17" href="$a00329.html" title="Component that describes global rendering properties" alt="" coords="1494,491,1594,517"/>
+<area shape="rect" id="node15" href="$a00158.html" title="Light component." alt="" coords="1495,900,1593,927"/>
+<area shape="rect" id="node12" href="$a00309.html" title="Two&#45;dimensional vector." alt="" coords="503,281,617,308"/>
+<area shape="rect" id="node13" href="$a00178.html" title="4x4 matrix for arbitrary linear transforms including projection." alt="" coords="503,385,617,412"/>
+<area shape="rect" id="node22" href="$a00159.html" title="Queue for light related draw calls." alt="" coords="1717,945,1888,972"/>
+<area shape="rect" id="node18" href="$a00082.html" title="RGBA color." alt="" coords="1187,824,1288,851"/>
+<area shape="rect" id="node21" href="$a00078.html" title="Cascaded shadow map parameters." alt="" coords="1144,875,1331,901"/>
+<area shape="rect" id="node23" href="$a00125.html" title="Shadow map focusing parameters." alt="" coords="1151,925,1323,952"/>
+<area shape="rect" id="node24" href="$a00069.html" title="Shadow depth bias parameters." alt="" coords="1156,1043,1319,1069"/>
+<area shape="rect" id="node25" href="$a00268.html" title="Urho3D::SharedPtr\&lt;\l Urho3D::Texture \&gt;" alt="" coords="1169,977,1306,1018"/>
+</map>

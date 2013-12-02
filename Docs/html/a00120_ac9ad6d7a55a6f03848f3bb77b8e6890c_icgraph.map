@@ -1,0 +1,4 @@
+<map id="Urho3D::File::Read" name="Urho3D::File::Read">
+<area shape="rect" id="node2" href="$a00120.html#a76e6334a36cb7ad8e4677513f8085cf9" title="Set position from the beginning of the file." alt="" coords="181,5,309,32"/>
+<area shape="rect" id="node3" href="$a00120.html#aab109773be7ff91556341733123ca3be" title="Return a checksum of the file contents using the SDBM hash algorithm." alt="" coords="358,31,538,57"/>
+</map>

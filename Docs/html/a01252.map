@@ -1,0 +1,25 @@
+<map id="Urho3D::DelayedWorldTransform" name="Urho3D::DelayedWorldTransform">
+<area shape="rect" id="node2" href="$a00223.html" title="Rotation represented as a four&#45;dimensional normalized vector." alt="" coords="651,68,786,95"/>
+<area shape="rect" id="node10" href="$a00192.html" title="Scene node that may contain components and child nodes." alt="" coords="928,360,1029,387"/>
+<area shape="rect" id="node4" href="$a00245.html" title="Physics rigid body component." alt="" coords="1998,308,2127,335"/>
+<area shape="rect" id="node3" href="$a00310.html" title="Three&#45;dimensional vector." alt="" coords="661,723,776,749"/>
+<area shape="rect" id="node5" href="$a00084.html" title="Base class for components. Components can be created to scene nodes." alt="" coords="1130,276,1267,303"/>
+<area shape="rect" id="node23" href="$a00216.html" title="Physics simulation world component. Should be added only to the root scene node." alt="" coords="1417,203,1565,229"/>
+<area shape="rect" id="node6" href="$a00257.html" title="Base class for objects with automatic serialization through attributes." alt="" coords="650,265,787,292"/>
+<area shape="rect" id="node7" href="$a00198.html" title="Base class for objects with type identification, subsystem access and event sending/receiving capabil..." alt="" coords="225,271,335,297"/>
+<area shape="rect" id="node8" href="$a00140.html" title="Hash map template class." alt="" coords="195,321,365,348"/>
+<area shape="rect" id="node9" href="$a00191.html" title="Per&#45;object attribute state for network replication, allocated on demand." alt="" coords="205,220,355,247"/>
+<area shape="rect" id="node13" href="$a00246.html" title="Root scene node, represents the whole scene." alt="" coords="1145,395,1253,421"/>
+<area shape="rect" id="node11" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Node * \&gt;" alt="" coords="435,166,579,207"/>
+<area shape="rect" id="node12" href="$a00312.html" title="Vector base class." alt="" coords="6,372,143,399"/>
+<area shape="rect" id="node15" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::WeakPtr\&lt; Urho3D::Component \&gt; \&gt;" alt="" coords="393,365,620,406"/>
+<area shape="rect" id="node19" href="$a00218.html" title="Urho3D::PODVector\&lt;\l unsigned char \&gt;" alt="" coords="208,579,352,621"/>
+<area shape="rect" id="node20" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::SharedPtr\&lt; Urho3D::Component \&gt; \&gt;" alt="" coords="389,414,624,455"/>
+<area shape="rect" id="node24" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Constraint * \&gt;" alt="" coords="1123,173,1274,214"/>
+<area shape="rect" id="node14" href="$a00285.html" title="String class." alt="" coords="666,480,771,507"/>
+<area shape="rect" id="node16" href="$a00313.html" title="Dynamically sized buffer that can be read and written to as a stream." alt="" coords="648,531,789,557"/>
+<area shape="rect" id="node17" href="$a00112.html" title="Abstract stream for reading." alt="" coords="211,477,349,504"/>
+<area shape="rect" id="node18" href="$a00258.html" title="Abstract stream for writing." alt="" coords="218,528,342,555"/>
+<area shape="rect" id="node22" href="$a00320.html" title="Urho3D::WeakPtr\&lt; Urho3D\l::PhysicsWorld \&gt;" alt="" coords="1689,191,1863,233"/>
+<area shape="rect" id="node25" href="$a00231.html" title="Reference count structure." alt="" coords="1428,152,1553,179"/>
+</map>

@@ -1,0 +1,26 @@
+<map id="Urho3D::ScriptInstance" name="Urho3D::ScriptInstance">
+<area shape="rect" id="node2" href="$a00084.html" title="Base class for components. Components can be created to scene nodes." alt="" coords="1742,489,1879,516"/>
+<area shape="rect" id="node3" href="$a00257.html" title="Base class for objects with automatic serialization through attributes." alt="" coords="1126,488,1263,515"/>
+<area shape="rect" id="node10" href="$a00192.html" title="Scene node that may contain components and child nodes." alt="" coords="1512,248,1613,275"/>
+<area shape="rect" id="node4" href="$a00198.html" title="Base class for objects with type identification, subsystem access and event sending/receiving capabil..." alt="" coords="692,656,801,683"/>
+<area shape="rect" id="node20" href="$a00251.html" title="Scripting subsystem. Allows execution of AngelScript." alt="" coords="1510,733,1615,760"/>
+<area shape="rect" id="node5" href="$a00140.html" title="Hash map template class." alt="" coords="661,491,832,517"/>
+<area shape="rect" id="node6" href="$a00138.html" title="Hash set/map base class." alt="" coords="222,520,351,547"/>
+<area shape="rect" id="node25" href="$a00140.html" title="Urho3D::HashMap\&lt; Urho3D\l::AttributeInfo *, unsigned \&gt;" alt="" coords="1307,537,1485,578"/>
+<area shape="rect" id="node7" href="$a00191.html" title="Per&#45;object attribute state for network replication, allocated on demand." alt="" coords="672,440,821,467"/>
+<area shape="rect" id="node8" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::AttributeInfo \&gt;" alt="" coords="205,386,368,427"/>
+<area shape="rect" id="node9" href="$a00312.html" title="Vector base class." alt="" coords="6,335,143,361"/>
+<area shape="rect" id="node11" href="$a00218.html" title="Urho3D::PODVector\&lt;\l Urho3D::Node * \&gt;" alt="" coords="448,197,592,238"/>
+<area shape="rect" id="node15" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::WeakPtr\&lt; Urho3D::Component \&gt; \&gt;" alt="" coords="856,335,1083,377"/>
+<area shape="rect" id="node17" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::SharedPtr\&lt; Urho3D::Component \&gt; \&gt;" alt="" coords="403,246,637,287"/>
+<area shape="rect" id="node23" href="$a00308.html" title="Urho3D::Vector\&lt; Urho3D\l::DelayedCall \&gt;" alt="" coords="205,598,368,639"/>
+<area shape="rect" id="node12" href="$a00246.html" title="Root scene node, represents the whole scene." alt="" coords="1757,204,1865,231"/>
+<area shape="rect" id="node13" href="$a00285.html" title="String class." alt="" coords="1142,44,1247,71"/>
+<area shape="rect" id="node14" href="$a00223.html" title="Rotation represented as a four&#45;dimensional normalized vector." alt="" coords="1127,197,1262,224"/>
+<area shape="rect" id="node16" href="$a00313.html" title="Dynamically sized buffer that can be read and written to as a stream." alt="" coords="1124,299,1265,325"/>
+<area shape="rect" id="node18" href="$a00252.html" title="Interface class for event listeners that forward events to script." alt="" coords="195,777,378,804"/>
+<area shape="rect" id="node22" href="$a00253.html" title="Script file resource." alt="" coords="683,720,810,747"/>
+<area shape="rect" id="node19" href="$a00268.html" title="Urho3D::SharedPtr\&lt;\l Urho3D::Script \&gt;" alt="" coords="1742,675,1879,717"/>
+<area shape="rect" id="node21" href="$a00320.html" title="Urho3D::WeakPtr\&lt; Urho3D\l::ScriptFile \&gt;" alt="" coords="1107,762,1282,803"/>
+<area shape="rect" id="node24" href="$a00231.html" title="Reference count structure." alt="" coords="684,784,809,811"/>
+</map>
