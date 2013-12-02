@@ -1,0 +1,20 @@
+# Build directories
+Build/
+*-Build/
+
+# Output directories
+Bin/
+Bin-CC/
+Lib/
+Lib-CC/
+
+# Source directory
+Source/
+
+# Generated Doxyfile
+Docs/Doxyfile
+
+# Misc.
+*~
+*.swp
+.DS_Store
