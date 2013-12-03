@@ -9,10 +9,10 @@
     <title>{{ site.title }} - {{ page.title }}</title>
     
     <!-- Fav and touch icons -->
-    <link rel="shortcut icon" href="/assets/images/Urho3D_favicon.png">
-    <link rel="apple-touch-icon" href="/assets/images/Urho3D_favicon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/assets/images/Urho3D_favicon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/assets/images/Urho3D_favicon-114x114.png">
+    <link rel="shortcut icon" href="{{ BASE_PATH }}/assets/images/Urho3D_favicon.png">
+    <link rel="apple-touch-icon" href="{{ BASE_PATH }}/assets/images/Urho3D_favicon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ BASE_PATH }}/assets/images/Urho3D_favicon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ BASE_PATH }}/assets/images/Urho3D_favicon-114x114.png">
 
     <!-- atom & rss feed -->
     <link href="{{ BASE_PATH }}{{ site.JB.atom_path }}" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
@@ -32,7 +32,7 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1><a href="{{ HOME_PATH }}" title="{{ site.title }} Homepage"><img src="/assets/images/Urho3D_logo.jpg" alt="Urho3D_logo.jpg" height="42" width="153" /></a></h1>
+        <h1><a href="{{ HOME_PATH }}" title="{{ site.title }} Homepage"><img src="{{ BASE_PATH }}/assets/images/Urho3D_logo.jpg" alt="Urho3D_logo.jpg" height="42" width="153" /></a></h1>
         <p>{{ site.tagline }}</p>
         <ul>
             <li><a href="https://github.com/{{ site.organization.name }}/{{ site.organization.project }}/zipball/master">Download Latest <strong>ZIP File</strong></a></li>
@@ -40,15 +40,15 @@
             <li><a href="https://github.com/{{ site.organization.name }}/{{ site.organization.project }}">View On <strong>GitHub</strong></a></li>
         </ul>
         <p class="view">
-          <a href="/about.html">About<small>&nbsp;&nbsp;{{ site.title }}</small></a>
-          <a href="/Docs/html/index.html" target="_blank">Documentation<small>&nbsp;&nbsp;Manual and Scripting APIs</small></a><br>
-          <a href="/archive.html">Archive</a><br>
-          <a href="/categories.html">Categories</a><br>
-          <a href="/tags.html">Tags</a>
+          <a href="{{ BASE_PATH }}/about.html">About<small>&nbsp;&nbsp;{{ site.title }}</small></a>
+          <a href="{{ BASE_PATH }}/Docs/html/index.html" target="_blank">Documentation<small>&nbsp;&nbsp;Manual and Scripting APIs</small></a><br>
+          <a href="{{ BASE_PATH }}/archive.html">Archive</a><br>
+          <a href="{{ BASE_PATH }}/categories.html">Categories</a><br>
+          <a href="{{ BASE_PATH }}/tags.html">Tags</a>
         </p>
         <p class="view"><small>
-          <a href="{{ site.JB.atom_path }}"><img src="/assets/images/feeds.jpg" alt="feeds.jpg" />ATOM</a>&nbsp;
-          <a href="{{ site.JB.rss_path }}"><img src="/assets/images/feeds.jpg" alt="feeds.jpg" />RSS</a>
+          <a href="{{ BASE_PATH }}{{ site.JB.atom_path }}"><img src="{{ BASE_PATH }}/assets/images/feeds.jpg" alt="feeds.jpg" />ATOM</a>&nbsp;
+          <a href="{{ BASE_PATH }}{{ site.JB.rss_path }}"><img src="{{ BASE_PATH }}/assets/images/feeds.jpg" alt="feeds.jpg" />RSS</a>
         </small></p>
       </header>
       <section>
