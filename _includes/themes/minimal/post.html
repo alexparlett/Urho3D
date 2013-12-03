@@ -1,0 +1,14 @@
+<div class="post-meta">
+  <p class="date">{{ page.date | date: "<i>%d</i><b>%b</b>" }}</p>
+</div>
+<h1 class="post-title">{{ page.title }}
+  <div class="post-title-sub">
+    tags: {% for tag in page.tags %} <a href="/blog/tag/{{tag}}/" rel="tag"><i class="hash">#</i>{{tag}}</a>{% if forloop.last != true %},{% endif %}{% endfor %}
+  </div>
+</h1>
+<div class="posts">
+  {{ content }}
+</div>
+<div class="comments">
+  {% include JB/comments %}
+</div>

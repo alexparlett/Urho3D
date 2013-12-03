@@ -285,3 +285,84 @@ footer {
     color:#444;
   }
 }
+
+.post-meta {
+  float: left;
+  width: 40px;
+  margin-top: 2px;
+  margin-left: -50px;
+  border-right: 1px solid #E6E6E6;
+}
+
+.post-meta p {
+  margin: 0px;
+}
+
+.post-meta .date {
+  text-align: center;
+  line-height: 1.1em;
+  margin: 8px 0px 5px 0px;
+}
+
+.post-meta .date i {
+  font-style: normal;
+  font-size: 24px;
+  display: block;
+}
+
+.post-meta .date b {
+  font-family: 'ColaborateLightRegular', 'HelveticaNeue-Light', 'Helvetica Neue', Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  display: block;
+}
+
+.post-title {
+  font-size: 25px;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.post-title-sub {
+  color: #777;
+  font-size: 13px;
+  font-weight: normal;
+  position: absolute;
+  bottom: -13px;
+  left: 0px;
+}
+
+.page h1 {
+  font-weight: normal;
+  color: rgb(168, 168, 168);
+}
+
+.archive-date {
+  font-size: 13px;
+}
+
+.archive-title {
+  font-size: 18px;
+}
+
+.tag_box {
+  overflow: hidden;
+  padding: 5px 5px;
+}
+
+.tag_box.inline li {
+  float: left;
+  list-style: none;
+}
+
+.tag_box a {
+  padding: 3px 6px;
+  margin: 2px;
+  background: rgb(241, 241, 241);
+  border-radius: 3px;
+}
+
+.tag_box a span {
+  vertical-align: super;
+  font-size: 0.8em;
+}

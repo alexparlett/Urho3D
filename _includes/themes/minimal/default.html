@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="{{ site.author.name }}">
+    {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+    <title>{{ site.title }} - {{ page.title }}</title>
+    
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="/assets/images/Urho3D_favicon.png">
+    <link rel="apple-touch-icon" href="/assets/images/Urho3D_favicon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/images/Urho3D_favicon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/images/Urho3D_favicon-114x114.png">
+
+    <!-- atom & rss feed -->
+    <link href="{{ BASE_PATH }}{{ site.JB.atom_path }}" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+    <link href="{{ BASE_PATH }}{{ site.JB.rss_path }}" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ ASSET_PATH }}/css/styles.css">
+    <link rel="stylesheet" href="{{ ASSET_PATH }}/css/pygment_trac.css">
+    <link rel="stylesheet" href="{{ ASSET_PATH }}/css/webkit-scrollbar.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ ASSET_PATH }}/javascripts/webkit-scrollbar.js"></script>
+    
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="{{ HOME_PATH }}" title="{{ site.title }} Homepage"><img src="/assets/images/Urho3D_logo.jpg" alt="Urho3D_logo.jpg" height="42" width="153" /></a></h1>
+        <p>{{ site.tagline }}</p>
+        <ul>
+            <li><a href="https://github.com/{{ site.organization.name }}/{{ site.organization.project }}/zipball/master">Download Latest <strong>ZIP File</strong></a></li>
+            <li><a href="https://github.com/{{ site.organization.name }}/{{ site.organization.project }}/tarball/master">Download Latest<strong>TAR Ball</strong></a></li>
+            <li><a href="https://github.com/{{ site.organization.name }}/{{ site.organization.project }}">View On <strong>GitHub</strong></a></li>
+        </ul>
+        <p class="view">
+          <a href="/about.html">About<small>&nbsp;&nbsp;{{ site.title }}</small></a>
+          <a href="/Docs/html/index.html" target="_blank">Documentation<small>&nbsp;&nbsp;Manual and Scripting APIs</small></a><br>
+          <a href="/archive.html">Archive</a><br>
+          <a href="/categories.html">Categories</a><br>
+          <a href="/tags.html">Tags</a>
+        </p>
+        <p class="view"><small>
+          <a href="{{ site.JB.atom_path }}"><img src="/assets/images/feeds.jpg" alt="feeds.jpg" />ATOM</a>&nbsp;
+          <a href="{{ site.JB.rss_path }}"><img src="/assets/images/feeds.jpg" alt="feeds.jpg" />RSS</a>
+        </small></p>
+      </header>
+      <section>
+        {{ content }}
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/{{ site.organization.name }}">{{ site.organization.name }}</a>
+        <a title="hits counter" href="http://statcounter.com/" target="_blank"><img src="http://c.statcounter.com/9450146/0/54b7eae5/0/" alt="hits counter" style="border:none;"></a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a>
+          Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> &mdash; Bootstrapped by <a href="http://jekyllbootstrap.com/">jekyll-bootstrap</a><small></p>
+      </footer>
+    </div>
+    <script src="{{ ASSET_PATH }}/javascripts/scale.fix.js"></script>
+    
+    {% include JB/analytics %}
+  </body>
+</html>
