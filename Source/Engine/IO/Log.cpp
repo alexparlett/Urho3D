@@ -92,13 +92,8 @@ void Log::Open(const String& fileName)
     }
 
     logFile_ = new File(context_);
-    if (logFile_->Open(fileName, FILE_WRITE))
-        Write(LOG_INFO, "Opened log file " + fileName);
-    else
-    {
+    if (!logFile_->Open(fileName, FILE_WRITE))
         logFile_.Reset();
-        Write(LOG_ERROR, "Failed to create log file " + fileName);
-    }
     #endif
 }
 
@@ -128,6 +123,11 @@ void Log::SetTimeStamp(bool enable)
 void Log::SetQuiet(bool quiet)
 {
     quiet_ = quiet;
+}
+
+bool Log::IsOpen() const 
+{ 
+    return logFile_ ? logFile_->IsOpen() : false; 
 }
 
 void Log::Write(int level, const String& message)

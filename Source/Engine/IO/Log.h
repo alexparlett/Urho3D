@@ -99,6 +99,8 @@ public:
     String GetLastMessage() const { return lastMessage_; }
     /// Return whether log is in quiet mode (only errors printed to standard error stream).
     bool IsQuiet() const { return quiet_; }
+    /// Return whetehr log is open.
+    bool IsOpen() const;
 
     /// Write to the log. If logging level is higher than the level of the message, the message is ignored.
     static void Write(int level, const String& message);
