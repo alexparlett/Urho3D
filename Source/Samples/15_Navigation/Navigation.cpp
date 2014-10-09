@@ -44,15 +44,20 @@
 #include "XMLFile.h"
 #include "Zone.h"
 
+#include "DetourCrowdManager.h"
+#include "AnnotationBuilder.h"
 #include "Navigation.h"
 
 #include "DebugNew.h"
+
+
 
 DEFINE_APPLICATION_MAIN(Navigation)
 
 Navigation::Navigation(Context* context) :
     Sample(context),
-    drawDebug_(false)
+    drawDebug_(true),
+	crowdMng_(0)
 {
 }
 
@@ -121,7 +126,7 @@ void Navigation::CreateScene()
     for (unsigned i = 0; i < NUM_BOXES; ++i)
     {
         Node* boxNode = scene_->CreateChild("Box");
-        float size = 1.0f + Random(10.0f);
+		float size = 3.0f;// +Random(3.0f);
         boxNode->SetPosition(Vector3(Random(80.0f) - 40.0f, size * 0.5f, Random(80.0f) - 40.0f));
         boxNode->SetScale(size);
         StaticModel* boxObject = boxNode->CreateComponent<StaticModel>();
@@ -131,6 +136,13 @@ void Navigation::CreateScene()
         if (size >= 3.0f)
             boxObject->SetOccluder(true);
     }
+
+// 	Node* testNode = scene_->CreateChild("test");
+// 	testNode->SetPosition(Vector3(50.0f,  0.5f, 50.0f));
+// 	StaticModel* testObject = testNode->CreateComponent<StaticModel>();
+// 	testObject->SetModel(cache->GetResource<Model>("Models/nav_test.mdl"));
+
+
 
     // Create Jack node that will follow the path
     jackNode_ = scene_->CreateChild("Jack");
@@ -151,6 +163,7 @@ void Navigation::CreateScene()
     // Now build the navigation geometry. This will take some time. Note that the navigation mesh will prefer to use
     // physics geometry from the scene nodes, as it often is simpler, but if it can not find any (like in this example)
     // it will use renderable geometry instead
+	navMesh->SetKeepInterResults(true);
     navMesh->Build();
     
     // Create the camera. Limit far clip distance to match the fog
@@ -160,6 +173,32 @@ void Navigation::CreateScene()
     
     // Set an initial position for the camera scene node above the plane
     cameraNode_->SetPosition(Vector3(0.0f, 5.0f, 0.0f));
+
+	crowdMng_ = scene_->CreateComponent<DetourCrowdManager>();
+	crowdMng_->SetNavigationMesh(navMesh);
+	
+
+	bool b = crowdMng_->CreateCrowd();
+
+	if (crowdMng_)
+	{
+		int i = crowdMng_->AddAgent(crowdMng_->GetClosestWalkablePosition(Vector3(-5.0f, 0.0f, 20.0f)), 0.6f, 2.0f, 5.0f, 5.0f);
+		bool b = crowdMng_->SetAgentTarget(i, crowdMng_->GetClosestWalkablePosition(Vector3(10.0f, 0.0f, 10.0f)));
+		crowdMng_->UpdateAgentMaxSpeed(i, 4.0f);
+
+
+	}
+
+	annotationBuilder_ = new AnnotationBuilder(context_);
+	AnnotationBuilderConfig c;
+	c.agentClimb = navMesh->GetAgentMaxClimb();
+	c.agentHeight = navMesh->GetAgentHeight();
+	c.agentRadius = navMesh->GetAgentRadius();
+	c.cellHeight = navMesh->GetCellHeight();
+	c.cellSize = navMesh->GetCellSize();
+
+	annotationBuilder_->Build(c, navMesh);
+	annotationBuilder_->BuildAllEdges(EDGE_JUMP_DOWN);
 }
 
 void Navigation::CreateUI()
@@ -275,7 +314,7 @@ void Navigation::SetPathPoint()
     if (Raycast(250.0f, hitPos, hitDrawable))
     {
         Vector3 pathPos = navMesh->FindNearestPoint(hitPos, Vector3(1.0f, 1.0f, 1.0f));
-
+		bool b = crowdMng_->SetAgentTarget(0, pathPos);
         if (GetSubsystem<Input>()->GetQualifierDown(QUAL_SHIFT))
         {
             // Teleport
@@ -318,6 +357,7 @@ void Navigation::AddOrRemoveObject()
         
         // Rebuild part of the navigation mesh, then recalculate path if applicable
         NavigationMesh* navMesh = scene_->GetComponent<NavigationMesh>();
+		navMesh->SetKeepInterResults(true);
         navMesh->Build(updateBox);
         if (currentPath_.Size())
             navMesh->FindPath(currentPath_, jackNode_->GetPosition(), endPos_);
@@ -370,6 +410,14 @@ bool Navigation::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDrawa
 
 void Navigation::FollowPath(float timeStep)
 {
+	if (crowdMng_)
+	{
+		jackNode_->SetPosition(crowdMng_->GetAgentPosition(0));
+		Vector3 vel = crowdMng_->GetAgentCurrentVelocity(0);
+		Vector3  dvel =  crowdMng_->GetAgentDesiredVelocity(0);
+	}
+
+	return;
     if (currentPath_.Size())
     {
         Vector3 nextWaypoint = currentPath_[0]; // NB: currentPath[0] is the next waypoint in order
@@ -401,13 +449,23 @@ void Navigation::HandleUpdate(StringHash eventType, VariantMap& eventData)
 
     // Make Jack follow the Detour path
     FollowPath(timeStep);
+	if (crowdMng_)
+	{
+		crowdMng_->Update(timeStep);
+	}
+	
 }
 
 void Navigation::HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
 {
     // If draw debug mode is enabled, draw navigation mesh debug geometry
-    if (drawDebug_)
-        scene_->GetComponent<NavigationMesh>()->DrawDebugGeometry(true);
+	if (drawDebug_)
+	{
+		scene_->GetComponent<NavigationMesh>()->DrawDebug(DRAWMODE_NAVMESH, true, DRAWFLAG_CLOSEDLIST);
+		DebugRenderer* debug = scene_->GetComponent<DebugRenderer>();
+		annotationBuilder_->DrawDebug(debug, true, DRAW_ANNOTATIONS | DRAW_WALKABLE_BORDER);
+	}
+        
     
     if (currentPath_.Size())
     {

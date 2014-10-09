@@ -30,7 +30,8 @@ namespace Urho3D
 class Drawable;
 class Node;
 class Scene;
-
+class DetourCrowdManager;
+class AnnotationBuilder;
 }
 
 /// Navigation example.
@@ -159,4 +160,7 @@ private:
     SharedPtr<Node> jackNode_;
     /// Flag for drawing debug geometry.
     bool drawDebug_;
+
+	DetourCrowdManager* crowdMng_;
+	SharedPtr<AnnotationBuilder> annotationBuilder_;
 };
