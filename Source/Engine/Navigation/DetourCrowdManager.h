@@ -25,10 +25,13 @@
 #include "Component.h"
 
 class dtCrowd;
+struct dtCrowdAgent;
+struct dtCrowdAgentDebugInfo;
 
 namespace Urho3D
 {
 class NavigationMesh;
+class NavigationAgent;
 enum NavigationRegionType
 {
 	RegionType_Ground = 0,
@@ -64,7 +67,8 @@ enum NavigationPushiness
 class URHO3D_API DetourCrowdManager : public Component
 {
 		OBJECT(DetourCrowdManager);
-
+		friend class NavigationAgent;
+			  
 public:
 
 
@@ -75,34 +79,61 @@ public:
     /// Register object factory.
     static void RegisterObject(Context* context);
 
-	void SetNavigationMesh(NavigationMesh *navMesh);
-	NavigationMesh* GetNavigationMesh();
 
+	///
 	bool CreateCrowd();
-
+	///
 	void Update(float delta);
-
+	///
 	int AddAgent(Vector3 pos, float radius, float height, float accel, float maxSpeed);
+	///
 	void RemoveAgent(int agent);
 
+	///
 	void UpdateAgentNavigationQuality(int agent, NavigationAvoidanceQuality nq);
+	///
 	void UpdateAgentPushiness(int agent, NavigationPushiness pushiness);
+	///
 	void UpdateAgentMaxSpeed(int agent, float maxSpeed);
+	///
 	void UpdateAgentMaxAcceleration(int agent, float accel);
 
+	///
+	void SetNavigationMesh(NavigationMesh *navMesh);
+	///
 	bool SetAgentTarget(int agent, Vector3 target);
+	///
+	bool SetAgentTarget(int agent, Vector3 target, unsigned int & targetRef);
+	///
 	bool SetMoveVelocity(int agent, const Vector3 & velocity);
 
+	///
+	NavigationMesh* GetNavigationMesh();
+	///
 	Vector3 GetAgentPosition(int agent);
+	///
 	Vector3 GetAgentCurrentVelocity(int agent);
+	///
 	Vector3 GetAgentDesiredVelocity(int agent);
-
+	///
 	Vector3 GetClosestWalkablePosition(Vector3 pos);
 
+	/// 
+	void DrawDebug(DebugRenderer* debug, bool depthTest);
+protected:
+	const dtCrowdAgent * GetCrowdAgent(int agent);
+	void AddAgentComponent(NavigationAgent* agent);
+	void RemoveAgentComponent(NavigationAgent* agent);
+	dtCrowd * GetCrowd() { return crowd_; }
 private:
 	dtCrowd* crowd_;
 	WeakPtr<NavigationMesh> navMesh_;
+	/// \todo add an check if max agents reached to addagent /addagentcomponent ... ?
 	int maxAgents_;	
+	/// Agent Components 
+	PODVector<NavigationAgent*> agentComponents_;
+	///
+	dtCrowdAgentDebugInfo* agentDebug_;
 };
 
 }

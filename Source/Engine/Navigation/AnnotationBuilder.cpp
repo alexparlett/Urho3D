@@ -366,7 +366,7 @@ namespace Urho3D
 				AddEdgeLinks(sampler_);
 		}
 
-		FilterJumpOverLinks();
+		//FilterJumpOverLinks();
 	}
 
 	AnnotationBuilder::EdgeSampler* AnnotationBuilder::SampleEdge(int type, const float* sp, const float* sq)

@@ -53,6 +53,8 @@
 #include "DebugNew.h"
 #include "Pair.h"
 #include "HashMap.h"
+#include "AnnotationBuilder.h"
+#include "NavigationAgent.h"
 
 namespace Urho3D
 {
@@ -1466,14 +1468,7 @@ namespace Urho3D
 		}
 	}
 
-	void RegisterNavigationLibrary(Context* context)
-	{
-		Navigable::RegisterObject(context);
-		NavigationMesh::RegisterObject(context);
-		OffMeshConnection::RegisterObject(context);
-		DetourCrowdManager::RegisterObject(context);
-		DetourDebugRenderer::RegisterObject(context);
-	}
+
 
 	NavigationBuildData::NavigationBuildData() :
 		ctx_(new rcContext(false)),
@@ -1512,5 +1507,16 @@ namespace Urho3D
 		contourSet_ = 0;
 		polyMesh_ = 0;
 		polyMeshDetail_ = 0;
+	}
+
+	void RegisterNavigationLibrary(Context* context)
+	{
+		Navigable::RegisterObject(context);
+		NavigationMesh::RegisterObject(context);
+		OffMeshConnection::RegisterObject(context);
+		DetourCrowdManager::RegisterObject(context);
+		DetourDebugRenderer::RegisterObject(context);
+		AnnotationBuilder::RegisterObject(context);
+		NavigationAgent::RegisterObject(context);
 	}
 }

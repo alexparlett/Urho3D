@@ -49,6 +49,7 @@
 #include "Navigation.h"
 
 #include "DebugNew.h"
+#include "NavigationAgent.h"
 
 
 
@@ -133,8 +134,8 @@ void Navigation::CreateScene()
         boxObject->SetModel(cache->GetResource<Model>("Models/Box.mdl"));
         boxObject->SetMaterial(cache->GetResource<Material>("Materials/Stone.xml"));
         boxObject->SetCastShadows(true);
-        if (size >= 3.0f)
-            boxObject->SetOccluder(true);
+//         if (size >= 3.0f)
+//             boxObject->SetOccluder(true);
     }
 
 // 	Node* testNode = scene_->CreateChild("test");
@@ -182,9 +183,12 @@ void Navigation::CreateScene()
 
 	if (crowdMng_)
 	{
-		int i = crowdMng_->AddAgent(crowdMng_->GetClosestWalkablePosition(Vector3(-5.0f, 0.0f, 20.0f)), 0.6f, 2.0f, 5.0f, 5.0f);
-		bool b = crowdMng_->SetAgentTarget(i, crowdMng_->GetClosestWalkablePosition(Vector3(10.0f, 0.0f, 10.0f)));
-		crowdMng_->UpdateAgentMaxSpeed(i, 4.0f);
+
+		jackNode_->CreateComponent<NavigationAgent>();
+
+// 		int i = crowdMng_->AddAgent(crowdMng_->GetClosestWalkablePosition(Vector3(-5.0f, 0.0f, 20.0f)), 0.6f, 2.0f, 5.0f, 5.0f);
+// 		bool b = crowdMng_->SetAgentTarget(i, crowdMng_->GetClosestWalkablePosition(Vector3(10.0f, 0.0f, 10.0f)));
+// 		crowdMng_->UpdateAgentMaxSpeed(i, 4.0f);
 
 
 	}
@@ -410,12 +414,12 @@ bool Navigation::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDrawa
 
 void Navigation::FollowPath(float timeStep)
 {
-	if (crowdMng_)
-	{
-		jackNode_->SetPosition(crowdMng_->GetAgentPosition(0));
-		Vector3 vel = crowdMng_->GetAgentCurrentVelocity(0);
-		Vector3  dvel =  crowdMng_->GetAgentDesiredVelocity(0);
-	}
+// 	if (crowdMng_)
+// 	{
+// 		jackNode_->SetPosition(crowdMng_->GetAgentPosition(0));
+// 		Vector3 vel = crowdMng_->GetAgentCurrentVelocity(0);
+// 		Vector3  dvel =  crowdMng_->GetAgentDesiredVelocity(0);
+// 	}
 
 	return;
     if (currentPath_.Size())
@@ -461,27 +465,28 @@ void Navigation::HandlePostRenderUpdate(StringHash eventType, VariantMap& eventD
     // If draw debug mode is enabled, draw navigation mesh debug geometry
 	if (drawDebug_)
 	{
-		scene_->GetComponent<NavigationMesh>()->DrawDebug(DRAWMODE_NAVMESH, true, DRAWFLAG_CLOSEDLIST);
+	//	scene_->GetComponent<NavigationMesh>()->DrawDebug(DRAWMODE_NAVMESH, true, DRAWFLAG_CLOSEDLIST);
 		DebugRenderer* debug = scene_->GetComponent<DebugRenderer>();
 		annotationBuilder_->DrawDebug(debug, true, DRAW_ANNOTATIONS | DRAW_WALKABLE_BORDER);
+		crowdMng_->DrawDebug(debug, true);
 	}
         
     
-    if (currentPath_.Size())
-    {
-        // Visualize the current calculated path
-        DebugRenderer* debug = scene_->GetComponent<DebugRenderer>();
-        debug->AddBoundingBox(BoundingBox(endPos_ - Vector3(0.1f, 0.1f, 0.1f), endPos_ + Vector3(0.1f, 0.1f, 0.1f)),
-            Color(1.0f, 1.0f, 1.0f));
-
-        // Draw the path with a small upward bias so that it does not clip into the surfaces
-        Vector3 bias(0.0f, 0.05f, 0.0f);
-        debug->AddLine(jackNode_->GetPosition() + bias, currentPath_[0] + bias, Color(1.0f, 1.0f, 1.0f));
-
-        if (currentPath_.Size() > 1)
-        {
-            for (unsigned i = 0; i < currentPath_.Size() - 1; ++i)
-                debug->AddLine(currentPath_[i] + bias, currentPath_[i + 1] + bias, Color(1.0f, 1.0f, 1.0f));
-        }
-    }
+//     if (currentPath_.Size())
+//     {
+//         // Visualize the current calculated path
+//         DebugRenderer* debug = scene_->GetComponent<DebugRenderer>();
+//         debug->AddBoundingBox(BoundingBox(endPos_ - Vector3(0.1f, 0.1f, 0.1f), endPos_ + Vector3(0.1f, 0.1f, 0.1f)),
+//             Color(1.0f, 1.0f, 1.0f));
+// 
+//         // Draw the path with a small upward bias so that it does not clip into the surfaces
+//         Vector3 bias(0.0f, 0.05f, 0.0f);
+//         debug->AddLine(jackNode_->GetPosition() + bias, currentPath_[0] + bias, Color(1.0f, 1.0f, 1.0f));
+// 
+//         if (currentPath_.Size() > 1)
+//         {
+//             for (unsigned i = 0; i < currentPath_.Size() - 1; ++i)
+//                 debug->AddLine(currentPath_[i] + bias, currentPath_[i + 1] + bias, Color(1.0f, 1.0f, 1.0f));
+//         }
+//     }
 }
