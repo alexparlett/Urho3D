@@ -114,7 +114,7 @@ namespace Urho3D
 		}
 
 		// Make polygons with 'disabled' flag invalid.
-		crowd_->getEditableFilter(0)->setExcludeFlags(NavigationPolyFlags::PolyFlags_Disabled | NavigationPolyFlags::PolyFlags_Swim);
+		crowd_->getEditableFilter(0)->setExcludeFlags(PolyFlags_Disabled | PolyFlags_Swim);
 
 		// Setup local avoidance params to different qualities.
 		dtObstacleAvoidanceParams params;
