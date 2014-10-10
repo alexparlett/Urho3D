@@ -192,10 +192,10 @@ Urho3D::NavigationAgentState NavigationAgent::GetAgentState() const
 	{
 		const dtCrowdAgent * agent = crowdManager_->GetCrowdAgent(agentCrowdId_);
 		if (!agent || !agent->active)
-			return NavigationAgentState::NAV_AGENT_INVALID;
+			return NAV_AGENT_INVALID;
 		return (NavigationAgentState)agent->state;
 	}
-	return NavigationAgentState::NAV_AGENT_INVALID;
+	return NAV_AGENT_INVALID;
 
 
 }
@@ -206,7 +206,7 @@ Urho3D::NavigationTargetState NavigationAgent::GetTargetState() const
 	{
 		const dtCrowdAgent * agent = crowdManager_->GetCrowdAgent(agentCrowdId_);
 		if (!agent || !agent->active)
-			return NavigationTargetState::NAV_AGENT_TARGET_NONE;
+			return NAV_AGENT_TARGET_NONE;
 
 		// Determine if we've arrived at the target
 		if (agent->targetState == DT_CROWDAGENT_TARGET_VALID)
@@ -219,7 +219,7 @@ Urho3D::NavigationTargetState NavigationAgent::GetTargetState() const
 				{
 					// Within its own radius of the goal?
 					if (dtVdist2D(agent->npos, &agent->cornerVerts[(agent->ncorners - 1) * 3]) <= agent->params.radius)
-						return NavigationTargetState::NAV_AGENT_TARGET_ARRIVED;
+						return NAV_AGENT_TARGET_ARRIVED;
 
 				} // End if reaching end
 
@@ -229,7 +229,7 @@ Urho3D::NavigationTargetState NavigationAgent::GetTargetState() const
 		// Return the underlying state.
 		return (NavigationTargetState)agent->targetState;
 	}
-	return NavigationTargetState::NAV_AGENT_TARGET_NONE;
+	return NAV_AGENT_TARGET_NONE;
 }
 
 void NavigationAgent::SetUpdateNodePosition(bool unodepos)
