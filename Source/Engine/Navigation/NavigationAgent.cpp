@@ -30,6 +30,8 @@
 #include "Log.h"
 #include "DetourCrowdManager.h"
 #include "Profiler.h"
+#include "Serializable.h"
+#include "Variant.h"
 
 #include <DetourCommon.h>
 #include <DetourCrowd.h>
@@ -38,11 +40,15 @@
 
 
 
+
+
 namespace Urho3D
 {
 
 extern const char* NAVIGATION_CATEGORY;
 
+static const float DEFAULT_AGENT_MAX_SPEED = 5.0f;
+static const float DEFAULT_AGENT_MAX_ACCEL = 3.6f;
 
 
 NavigationAgent::NavigationAgent(Context* context) :
@@ -50,7 +56,9 @@ NavigationAgent::NavigationAgent(Context* context) :
 	inCrowd_(false),
 	agentCrowdId_(-1),
 	targetRef_(-1),
-	updateNodePosition_(true)
+	updateNodePosition_(true),
+	maxAccel_(DEFAULT_AGENT_MAX_ACCEL),
+	maxSpeed_(DEFAULT_AGENT_MAX_SPEED)
 {
 
 }
@@ -62,6 +70,9 @@ NavigationAgent::~NavigationAgent()
 void NavigationAgent::RegisterObject(Context* context)
 {
 	context->RegisterFactory<NavigationAgent>(NAVIGATION_CATEGORY);
+
+	ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Accel", GetMaxAccel, SetMaxAccel, float, DEFAULT_AGENT_MAX_ACCEL, AM_DEFAULT);
+	ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Speed", GetMaxSpeed, SetMaxSpeed, float, DEFAULT_AGENT_MAX_SPEED, AM_DEFAULT);
 }
 
 void NavigationAgent::OnNodeSet(Node* node)
@@ -72,12 +83,16 @@ void NavigationAgent::OnNodeSet(Node* node)
 		if (scene)
 		{
 			if (scene == node)
-				LOGWARNING(GetTypeName() + " should not be created to the root scene node");
+				LOGWARNING(GetTypeName() + " should not be created to the root scene node");		
+				/// \todo error handling if no DetourCrowdManager component was created
+				crowdManager_ = scene->GetOrCreateComponent<DetourCrowdManager>();
+				// 
+				//crowdManager_ = scene->GetOrCreateComponent<DetourCrowdManager>();
+				//crowdManager_->AddAgent(this);
 
-			crowdManager_ = scene->GetOrCreateComponent<DetourCrowdManager>();
-			//crowdManager_->AddAgent(this);
+				AddAgentToCrowd();
+			
 
- 			AddAgentToCrowd();
 		}
 		else
 			LOGERROR("Node is detached from scene, can not create rigid body");
@@ -108,19 +123,17 @@ void NavigationAgent::AddAgentToCrowd()
 	else
 	{
 		inCrowd_ = true;
-		agentCrowdId_ = crowdManager_->AddAgent(node_->GetPosition(), 0.6f, 2.0f, 5.0f, 5.0f);
+		agentCrowdId_ = crowdManager_->AddAgent(node_->GetPosition(), maxAccel_, maxSpeed_);
 		if (agentCrowdId_ == -1)
 		{
+			inCrowd_ = false;
 			LOGERROR("AddAgentToCrowd: Could not add agent to crowd!");
 			return;
 		}
 		crowdManager_->AddAgentComponent(this);
 		dtCrowdAgentParams params = crowdManager_->GetCrowd()->getEditableAgent(agentCrowdId_)->params;
-		params.userData = this;
 		//  add this component as a userpointer in dtCrowdAgentParams ? 
-		//	/// User defined data attached to the agent.
-		//  void* userData;
-	
+		params.userData = this;
 	}
 }
 

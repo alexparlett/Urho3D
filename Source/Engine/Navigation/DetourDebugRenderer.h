@@ -29,7 +29,7 @@
 namespace Urho3D
 {
 	class DebugRenderer;
-/// Component which tags geometry for inclusion in the navigation mesh. Optionally auto-includes geometry from child nodes.
+/// DetourDebugRenderer
 class URHO3D_API DetourDebugRenderer : public Object, public duDebugDraw
 {
 	OBJECT(DetourDebugRenderer);

@@ -30,24 +30,28 @@ namespace Urho3D
 class Drawable;
 class Node;
 class Scene;
+class DetourCrowdManager;
 
 }
 
-/// Navigation example.
+/// DetourCrowd example.
 /// This sample demonstrates:
 ///     - Generating a navigation mesh into the scene
-///     - Performing path queries to the navigation mesh
+///     - Creating the detour crowd manager into the scene
 ///     - Rebuilding the navigation mesh partially when adding or removing objects
 ///     - Visualizing custom debug geometry
 ///     - Raycasting drawable components
-///     - Making a node follow the Detour path
-class Navigation : public Sample
+///     - Creating detour crowd agents and let them move randomly 
+///     - Controlling a DT agent:
+///							- setting a target point (mouse click)
+
+class DetourCrowd : public Sample
 {
-    OBJECT(Navigation);
+    OBJECT(DetourCrowd);
 
 public:
     /// Construct.
-    Navigation(Context* context);
+    DetourCrowd(Context* context);
 
     /// Setup after engine initialization and before running the main loop.
     virtual void Start();
@@ -144,19 +148,18 @@ private:
     Node* CreateMushroom(const Vector3& pos);
     /// Utility function to raycast to the cursor position. Return true if hit
     bool Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDrawable);
-    /// Make Jack follow the Detour path.
-    void FollowPath(float timeStep);
     /// Handle the logic update event.
     void HandleUpdate(StringHash eventType, VariantMap& eventData);
     /// Handle the post-render update event.
     void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData);
 
-    /// Last calculated path.
-    PODVector<Vector3> currentPath_;
-    /// Path end position.
-    Vector3 endPos_;
     /// Jack scene node.
     SharedPtr<Node> jackNode_;
     /// Flag for drawing debug geometry.
     bool drawDebug_;
+	/// Cached Detour Crowd Manager Component, which was added to the scene.
+	SharedPtr<DetourCrowdManager> crowdMng_;
+	/// Cached player controlled detour crowd agent.
+	NavigationAgent* playerAgent_;
+
 };

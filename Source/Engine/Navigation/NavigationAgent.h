@@ -48,7 +48,12 @@ enum NavigationAgentState
 	NAV_AGENT_READY,			///< The agent is traversing a normal navigation mesh polygon
 	NAV_AGENT_TRAVERSINGLINK	///< The agent is traversing an off-mesh connection.
 };
-		
+
+
+/// Root scene node must have an DetourCrowdManager Component!
+/// Do not create to the root scene node!
+/// Agents radius and height is set through the navigation mesh.
+/// 
 class URHO3D_API NavigationAgent : public Component
 {
 		OBJECT(NavigationAgent);
@@ -69,6 +74,11 @@ public:
 	bool SetMoveVelocity(const Vector3& velocity);
 	/// Update the nodes position.
 	void SetUpdateNodePosition(bool unodepos);
+	/// Sets the agents max acceleration.
+	void SetMaxAccel( float val)		{ maxAccel_ = val; }
+	/// Sets the agents max velocity.
+	void SetMaxSpeed( float val)		{ maxSpeed_ = val; }
+
 
 	/// Returns the agents position.
 	Vector3 GetPosition() const;
@@ -85,7 +95,12 @@ public:
 	/// Returns if the nodes position is updating because of the crowd.
 	bool GetUpdateNodePosition();
 	/// Returns the agent id.
-	int GetAgentCrowdId(){ return agentCrowdId_; }
+	int GetAgentCrowdId()	const	{ return agentCrowdId_; }
+	/// Gets the agents max velocity.
+	float GetMaxSpeed()		const	{ return maxSpeed_; }
+	/// Gets the agents max acceleration.
+	float GetMaxAccel()		const	{ return maxAccel_; }
+
 	/// Updates the nodes position if updateNodePosition is set. Is called in DetourCrowdManager::Update().
 	virtual void OnNavigationAgentReposition(const Vector3& newPos);
 
@@ -95,7 +110,7 @@ protected:
 	/// \todo Handle node transform being dirtied.
 	virtual void OnMarkedDirty(Node* node);
 private:
-	/// Create  or re-add 
+	/// Create or re-add 
 	void AddAgentToCrowd();
 	/// Remove 
 	void RemoveAgentFromCrowd();
@@ -111,6 +126,10 @@ private:
 	Vector3 targetPosition_;   
 	/// update nodes position ?
 	bool updateNodePosition_;
+	/// Agents max acceleration.
+	float maxAccel_;
+	/// Agents max Velocity.
+	float maxSpeed_;
 };
 
 }

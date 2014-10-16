@@ -63,15 +63,15 @@ enum NavigationPushiness
 	PUSHINESS_HIGH
 };
 
-/// Component which tags geometry for inclusion in the navigation mesh. Optionally auto-includes geometry from child nodes.
+/// Detour Crowd Simulation Scene Component. Should be added only to the root scene node.
+/// Agents radius and height is set through the navigation mesh.
+/// \todo support multiple agents radii and heights
 class URHO3D_API DetourCrowdManager : public Component
 {
 		OBJECT(DetourCrowdManager);
 		friend class NavigationAgent;
 			  
 public:
-
-
     /// Construct.
 	DetourCrowdManager(Context* context);
     /// Destruct.
@@ -80,59 +80,79 @@ public:
     static void RegisterObject(Context* context);
 
 
-	///
+	/// Assigns the navigation mesh for the crowd.
+	void SetNavigationMesh(NavigationMesh *navMesh);
+	/// Get the Navigation mesh assigned to the crowd.
+	NavigationMesh* GetNavigationMesh();
+
+	/// Create detour crowd component for the specified navigation mesh.
 	bool CreateCrowd();
-	///
+
+	/// Update the crod simulation
 	void Update(float delta);
-	///
-	int AddAgent(Vector3 pos, float radius, float height, float accel, float maxSpeed);
-	///
+
+	/// Create and adds an detour crowd agent.
+	/// Agents radius and height is set through the navigation mesh!
+	int AddAgent(Vector3 pos,  float maxaccel, float maxSpeed);
+	/// Removes the detour crowd agent.
 	void RemoveAgent(int agent);
 
-	///
+	/// Update the Navigation Agents Avoidance Quality for the specified agent.
 	void UpdateAgentNavigationQuality(int agent, NavigationAvoidanceQuality nq);
-	///
+	/// Update the Navigation Agents Pushiness for the specified agent.
 	void UpdateAgentPushiness(int agent, NavigationPushiness pushiness);
-	///
+	/// Update the Navigation Agents MaxSpeed for the specified agent.
 	void UpdateAgentMaxSpeed(int agent, float maxSpeed);
-	///
+	/// Update the Navigation Agents MaxAcceleration for the specified agent.
 	void UpdateAgentMaxAcceleration(int agent, float accel);
 
-	///
-	void SetNavigationMesh(NavigationMesh *navMesh);
-	///
+	/// Sets the move target for the specified agent.
 	bool SetAgentTarget(int agent, Vector3 target);
-	///
+	/// Sets the move target for the specified agent.
 	bool SetAgentTarget(int agent, Vector3 target, unsigned int & targetRef);
-	///
+	/// Sets the move velocity for the specified agent.
 	bool SetMoveVelocity(int agent, const Vector3 & velocity);
 
-	///
-	NavigationMesh* GetNavigationMesh();
-	///
+	/// Gets the agents position for the specified agent.
 	Vector3 GetAgentPosition(int agent);
-	///
+	/// Gets the agents current velocity for the specified agent.
 	Vector3 GetAgentCurrentVelocity(int agent);
-	///
+	/// Gets the agents desired velocity for the specified agent.
 	Vector3 GetAgentDesiredVelocity(int agent);
-	///
+
+	/// Gets the closest walkable position.
 	Vector3 GetClosestWalkablePosition(Vector3 pos);
 
-	/// 
+	/// Gets all agents.
+	const PODVector<NavigationAgent*>& GetNavigationAgents() const;
+	/// \todo add flags to specify what to show. path line , Velocity, Paths corridor polys ...
+	/// Draw the agents debug data. 
 	void DrawDebug(DebugRenderer* debug, bool depthTest);
 protected:
+	/// Handle node being assigned.
+	virtual void OnNodeSet(Node* node);
+	/// Gets the detour crowd agent.
 	const dtCrowdAgent * GetCrowdAgent(int agent);
+	/// Adds the agent scene component to the list. Called from NavigationAgent.
 	void AddAgentComponent(NavigationAgent* agent);
+	/// Removes the agent scene component from the list. Called from NavigationAgent.
 	void RemoveAgentComponent(NavigationAgent* agent);
-	dtCrowd * GetCrowd() { return crowd_; }
+	/// Gets the internal detour crowd component.
+	dtCrowd * GetCrowd();
 private:
+	/// Handle the scene subsystem update event, step simulation here.
+	void HandleSceneSubsystemUpdate(StringHash eventType, VariantMap& eventData);
+
+	/// internal crowd component
 	dtCrowd* crowd_;
+	/// NavigationMesh for which the crowd was created
 	WeakPtr<NavigationMesh> navMesh_;
 	/// \todo add an check if max agents reached to addagent /addagentcomponent ... ?
+	/// max agents for the crowd 
 	int maxAgents_;	
 	/// Agent Components 
 	PODVector<NavigationAgent*> agentComponents_;
-	///
+	/// internal debug information 
 	dtCrowdAgentDebugInfo* agentDebug_;
 };
 

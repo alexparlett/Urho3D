@@ -34,8 +34,9 @@
 #include "DebugRenderer.h"
 
 #include "DebugNew.h"
-
-
+#include "SceneEvents.h"
+#include "Component.h"
+#include "Node.h"
 
 namespace Urho3D
 {
@@ -66,7 +67,6 @@ namespace Urho3D
 		dtFreeCrowd(crowd_);
 		if (agentDebug_)
 			delete agentDebug_;
-		
 	}
 
 	void DetourCrowdManager::RegisterObject(Context* context)
@@ -97,14 +97,13 @@ namespace Urho3D
 		if (navMesh_->navMeshQuery_ == 0)
 		if (!navMesh_->InitializeQuery())
 			return false;
-
 		if (crowd_ == 0)
 			crowd_ = dtAllocCrowd();
-
 		if (agentDebug_ == NULL)
 		{
 			agentDebug_ = new dtCrowdAgentDebugInfo();
 		}
+
 		// Initialize the crowd
 		bool b = crowd_->init(maxAgents_, navMesh_->GetAgentRadius(), navMesh_->navMesh_);
 		if (b == false)
@@ -151,14 +150,14 @@ namespace Urho3D
 		return true;
 	}
 
-	int DetourCrowdManager::AddAgent(Vector3 pos, float radius, float height, float accel, float maxSpeed)
+	int DetourCrowdManager::AddAgent(Vector3 pos, float maxaccel, float maxSpeed)
 	{
-		if (crowd_ == 0)
+		if (crowd_ == 0 && navMesh_.Expired())
 			return -1;
 		dtCrowdAgentParams params;
-		params.radius = radius;
-		params.height = height;
-		params.maxAcceleration = accel;
+		params.radius = navMesh_->GetAgentRadius();
+		params.height = navMesh_->GetAgentHeight();
+		params.maxAcceleration = maxaccel;
 		params.maxSpeed = maxSpeed;
 		params.collisionQueryRange = params.radius * 8.0f;
 		params.pathOptimizationRange = params.radius * 30.0f;
@@ -183,6 +182,8 @@ namespace Urho3D
 			&polyRef,
 			nearestPos);
 
+		MarkNetworkUpdate();
+
 		return crowd_->addAgent(nearestPos, &params);
 	}
 
@@ -191,6 +192,7 @@ namespace Urho3D
 		if (crowd_ == 0)
 			return;
 		crowd_->removeAgent(agent);
+		MarkNetworkUpdate();
 	}
 
 	void DetourCrowdManager::UpdateAgentNavigationQuality(int agent, NavigationAvoidanceQuality nq)
@@ -238,6 +240,8 @@ namespace Urho3D
 		}
 
 		crowd_->updateAgentParameters(agent, &params);
+
+		MarkNetworkUpdate();
 	}
 
 	void DetourCrowdManager::UpdateAgentPushiness(int agent, NavigationPushiness pushiness)
@@ -264,6 +268,8 @@ namespace Urho3D
 			break;
 		}
 		crowd_->updateAgentParameters(agent, &params);
+
+		MarkNetworkUpdate();
 	}
 
 	void DetourCrowdManager::UpdateAgentMaxSpeed(int agent, float maxSpeed)
@@ -273,6 +279,8 @@ namespace Urho3D
 		dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
 		params.maxSpeed = maxSpeed;
 		crowd_->updateAgentParameters(agent, &params);
+
+		MarkNetworkUpdate();
 	}
 
 	void DetourCrowdManager::UpdateAgentMaxAcceleration(int agent, float accel)
@@ -282,6 +290,8 @@ namespace Urho3D
 		dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
 		params.maxAcceleration = accel;
 		crowd_->updateAgentParameters(agent, &params);
+
+		MarkNetworkUpdate();
 	}
 
 	bool DetourCrowdManager::SetAgentTarget(int agent, Vector3 target)
@@ -402,31 +412,32 @@ namespace Urho3D
 	{
 		if (crowd_ == 0)
 			return;
-		crowd_->update(delta, agentDebug_); //, dtCrowdAgentDebugInfo* debug);
+
+		crowd_->update(delta, agentDebug_);
 
 		/// \todo  use this ?
-	PODVector<NavigationAgent*>::Iterator it;
-	for (it = agentComponents_.Begin(); it != agentComponents_.End(); it++)
-	{
-		(*it)->OnNavigationAgentReposition(FloatToVec3(crowd_->getAgent((*it)->GetAgentCrowdId())->npos));
-	}
+		PODVector<NavigationAgent*>::Iterator it;
+		for (it = agentComponents_.Begin(); it != agentComponents_.End(); it++)
+		{
+			(*it)->OnNavigationAgentReposition(FloatToVec3(crowd_->getAgent((*it)->GetAgentCrowdId())->npos));
+		}
 		/// or use events ?
 		/// or use this
-		/// problem if you dont use NavigationAgent component ... 
-// 		dtCrowdAgent* _agents[MAX_AGENTS] = { NULL };
-// 		//memset(_agents, 0, MAX_AGENTS * sizeof(*_agents));
-// 		int count = crowd_->getActiveAgents(_agents, MAX_AGENTS);
-// 		for (int i = 0; i < count; i++)
-// 		{
-// 			if (_agents[i])
-// 			{
-// 				NavigationAgent* a = static_cast<NavigationAgent*>(_agents[i]->params.userData);
-// 				if (a)
-// 				{
-// 					a->OnNavigationAgentReposition(FloatToVec3(_agents[i]->npos));
-// 				}
-// 			}
-// 		}
+		/// but there is a problem if you dont use NavigationAgent components ...
+		// 		dtCrowdAgent* _agents[MAX_AGENTS] = { NULL };
+		// 		//memset(_agents, 0, MAX_AGENTS * sizeof(*_agents));
+		// 		int count = crowd_->getActiveAgents(_agents, MAX_AGENTS);
+		// 		for (int i = 0; i < count; i++)
+		// 		{
+		// 			if (_agents[i])
+		// 			{
+		// 				NavigationAgent* a = static_cast<NavigationAgent*>(_agents[i]->params.userData);
+		// 				if (a)
+		// 				{
+		// 					a->OnNavigationAgentReposition(FloatToVec3(_agents[i]->npos));
+		// 				}
+		// 			}
+		// 		}
 	}
 
 	const dtCrowdAgent * DetourCrowdManager::GetCrowdAgent(int agent)
@@ -448,7 +459,7 @@ namespace Urho3D
 
 	void DetourCrowdManager::DrawDebug(DebugRenderer* debug, bool depthTest)
 	{
-		if (debug && navMesh_.NotNull() )
+		if (debug && navMesh_.NotNull())
 		{
 			PROFILE(DrawDebugDetourCrowdManager);
 			DetourDebugRenderer dd(context_);
@@ -456,17 +467,17 @@ namespace Urho3D
 			dd.depthMask(depthTest);
 
 			// Paths corridor polys
-			for (int i = 0; i < crowd_->getAgentCount(); i++)
-			{
-				const dtCrowdAgent* ag = crowd_->getAgent(i);
-				if (!ag->active)
-					continue;
-				const dtPolyRef* path = ag->corridor.getPath();
-				const int npath = ag->corridor.getPathCount();
-				// Draw path corridor polys
-				for (int j = 0; j < npath; ++j)
-					duDebugDrawNavMeshPoly(&dd, *navMesh_->navMesh_, path[j], duRGBA(255, 255, 255, 5));
-			}
+// 			for (int i = 0; i < crowd_->getAgentCount(); i++)
+// 			{
+// 				const dtCrowdAgent* ag = crowd_->getAgent(i);
+// 				if (!ag->active)
+// 					continue;
+// 				const dtPolyRef* path = ag->corridor.getPath();
+// 				const int npath = ag->corridor.getPathCount();
+// 				// Draw path corridor polys
+// 				for (int j = 0; j < npath; ++j)
+// 					duDebugDrawNavMeshPoly(&dd, *navMesh_->navMesh_, path[j], duRGBA(255, 255, 255, 5));
+// 			}
 
 			// Current position-to-target line
 			for (int i = 0; i < crowd_->getAgentCount(); i++)
@@ -483,8 +494,8 @@ namespace Urho3D
 				for (int i = 0; i < ag->ncorners; ++i)
 				{
 					pos2.x_ = ag->cornerVerts[i * 3];
-					pos2.y_ =  ag->cornerVerts[i * 3 + 1];
-					pos2.z_ =  ag->cornerVerts[i * 3 + 2];
+					pos2.y_ = ag->cornerVerts[i * 3 + 1];
+					pos2.z_ = ag->cornerVerts[i * 3 + 2];
 					debug->AddLine(pos1, pos2, color, depthTest);
 					pos1 = pos2;
 				}
@@ -494,7 +505,7 @@ namespace Urho3D
 				debug->AddLine(pos1, pos2, color, depthTest);
 
 				// Target circle
-				debug->AddSphere(Sphere(pos2,0.5f), color, depthTest);
+				debug->AddSphere(Sphere(pos2, 0.5f), color, depthTest);
 			}
 
 			// Velocity stuff.
@@ -529,6 +540,32 @@ namespace Urho3D
 					pos[0] + vel[0], pos[1] + height + vel[1], pos[2] + vel[2],
 					0.0f, 0.4f, duRGBA(0, 0, 0, 160), 2.0f);
 			}
+		}
+	}
+
+	const PODVector<NavigationAgent*>& DetourCrowdManager::GetNavigationAgents() const
+	{
+		return agentComponents_;
+	}
+
+	dtCrowd * DetourCrowdManager::GetCrowd()
+	{
+		return crowd_;
+	}
+
+	void DetourCrowdManager::HandleSceneSubsystemUpdate(StringHash eventType, VariantMap& eventData)
+	{
+		using namespace SceneSubsystemUpdate;
+
+		Update(eventData[P_TIMESTEP].GetFloat());
+	}
+
+	void DetourCrowdManager::OnNodeSet(Node* node)
+	{
+		// Subscribe to the scene subsystem update, which will trigger the crowd update step
+		if (node)
+		{			
+			SubscribeToEvent(node, E_SCENESUBSYSTEMUPDATE, HANDLER(DetourCrowdManager, HandleSceneSubsystemUpdate));
 		}
 	}
 
