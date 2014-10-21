@@ -178,6 +178,8 @@ void DetourCrowd::CreateScene()
 	if (b)
 	{
 		playerAgent_ = jackNode_->CreateComponent<NavigationAgent>();
+		playerAgent_->SetMaxAccel(1000.0f);
+		playerAgent_->SetNavigationPushiness(PUSHINESS_LOW);
 		
 		for (int i = 0; i < 50; i++)
 		{
@@ -201,6 +203,9 @@ void DetourCrowd::CreateScene()
 				a->SetMoveTarget(pos);
 			}
 		}
+		
+		playerAgent_->SetNavigationPushiness(PUSHINESS_HIGH);
+		playerAgent_->SetNavigationQuality(NAVIGATIONQUALITY_HIGH);
 	}
 	else
 	{

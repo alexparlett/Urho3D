@@ -23,6 +23,7 @@
 #pragma once
 
 #include "Component.h"
+#include "DetourCrowdManager.h"
 
 namespace Urho3D
 {
@@ -75,9 +76,13 @@ public:
 	/// Update the nodes position.
 	void SetUpdateNodePosition(bool unodepos);
 	/// Sets the agents max acceleration.
-	void SetMaxAccel( float val)		{ maxAccel_ = val; }
+	void SetMaxAccel( float val);
 	/// Sets the agents max velocity.
-	void SetMaxSpeed( float val)		{ maxSpeed_ = val; }
+	void SetMaxSpeed( float val);
+	/// Sets the agent's navigation quality
+	void SetNavigationQuality(NavigationAvoidanceQuality val);
+	/// Sets the agent's navigation pushiness
+	void SetNavigationPushiness(NavigationPushiness val);
 
 
 	/// Returns the agents position.
@@ -100,6 +105,11 @@ public:
 	float GetMaxSpeed()		const	{ return maxSpeed_; }
 	/// Gets the agents max acceleration.
 	float GetMaxAccel()		const	{ return maxAccel_; }
+	/// Gets the agent's navigation quality
+	NavigationAvoidanceQuality GetNavigationQuality() const {return navQuality_; }
+	/// Gets the agent's navigation pushiness
+	NavigationPushiness GetNavigationPushiness() const {return navPushiness_; }
+	
 
 	/// Updates the nodes position if updateNodePosition is set. Is called in DetourCrowdManager::Update().
 	virtual void OnNavigationAgentReposition(const Vector3& newPos);
@@ -130,6 +140,10 @@ private:
 	float maxAccel_;
 	/// Agents max Velocity.
 	float maxSpeed_;
+	/// Agent's NavigationAvoidanceQuality
+	NavigationAvoidanceQuality navQuality_;
+	/// Agent's Navigation Pushiness
+	NavigationPushiness navPushiness_;
 };
 
 }

@@ -49,6 +49,8 @@ extern const char* NAVIGATION_CATEGORY;
 
 static const float DEFAULT_AGENT_MAX_SPEED = 5.0f;
 static const float DEFAULT_AGENT_MAX_ACCEL = 3.6f;
+static const NavigationAvoidanceQuality DEFAULT_AGENT_AVOIDANCE_QUALITY=NAVIGATIONQUALITY_MED;
+static const NavigationPushiness DEFAULT_AGENT_NAVIGATION_PUSHINESS=PUSHINESS_MEDIUM;
 
 
 NavigationAgent::NavigationAgent(Context* context) :
@@ -58,7 +60,9 @@ NavigationAgent::NavigationAgent(Context* context) :
 	targetRef_(-1),
 	updateNodePosition_(true),
 	maxAccel_(DEFAULT_AGENT_MAX_ACCEL),
-	maxSpeed_(DEFAULT_AGENT_MAX_SPEED)
+	maxSpeed_(DEFAULT_AGENT_MAX_SPEED),
+	navQuality_(DEFAULT_AGENT_AVOIDANCE_QUALITY),
+	navPushiness_(DEFAULT_AGENT_NAVIGATION_PUSHINESS)
 {
 
 }
@@ -91,11 +95,9 @@ void NavigationAgent::OnNodeSet(Node* node)
 				//crowdManager_->AddAgent(this);
 
 				AddAgentToCrowd();
-			
-
 		}
 		else
-			LOGERROR("Node is detached from scene, can not create rigid body");
+			LOGERROR("Node is detached from scene, can not create navigation agent.");
 
 		node->AddListener(this);
 	}
@@ -134,6 +136,8 @@ void NavigationAgent::AddAgentToCrowd()
 		dtCrowdAgentParams params = crowdManager_->GetCrowd()->getEditableAgent(agentCrowdId_)->params;
 		//  add this component as a userpointer in dtCrowdAgentParams ? 
 		params.userData = this;
+		crowdManager_->UpdateAgentNavigationQuality(agentCrowdId_, navQuality_);
+		crowdManager_->UpdateAgentPushiness(agentCrowdId_, navPushiness_);
 	}
 }
 
@@ -165,6 +169,42 @@ bool NavigationAgent::SetMoveVelocity(const Vector3& velocity)
 		return crowdManager_->SetMoveVelocity(agentCrowdId_, velocity);
 	}
 	return false;
+}
+
+void NavigationAgent::SetMaxSpeed(float speed)
+{
+	maxSpeed_=speed;
+	if(crowdManager_ && inCrowd_)
+	{
+		crowdManager_->UpdateAgentMaxSpeed(agentCrowdId_, maxSpeed_);
+	}
+}
+
+void NavigationAgent::SetMaxAccel(float accel)
+{
+	maxAccel_=accel;
+	if(crowdManager_ && inCrowd_)
+	{
+		crowdManager_->UpdateAgentMaxAcceleration(agentCrowdId_, maxAccel_);
+	}
+}
+
+void NavigationAgent::SetNavigationQuality(NavigationAvoidanceQuality val)
+{
+	navQuality_=val;
+	if(crowdManager_ && inCrowd_)
+	{
+		crowdManager_->UpdateAgentNavigationQuality(agentCrowdId_, navQuality_);
+	}
+}
+
+void NavigationAgent::SetNavigationPushiness(NavigationPushiness val)
+{
+	navPushiness_=val;
+	if(crowdManager_ && inCrowd_)
+	{
+		crowdManager_->UpdateAgentPushiness(agentCrowdId_, navPushiness_);
+	}
 }
 
 Vector3 NavigationAgent::GetPosition() const

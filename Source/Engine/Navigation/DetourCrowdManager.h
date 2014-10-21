@@ -93,7 +93,7 @@ public:
 
 	/// Create and adds an detour crowd agent.
 	/// Agents radius and height is set through the navigation mesh!
-	int AddAgent(Vector3 pos,  float maxaccel, float maxSpeed);
+	int AddAgent(const Vector3 &pos,  float maxaccel, float maxSpeed);
 	/// Removes the detour crowd agent.
 	void RemoveAgent(int agent);
 

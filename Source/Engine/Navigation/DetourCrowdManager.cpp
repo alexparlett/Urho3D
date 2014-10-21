@@ -89,6 +89,7 @@ namespace Urho3D
 	bool DetourCrowdManager::CreateCrowd()
 	{
 		/// \todo check if already created ?
+		if(!navMesh_) return false;
 
 		if (navMesh_.Expired())
 			return false;
@@ -150,7 +151,7 @@ namespace Urho3D
 		return true;
 	}
 
-	int DetourCrowdManager::AddAgent(Vector3 pos, float maxaccel, float maxSpeed)
+	int DetourCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed)
 	{
 		if (crowd_ == 0 && navMesh_.Expired())
 			return -1;

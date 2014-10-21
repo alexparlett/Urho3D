@@ -26,6 +26,8 @@
 #include "Navigable.h"
 #include "NavigationMesh.h"
 #include "OffMeshConnection.h"
+#include "DetourCrowdManager.h"
+#include "NavigationAgent.h"
 
 namespace Urho3D
 {
@@ -100,6 +102,26 @@ void RegisterOffMeshConnection(asIScriptEngine* engine)
     engine->RegisterObjectMethod("OffMeshConnection", "float get_radius() const", asMETHOD(OffMeshConnection, GetRadius), asCALL_THISCALL);
     engine->RegisterObjectMethod("OffMeshConnection", "void set_bidirectional(bool)", asMETHOD(OffMeshConnection, SetBidirectional), asCALL_THISCALL);
     engine->RegisterObjectMethod("OffMeshConnection", "bool get_bidirectional() const", asMETHOD(OffMeshConnection, IsBidirectional), asCALL_THISCALL);
+}
+
+
+void RegisterDetourCrowdManager(asIScriptEngine *engine)
+{
+    engine->RegisterEnum("NavigationAvoidanceQuality");
+    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_LOW", NAVIGATIONQUALITY_LOW);
+    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_MED", NAVIGATIONQUALITY_MED);
+    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_HIGH", NAVIGATIONQUALITY_HIGH);
+    
+    engine->RegisterEnum("NavigationPushiness");
+    engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_LOW", PUSHINESS_LOW);
+    engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_MED", PUSHINESS_MEDIUM);
+    engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_HIGH", PUSHINESS_HIGH);
+    
+    RegisterComponent<DetourCrowdManager>(engine, "DetourCrowdManager");
+    engine->RegisterObjectMethod("DetourCrowdManager", "void set_navMesh(NavigationMesh@+)", asMETHOD(DetourCrowdManager, SetNavigationMesh), asCALL_THISCALL);
+    engine->RegisterObjectMethod("DetourCrowdManager", "NavigationMesh@+ get_navMesh()", asMETHOD(DetourCrowdManager, GetNavigationMesh), asCALL_THISCALL);
+    engine->RegisterObjectMethod("DetourCrowdManager", "bool CreateCrowd()", asMETHOD(DetourCrowdManager, CreateCrowd), asCALL_THISCALL);
+    
 }
 
 void RegisterNavigationAPI(asIScriptEngine* engine)
