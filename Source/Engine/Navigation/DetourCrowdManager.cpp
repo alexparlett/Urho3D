@@ -563,10 +563,13 @@ namespace Urho3D
 
 	void DetourCrowdManager::OnNodeSet(Node* node)
 	{
-		// Subscribe to the scene subsystem update, which will trigger the crowd update step
+		// Subscribe to the scene subsystem update, which will trigger the crowd update step, and grab a reference
+		// to the scene's NavigationMesh
 		if (node)
 		{			
 			SubscribeToEvent(node, E_SCENESUBSYSTEMUPDATE, HANDLER(DetourCrowdManager, HandleSceneSubsystemUpdate));
+			NavigationMesh *mesh=node->GetComponent<NavigationMesh>();
+			if(mesh) SetNavigationMesh(mesh);
 		}
 	}
 

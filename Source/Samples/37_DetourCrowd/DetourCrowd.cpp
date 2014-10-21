@@ -180,18 +180,8 @@ void DetourCrowd::CreateScene()
 		playerAgent_ = jackNode_->CreateComponent<NavigationAgent>();
 		playerAgent_->SetMaxAccel(1000.0f);
 		playerAgent_->SetNavigationPushiness(PUSHINESS_LOW);
-		
-		for (int i = 0; i < 50; i++)
-		{
-			Node* n = jackNode_->Clone();
-			NavigationAgent* a = n->GetOrCreateComponent<NavigationAgent>();
-			if (a)
-			{
-				Vector3 pos = navMesh->GetRandomPoint();
-				a->SetMoveTarget(pos);
-			}
-		}
 		jackNode_->SetPosition(Vector3(40.0f, 0.0f, -20.0f));
+		
 		for (int i = 0; i < 50; i++)
 		{
 			Node* n = jackNode_->Clone();

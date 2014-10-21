@@ -124,11 +124,50 @@ void RegisterDetourCrowdManager(asIScriptEngine *engine)
     
 }
 
+void RegisterNavigationAgent(asIScriptEngine *engine)
+{
+    engine->RegisterEnum("NavigationTargetState");
+    engine->RegisterEnumValue("NavigationTargetState", "NAV_AGENT_TARGET_NONE", NAV_AGENT_TARGET_NONE);
+    engine->RegisterEnumValue("NavigationTargetState", "NAV_AGENT_TARGET_FAILED", NAV_AGENT_TARGET_FAILED);
+    engine->RegisterEnumValue("NavigationTargetState", "NAV_AGENT_TARGET_VALID", NAV_AGENT_TARGET_VALID);
+    engine->RegisterEnumValue("NavigationTargetState", "NAV_AGENT_TARGET_REQUESTING", NAV_AGENT_TARGET_REQUESTING);
+    engine->RegisterEnumValue("NavigationTargetState", "NAV_AGENT_TARGET_WAITINGFORPATH", NAV_AGENT_TARGET_WAITINGFORPATH);
+    engine->RegisterEnumValue("NavigationTargetState", "NAV_AGENT_TARGET_WAITINGFORQUEUE", NAV_AGENT_TARGET_WAITINGFORQUEUE);
+    engine->RegisterEnumValue("NavigationTargetState", "NAV_AGENT_TARGET_VELOCITY", NAV_AGENT_TARGET_VELOCITY);
+    engine->RegisterEnumValue("NavigationTargetState", "NAV_AGENT_TARGET_ARRIVED", NAV_AGENT_TARGET_ARRIVED);
+    
+    engine->RegisterEnum("NavigationAgentState");
+    engine->RegisterEnumValue("NavigationAgentState", "NAV_AGENT_INVALID", NAV_AGENT_INVALID);
+    engine->RegisterEnumValue("NavigationAgentState", "NAV_AGENT_READY", NAV_AGENT_READY);
+    engine->RegisterEnumValue("NavigationAgentState", "NAV_AGENT_TRAVERSINGLINK", NAV_AGENT_TRAVERSINGLINK);
+    
+    RegisterComponent<NavigationAgent>(engine, "NavigationAgent");
+    engine->RegisterObjectMethod("NavigationAgent", "bool SetMoveTarget(const Vector3&in)", asMETHOD(NavigationAgent, SetMoveTarget), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "bool SetMoveVelocity(const Vector3&in)", asMETHOD(NavigationAgent, SetMoveVelocity), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_updateNodePosition(bool)", asMETHOD(NavigationAgent, SetUpdateNodePosition), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "bool get_updateNodePosition()", asMETHOD(NavigationAgent, GetUpdateNodePosition), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_maxAccel(float)", asMETHOD(NavigationAgent, SetMaxAccel), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "float get_maxAccel()", asMETHOD(NavigationAgent, GetMaxAccel), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_maxSpeed(float)", asMETHOD(NavigationAgent, SetMaxSpeed), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "float get_maxSpeed()", asMETHOD(NavigationAgent, GetMaxSpeed), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_navQuality(NavigationAvoidanceQuality)", asMETHOD(NavigationAgent, SetNavigationQuality), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationAvoidanceQuality get_navQuality()", asMETHOD(NavigationAgent, GetNavigationQuality), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_navPushiness(NavigationPushiness)", asMETHOD(NavigationAgent, SetNavigationPushiness), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationPushiness get_navPushiness()", asMETHOD(NavigationAgent, GetNavigationPushiness), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetDesiredVelocity() const", asMETHOD(NavigationAgent, GetDesiredVelocity), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetActualVelocity() const", asMETHOD(NavigationAgent, GetActualVelocity), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetTargetPosition() const", asMETHOD(NavigationAgent, GetTargetPosition), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationAgentState GetAgentState() const", asMETHOD(NavigationAgent, GetAgentState), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationTargetState GetTargetState() const", asMETHOD(NavigationAgent, GetTargetState), asCALL_THISCALL);
+}
+
 void RegisterNavigationAPI(asIScriptEngine* engine)
 {
     RegisterNavigable(engine);
     RegisterNavigationMesh(engine);
     RegisterOffMeshConnection(engine);
+    RegisterDetourCrowdManager(engine);
+    RegisterNavigationAgent(engine);
 }
 
 }
