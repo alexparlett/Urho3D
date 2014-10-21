@@ -88,7 +88,7 @@ public:
 	/// Create detour crowd component for the specified navigation mesh.
 	bool CreateCrowd();
 
-	/// Update the crod simulation
+	/// Update the crowd simulation
 	void Update(float delta);
 
 	/// Create and adds an detour crowd agent.
