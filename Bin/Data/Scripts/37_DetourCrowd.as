@@ -140,7 +140,7 @@ void CreateScene()
 	{
 		playerAgent=jackNode.CreateComponent("NavigationAgent");
 		playerAgent.maxAccel=1000.0;
-		playerAgent.navPushiness=PUSHINESS_LOW;
+		playerAgent.navigationPushiness=PUSHINESS_LOW;
 		jackNode.position=Vector3(40,0,-20);
 		
 		for(uint i=0; i<100; ++i)
@@ -152,10 +152,9 @@ void CreateScene()
 			updater.CreateObject(scriptFile, "CrowdUpdater");
 		}
 		
-		playerAgent.navPushiness=PUSHINESS_HIGH;
-		playerAgent.navQuality=NAVIGATIONQUALITY_HIGH;
+		playerAgent.navigationPushiness=PUSHINESS_HIGH;
+		playerAgent.navigationQuality=NAVIGATIONQUALITY_HIGH;
 	}
-	
 }
 
 void CreateUI()
@@ -374,27 +373,10 @@ void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
     // If draw debug mode is enabled, draw navigation mesh debug geometry
     if (drawDebug)
     {
+		DebugRenderer@ dbg=scene_.GetComponent("DebugRenderer");
         NavigationMesh@ navMesh = scene_.GetComponent("NavigationMesh");
         navMesh.DrawDebugGeometry(true);
-    }
-
-    if (currentPath.length > 0)
-    {
-        // Visualize the current calculated path
-        // Note the convenience accessor to the DebugRenderer component
-        DebugRenderer@ debug = scene_.debugRenderer;
-        debug.AddBoundingBox(BoundingBox(endPos - Vector3(0.1f, 0.1f, 0.1f), endPos + Vector3(0.1f, 0.1f, 0.1f)),
-            Color(1.0f, 1.0f, 1.0f));
-
-        // Draw the path with a small upward bias so that it does not clip into the surfaces
-        Vector3 bias(0.0f, 0.05f, 0.0f);
-        debug.AddLine(jackNode.position + bias, currentPath[0] + bias, Color(1.0f, 1.0f, 1.0f));
-
-        if (currentPath.length > 1)
-        {
-            for (uint i = 0; i < currentPath.length - 1; ++i)
-                debug.AddLine(currentPath[i] + bias, currentPath[i + 1] + bias, Color(1.0f, 1.0f, 1.0f));
-        }
+		crowdMng_.DrawDebug(dbg, true);
     }
 }
 

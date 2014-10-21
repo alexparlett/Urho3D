@@ -1,0 +1,50 @@
+$#include "NavigationAgent.h"
+
+enum NavigationTargetState
+{
+	NAV_AGENT_TARGET_NONE = 0,
+	NAV_AGENT_TARGET_FAILED,
+	NAV_AGENT_TARGET_VALID,
+	NAV_AGENT_TARGET_REQUESTING,
+	NAV_AGENT_TARGET_WAITINGFORPATH,
+	NAV_AGENT_TARGET_WAITINGFORQUEUE,
+	NAV_AGENT_TARGET_VELOCITY,
+	NAV_AGENT_TARGET_ARRIVED
+};
+
+enum NavigationAgentState
+{
+	NAV_AGENT_INVALID = 0,
+	NAV_AGENT_READY,
+	NAV_AGENT_TRAVERSINGLINK
+};
+
+
+
+class NavigationAgent : public Component
+{
+	bool SetMoveTarget(const Vector3& position);
+	bool SetMoveVelocity(const Vector3& velocity);
+	void SetUpdateNodePosition(bool unodepos);
+	void SetMaxAccel( float val);
+	void SetMaxSpeed( float val);
+	void SetNavigationQuality(NavigationAvoidanceQuality val);
+	void SetNavigationPushiness(NavigationPushiness val);
+
+	Vector3 GetDesiredVelocity() const;
+	Vector3 GetActualVelocity() const;
+	const Vector3& GetTargetPosition() const;
+	NavigationAgentState   GetAgentState() const;
+	NavigationTargetState  GetTargetState() const;
+	bool GetUpdateNodePosition();
+	float GetMaxSpeed();
+	float GetMaxAccel();
+	NavigationAvoidanceQuality GetNavigationQuality() const;
+	NavigationPushiness GetNavigationPushiness() const;
+	
+	tolua_property__get_set bool updateNodePosition;
+	tolua_property__get_set NavigationAvoidanceQuality navigationQuality;
+	tolua_property__get_set NavigationPushiness navigationPushiness;
+	tolua_property__get_set float maxSpeed;
+	tolua_property__get_set float maxAccel;
+};

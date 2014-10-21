@@ -146,7 +146,7 @@ private:
 	/// internal crowd component
 	dtCrowd* crowd_;
 	/// NavigationMesh for which the crowd was created
-	WeakPtr<NavigationMesh> navMesh_;
+	WeakPtr<NavigationMesh> navigationMesh_;
 	/// \todo add an check if max agents reached to addagent /addagentcomponent ... ?
 	/// max agents for the crowd 
 	int maxAgents_;	

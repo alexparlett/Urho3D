@@ -57,7 +57,7 @@ namespace Urho3D
 		Component(context),
 		maxAgents_(MAX_AGENTS),
 		crowd_(0),
-		navMesh_(0),
+		navigationMesh_(0),
 		agentDebug_(NULL)
 	{
 	}
@@ -76,27 +76,27 @@ namespace Urho3D
 
 	void DetourCrowdManager::SetNavigationMesh(NavigationMesh *navMesh)
 	{
-		navMesh_ = WeakPtr<NavigationMesh>(navMesh);
-		if (navMesh_ && navMesh_->navMeshQuery_ == 0)
-			navMesh_->InitializeQuery();
+		navigationMesh_ = WeakPtr<NavigationMesh>(navMesh);
+		if (navigationMesh_ && navigationMesh_->navMeshQuery_ == 0)
+			navigationMesh_->InitializeQuery();
 	}
 
 	NavigationMesh* DetourCrowdManager::GetNavigationMesh()
 	{
-		return navMesh_.Get();
+		return navigationMesh_.Get();
 	}
 
 	bool DetourCrowdManager::CreateCrowd()
 	{
 		/// \todo check if already created ?
-		if(!navMesh_) return false;
+		if(!navigationMesh_) return false;
 
-		if (navMesh_.Expired())
+		if (navigationMesh_.Expired())
 			return false;
-		if (navMesh_->navMesh_ == 0)
+		if (navigationMesh_->navMesh_ == 0)
 			return false;
-		if (navMesh_->navMeshQuery_ == 0)
-		if (!navMesh_->InitializeQuery())
+		if (navigationMesh_->navMeshQuery_ == 0)
+		if (!navigationMesh_->InitializeQuery())
 			return false;
 		if (crowd_ == 0)
 			crowd_ = dtAllocCrowd();
@@ -106,7 +106,7 @@ namespace Urho3D
 		}
 
 		// Initialize the crowd
-		bool b = crowd_->init(maxAgents_, navMesh_->GetAgentRadius(), navMesh_->navMesh_);
+		bool b = crowd_->init(maxAgents_, navigationMesh_->GetAgentRadius(), navigationMesh_->navMesh_);
 		if (b == false)
 		{
 			LOGERROR("Could not initialize  DetourCrowd");
@@ -153,11 +153,11 @@ namespace Urho3D
 
 	int DetourCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed)
 	{
-		if (crowd_ == 0 && navMesh_.Expired())
+		if (crowd_ == 0 && navigationMesh_.Expired())
 			return -1;
 		dtCrowdAgentParams params;
-		params.radius = navMesh_->GetAgentRadius();
-		params.height = navMesh_->GetAgentHeight();
+		params.radius = navigationMesh_->GetAgentRadius();
+		params.height = navigationMesh_->GetAgentHeight();
 		params.maxAcceleration = maxaccel;
 		params.maxSpeed = maxSpeed;
 		params.collisionQueryRange = params.radius * 8.0f;
@@ -176,7 +176,7 @@ namespace Urho3D
 		params.queryFilterType = 0;
 		dtPolyRef polyRef;
 		float nearestPos[3];
-		dtStatus status = navMesh_->navMeshQuery_->findNearestPoly(
+		dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
 			pos.Data(),
 			crowd_->getQueryExtents(),
 			crowd_->getFilter(0),
@@ -301,7 +301,7 @@ namespace Urho3D
 			return false;
 		dtPolyRef polyRef;
 		float nearestPos[3];
-		dtStatus status = navMesh_->navMeshQuery_->findNearestPoly(
+		dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
 			target.Data(),
 			crowd_->getQueryExtents(),
 			crowd_->getFilter(0),
@@ -329,7 +329,7 @@ namespace Urho3D
 		if (crowd_ == 0)
 			return false;
 		float nearestPos[3];
-		dtStatus status = navMesh_->navMeshQuery_->findNearestPoly(
+		dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
 			target.Data(),
 			crowd_->getQueryExtents(),
 			crowd_->getFilter(0),
@@ -388,7 +388,7 @@ namespace Urho3D
 		const static float extents[] = { 1.0f, 20.0f, 1.0f };
 		dtPolyRef closestPoly;
 		dtQueryFilter filter;
-		dtStatus status = navMesh_->navMeshQuery_->findNearestPoly(
+		dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
 			pos.Data(),
 			extents,
 			&filter,
@@ -460,7 +460,7 @@ namespace Urho3D
 
 	void DetourCrowdManager::DrawDebug(DebugRenderer* debug, bool depthTest)
 	{
-		if (debug && navMesh_.NotNull())
+		if (debug && navigationMesh_.NotNull())
 		{
 			PROFILE(DrawDebugDetourCrowdManager);
 			DetourDebugRenderer dd(context_);
