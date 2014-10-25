@@ -109,12 +109,12 @@ void RegisterDetourCrowdManager(asIScriptEngine *engine)
 {
     engine->RegisterEnum("NavigationAvoidanceQuality");
     engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_LOW", NAVIGATIONQUALITY_LOW);
-    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_MED", NAVIGATIONQUALITY_MED);
+    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_MEDIUM", NAVIGATIONQUALITY_MEDIUM);
     engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_HIGH", NAVIGATIONQUALITY_HIGH);
     
     engine->RegisterEnum("NavigationPushiness");
     engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_LOW", PUSHINESS_LOW);
-    engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_MED", PUSHINESS_MEDIUM);
+    engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_MEDIUM", PUSHINESS_MEDIUM);
     engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_HIGH", PUSHINESS_HIGH);
     
     RegisterComponent<DetourCrowdManager>(engine, "DetourCrowdManager");
@@ -161,6 +161,7 @@ void RegisterNavigationAgent(asIScriptEngine *engine)
     engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetTargetPosition() const", asMETHOD(NavigationAgent, GetTargetPosition), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "NavigationAgentState GetAgentState() const", asMETHOD(NavigationAgent, GetAgentState), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "NavigationTargetState GetTargetState() const", asMETHOD(NavigationAgent, GetTargetState), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetPosition() const", asMETHOD(NavigationAgent, GetPosition), asCALL_THISCALL);
 }
 
 void RegisterNavigationAPI(asIScriptEngine* engine)

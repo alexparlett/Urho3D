@@ -12,20 +12,32 @@ Node@ jackNode;
 NavigationAgent@ playerAgent;
 DetourCrowdManager@ crowdMng_;
 
-class CrowdUpdater : ScriptObject
+class RandomWalker : ScriptObject
 {
-	void Update(float timestep)
-	{
-		NavigationAgent@ a=node.GetComponent("NavigationAgent");
-		if(a !is null)
-		{
-			if(a.GetTargetState()==NAV_AGENT_TARGET_ARRIVED)
-			{
-				Vector3 pos=crowdMng_.navMesh.GetRandomPoint();
-				a.SetMoveTarget(pos);
-			}
-		}
-	}
+    void Update(float timestep)
+    {
+        NavigationAgent@ a=node.GetComponent("NavigationAgent");
+        if(a !is null)
+        {
+            if(a.GetTargetState()==NAV_AGENT_TARGET_ARRIVED)
+            {
+                Vector3 pos=crowdMng_.navigationMesh.GetRandomPoint();
+                a.SetMoveTarget(pos);
+            }
+        }
+    }
+}
+
+class Chaser : ScriptObject
+{
+    void Update(float timestep)
+    {
+        NavigationAgent@ a=node.GetComponent("NavigationAgent");
+        if(a !is null)
+        {
+            a.SetMoveTarget(playerAgent.GetPosition());
+        }
+    }
 }
 
 void Start()
@@ -53,9 +65,9 @@ void CreateScene()
     // Create the Octree component to the scene so that drawable objects can be rendered. Use default volume
     // (-1000, -1000, -1000) to (1000, 1000, 1000)
     scene_.CreateComponent("Octree");
-	scene_.CreateComponent("DebugRenderer");
-	
-	// Create scene node & StaticModel component for showing a static plane
+    scene_.CreateComponent("DebugRenderer");
+    
+    // Create scene node & StaticModel component for showing a static plane
     Node@ planeNode = scene_.CreateChild("Plane");
     planeNode.scale = Vector3(100.0f, 1.0f, 100.0f);
     StaticModel@ planeObject = planeNode.CreateComponent("StaticModel");
@@ -102,29 +114,29 @@ void CreateScene()
         if (size >= 3.0f)
             boxObject.occluder = true;
     }
-	
-	// Create Jack node for visual representation of the detour crowd agents
-	Node@ jackNode = scene_.CreateChild("Jack");
-	jackNode.position=Vector3(-5.0f, 0.0f, 20.0f);
-	AnimatedModel@ modelObject = jackNode.CreateComponent("AnimatedModel");
-	modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
-	modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
-	modelObject.castShadows=true;
+    
+    // Create Jack node for visual representation of the detour crowd agents
+    Node@ jackNode = scene_.CreateChild("Jack");
+    jackNode.position=Vector3(-5.0f, 0.0f, 20.0f);
+    AnimatedModel@ modelObject = jackNode.CreateComponent("AnimatedModel");
+    modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
+    modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
+    modelObject.castShadows=true;
 
-	// Create a NavigationMesh component to the scene root
-	NavigationMesh@ navMesh = scene_.CreateComponent("NavigationMesh");
-	// Create a Navigable component to the scene root. This tags all of the geometry in the scene as being part of the
-	// navigation mesh. By default this is recursive, but the recursion could be turned off from Navigable
-	scene_.CreateComponent("Navigable");
-	// Add padding to the navigation mesh in Y-direction so that we can add objects on top of the tallest boxes
-	// in the scene and still update the mesh correctly
-	navMesh.padding=Vector3(0.0f, 10.0f, 0.0f);
-	// Now build the navigation geometry. This will take some time. Note that the navigation mesh will prefer to use
-	// physics geometry from the scene nodes, as it often is simpler, but if it can not find any (like in this example)
-	// it will use renderable geometry instead
-	navMesh.Build();
+    // Create a NavigationMesh component to the scene root
+    NavigationMesh@ navMesh = scene_.CreateComponent("NavigationMesh");
+    // Create a Navigable component to the scene root. This tags all of the geometry in the scene as being part of the
+    // navigation mesh. By default this is recursive, but the recursion could be turned off from Navigable
+    scene_.CreateComponent("Navigable");
+    // Add padding to the navigation mesh in Y-direction so that we can add objects on top of the tallest boxes
+    // in the scene and still update the mesh correctly
+    navMesh.padding=Vector3(0.0f, 10.0f, 0.0f);
+    // Now build the navigation geometry. This will take some time. Note that the navigation mesh will prefer to use
+    // physics geometry from the scene nodes, as it often is simpler, but if it can not find any (like in this example)
+    // it will use renderable geometry instead
+    navMesh.Build();
 
-	// Create the camera. Limit far clip distance to match the fog
+    // Create the camera. Limit far clip distance to match the fog
     cameraNode = scene_.CreateChild("Camera");
     Camera@ camera = cameraNode.CreateComponent("Camera");
     camera.farClip = 300.0f;
@@ -132,29 +144,31 @@ void CreateScene()
     // Set an initial position for the camera scene node above the plane
     cameraNode.position = Vector3(0.0f, 5.0f, 0.0f);
 
-	// Create a DetourCrowdManager component to the scene root
-	crowdMng_ = scene_.CreateComponent("DetourCrowdManager");
-	
-	// Now build the crowd.
-	if(crowdMng_.CreateCrowd())
-	{
-		playerAgent=jackNode.CreateComponent("NavigationAgent");
-		playerAgent.maxAccel=1000.0;
-		playerAgent.navigationPushiness=PUSHINESS_LOW;
-		jackNode.position=Vector3(40,0,-20);
-		
-		for(uint i=0; i<100; ++i)
-		{
-			Node@ n=jackNode.Clone();
-			NavigationAgent@ a=n.GetOrCreateComponent("NavigationAgent");
-			a.SetMoveTarget(navMesh.GetRandomPoint());
-			ScriptInstance@ updater=n.CreateComponent("ScriptInstance");
-			updater.CreateObject(scriptFile, "CrowdUpdater");
-		}
-		
-		playerAgent.navigationPushiness=PUSHINESS_HIGH;
-		playerAgent.navigationQuality=NAVIGATIONQUALITY_HIGH;
-	}
+    // Create a DetourCrowdManager component to the scene root
+    crowdMng_ = scene_.CreateComponent("DetourCrowdManager");
+    
+    // Now build the crowd.
+    if(crowdMng_.CreateCrowd())
+    {
+        playerAgent=jackNode.CreateComponent("NavigationAgent");
+        playerAgent.maxAccel=2.0;
+        playerAgent.navigationPushiness=PUSHINESS_HIGH;
+        playerAgent.navigationQuality=NAVIGATIONQUALITY_HIGH;
+        jackNode.position=Vector3(40,0,-20);
+        
+        for(uint i=0; i<100; ++i)
+        {
+            Node@ n=jackNode.Clone();
+            NavigationAgent@ a=n.GetOrCreateComponent("NavigationAgent");
+            a.SetMoveTarget(playerAgent.GetPosition());
+            ScriptInstance@ updater=n.CreateComponent("ScriptInstance");
+            updater.CreateObject(scriptFile, "Chaser");
+        }
+        
+        playerAgent.navigationPushiness=PUSHINESS_HIGH;
+        playerAgent.navigationQuality=NAVIGATIONQUALITY_HIGH;
+        playerAgent.maxSpeed=10;
+    }
 }
 
 void CreateUI()
@@ -260,7 +274,7 @@ void SetPathPoint()
     if (Raycast(250.0f, hitPos, hitDrawable))
     {
         Vector3 pathPos = navMesh.FindNearestPoint(hitPos, Vector3(1.0f, 1.0f, 1.0f));
-		
+        
         playerAgent.SetMoveTarget(pathPos);
     }
 }
@@ -373,10 +387,10 @@ void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
     // If draw debug mode is enabled, draw navigation mesh debug geometry
     if (drawDebug)
     {
-		DebugRenderer@ dbg=scene_.GetComponent("DebugRenderer");
+        DebugRenderer@ dbg=scene_.GetComponent("DebugRenderer");
         NavigationMesh@ navMesh = scene_.GetComponent("NavigationMesh");
         navMesh.DrawDebugGeometry(true);
-		crowdMng_.DrawDebug(dbg, true);
+        crowdMng_.DrawDebug(dbg, true);
     }
 }
 

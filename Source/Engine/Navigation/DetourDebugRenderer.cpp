@@ -48,130 +48,130 @@ DetourDebugRenderer::~DetourDebugRenderer()
 
 void DetourDebugRenderer::RegisterObject(Context* context)
 {
-	context->RegisterFactory<DetourDebugRenderer>(NAVIGATION_CATEGORY);
+    context->RegisterFactory<DetourDebugRenderer>(NAVIGATION_CATEGORY);
 }
 
 void DetourDebugRenderer::depthMask(bool state)
 {
-	depthTest_ = state;
+    depthTest_ = state;
 }
 
 void DetourDebugRenderer::texture(bool state)
 {
-	
+    
 }
 
 void DetourDebugRenderer::begin(duDebugDrawPrimitives prim, float size /*= 1.0f*/)
 {
-	switch (prim)
-	{
-	case DU_DRAW_POINTS:
-		type_ = DU_DRAW_POINTS;
-		break;
-	case DU_DRAW_LINES:
-		type_ = DU_DRAW_LINES;
-		break;
-	case DU_DRAW_TRIS:
-		type_ = DU_DRAW_TRIS;
-		break;
-	case DU_DRAW_QUADS:
-		type_ = DU_DRAW_QUADS;
-		break;
-	};
+    switch (prim)
+    {
+    case DU_DRAW_POINTS:
+        type_ = DU_DRAW_POINTS;
+        break;
+    case DU_DRAW_LINES:
+        type_ = DU_DRAW_LINES;
+        break;
+    case DU_DRAW_TRIS:
+        type_ = DU_DRAW_TRIS;
+        break;
+    case DU_DRAW_QUADS:
+        type_ = DU_DRAW_QUADS;
+        break;
+    };
 }
 
 void DetourDebugRenderer::vertex(const float* pos, unsigned int color)
 {
-	vertices_.Push(DebugVertex(Vector3(pos[0], pos[1], pos[2]), color));
+    vertices_.Push(DebugVertex(Vector3(pos[0], pos[1], pos[2]), color));
 }
 
 void DetourDebugRenderer::vertex(const float x, const float y, const float z, unsigned int color)
 {
-	vertices_.Push(DebugVertex(Vector3(x, y, z), color));
+    vertices_.Push(DebugVertex(Vector3(x, y, z), color));
 }
 
 void DetourDebugRenderer::vertex(const float* pos, unsigned int color, const float* uv)
 {
-	vertices_.Push(DebugVertex(Vector3(pos[0], pos[1], pos[2]), color));
+    vertices_.Push(DebugVertex(Vector3(pos[0], pos[1], pos[2]), color));
 }
 
 void DetourDebugRenderer::vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v)
 {
-	vertices_.Push(DebugVertex(Vector3(x, y, z), color));
+    vertices_.Push(DebugVertex(Vector3(x, y, z), color));
 }
 
 void DetourDebugRenderer::end()
 {
-	if (debugRenderer_.Expired())
-		return;
+    if (debugRenderer_.Expired())
+        return;
 
-	switch (type_)
-	{
-	case DU_DRAW_POINTS:
-		DrawPoints();
-		break;
-	case DU_DRAW_LINES:
-		DrawLines();
-		break;
-	case DU_DRAW_TRIS:
-		DrawTris();
-		break;
-	case DU_DRAW_QUADS:
-		DrawQuads();
-		break;
-	};
+    switch (type_)
+    {
+    case DU_DRAW_POINTS:
+        DrawPoints();
+        break;
+    case DU_DRAW_LINES:
+        DrawLines();
+        break;
+    case DU_DRAW_TRIS:
+        DrawTris();
+        break;
+    case DU_DRAW_QUADS:
+        DrawQuads();
+        break;
+    };
 
-	// When the amount of debug geometry is reduced, release memory
-	unsigned  verticesSize = vertices_.Size();
+    // When the amount of debug geometry is reduced, release memory
+    unsigned  verticesSize = vertices_.Size();
 
-	vertices_.Clear();
+    vertices_.Clear();
 
-	if (vertices_.Capacity() > verticesSize * 2)
-		vertices_.Reserve(verticesSize);
+    if (vertices_.Capacity() > verticesSize * 2)
+        vertices_.Reserve(verticesSize);
 
 }
 
 void DetourDebugRenderer::SetDebugRenderer(DebugRenderer* debug)
 {
-	debugRenderer_ = WeakPtr<DebugRenderer>(debug);
+    debugRenderer_ = WeakPtr<DebugRenderer>(debug);
 }
 
 void DetourDebugRenderer::DrawPoints()
 {
-	
+    
 }
 
 void DetourDebugRenderer::DrawLines()
 {
-	for (unsigned i = 0; i < vertices_.Size(); i= i+2)
-	{
-		const DebugVertex& vertex = vertices_[i];
+    for (unsigned i = 0; i < vertices_.Size(); i= i+2)
+    {
+        const DebugVertex& vertex = vertices_[i];
 
-		debugRenderer_->AddLine(vertices_[i].vert_, vertices_[i + 1].vert_, vertices_[i].color_, depthTest_);
-	}
+        debugRenderer_->AddLine(vertices_[i].vert_, vertices_[i + 1].vert_, vertices_[i].color_, depthTest_);
+    }
 
-	
+    
 }
 
 void DetourDebugRenderer::DrawTris()
 {
-	for (unsigned i = 0; i < vertices_.Size(); i = i + 3)
-	{
-		const DebugVertex& vertex = vertices_[i];
+    for (unsigned i = 0; i < vertices_.Size(); i = i + 3)
+    {
+        const DebugVertex& vertex = vertices_[i];
 
-		debugRenderer_->AddTriangle(vertices_[i].vert_, vertices_[i + 1].vert_, vertices_[i + 2].vert_, vertices_[i].color_, depthTest_);
-	}
+        debugRenderer_->AddTriangle(vertices_[i].vert_, vertices_[i + 1].vert_, vertices_[i + 2].vert_, vertices_[i].color_, depthTest_);
+    }
 }
 
 void DetourDebugRenderer::DrawQuads()
 {
-	for (unsigned i = 0; i < vertices_.Size(); i = i + 4)
-	{
-		const DebugVertex& vertex = vertices_[i];
+    for (unsigned i = 0; i < vertices_.Size(); i = i + 4)
+    {
+        const DebugVertex& vertex = vertices_[i];
 
-		debugRenderer_->AddTriangle(vertices_[i].vert_, vertices_[i + 1].vert_, vertices_[i + 3].vert_, vertices_[i].color_, depthTest_);
-		debugRenderer_->AddTriangle(vertices_[i + 3].vert_, vertices_[i + 1].vert_, vertices_[i + 2].vert_, vertices_[i].color_, depthTest_);
-	}
+        debugRenderer_->AddTriangle(vertices_[i].vert_, vertices_[i + 1].vert_, vertices_[i + 3].vert_, vertices_[i].color_, depthTest_);
+        debugRenderer_->AddTriangle(vertices_[i + 3].vert_, vertices_[i + 1].vert_, vertices_[i + 2].vert_, vertices_[i].color_, depthTest_);
+    }
 }
 
 }
