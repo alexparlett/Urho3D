@@ -30,13 +30,22 @@ class RandomWalker : ScriptObject
 
 class Chaser : ScriptObject
 {
+    Node@ target=null;
     void Update(float timestep)
     {
         NavigationAgent@ a=node.GetComponent("NavigationAgent");
         if(a !is null)
         {
-            a.SetMoveTarget(playerAgent.GetPosition());
+            if(target !is null)
+            {
+                a.SetMoveTarget(target.position);
+            }
         }
+    }
+    
+    void SetTarget(Node@ t)
+    {
+        target=t;
     }
 }
 
@@ -151,9 +160,9 @@ void CreateScene()
     if(crowdMng_.CreateCrowd())
     {
         playerAgent=jackNode.CreateComponent("NavigationAgent");
-        playerAgent.maxAccel=2.0;
-        playerAgent.navigationPushiness=PUSHINESS_HIGH;
-        playerAgent.navigationQuality=NAVIGATIONQUALITY_HIGH;
+        playerAgent.maxAccel=200.0;
+        playerAgent.navigationPushiness=PUSHINESS_LOW;
+        playerAgent.navigationQuality=NAVIGATIONQUALITY_LOW;
         jackNode.position=Vector3(40,0,-20);
         
         for(uint i=0; i<100; ++i)
@@ -161,8 +170,11 @@ void CreateScene()
             Node@ n=jackNode.Clone();
             NavigationAgent@ a=n.GetOrCreateComponent("NavigationAgent");
             a.SetMoveTarget(playerAgent.GetPosition());
-            ScriptInstance@ updater=n.CreateComponent("ScriptInstance");
-            updater.CreateObject(scriptFile, "Chaser");
+            
+            //ScriptInstance@ updater=n.CreateComponent("ScriptInstance");
+            //updater.CreateObject(scriptFile, "Chaser");
+            Chaser@ c=cast<Chaser>(n.CreateScriptObject(scriptFile, "Chaser", LOCAL));
+            c.SetTarget(jackNode);
         }
         
         playerAgent.navigationPushiness=PUSHINESS_HIGH;
