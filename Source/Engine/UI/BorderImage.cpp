@@ -40,7 +40,7 @@ BorderImage::BorderImage(Context* context) :
     border_(IntRect::ZERO),
     imageBorder_(IntRect::ZERO),
     hoverOffset_(IntVector2::ZERO),
-    blendMode_(BLEND_REPLACE),
+    blendMode_(BLEND_ALPHA),
     tiled_(false)
 {
 }
