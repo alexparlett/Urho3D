@@ -7,9 +7,7 @@
 #include "Scripts/Utilities/Sample.as"
 
 Vector3 endPos;
-Array<Vector3> currentPath;
-Node@ jackNode;
-NavigationAgent@ playerAgent;
+Node@ player;
 DetourCrowdManager@ crowdMng_;
 
 class RandomWalker : ScriptObject
@@ -65,6 +63,40 @@ void Start()
 
     // Hook up to the frame update and render post-update events
     SubscribeToEvents();
+}
+
+Node@ CreatePlayer(Vector3 position, NavigationAvoidanceQuality quality, NavigationPushiness pushiness, float speed, float accel)
+{
+    Node@ n = scene_.CreateChild("Jack");
+    n.position=position;
+    AnimatedModel@ modelObject = n.CreateComponent("AnimatedModel");
+    modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
+    modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
+    modelObject.castShadows=true;
+    NavigationAgent @agent=n.CreateComponent("NavigationAgent");
+    agent.maxAccel=accel;
+    agent.navigationPushiness=pushiness;
+    agent.navigationQuality=quality;
+    agent.maxSpeed=speed;
+    return n;
+}
+
+Node@ CreateChaser(Node@ target, Vector3 position, NavigationAvoidanceQuality quality, NavigationPushiness pushiness, float speed, float accel)
+{
+    Node@ n = scene_.CreateChild("Jack");
+    n.position=position;
+    AnimatedModel@ modelObject = n.CreateComponent("AnimatedModel");
+    modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
+    modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
+    modelObject.castShadows=true;
+    NavigationAgent @agent=n.CreateComponent("NavigationAgent");
+    agent.maxAccel=accel;
+    agent.navigationPushiness=pushiness;
+    agent.navigationQuality=quality;
+    agent.maxSpeed=speed;
+    Chaser@ c=cast<Chaser>(n.CreateScriptObject(scriptFile, "Chaser", LOCAL));
+    c.SetTarget(target);
+    return n;
 }
 
 void CreateScene()
@@ -123,14 +155,8 @@ void CreateScene()
         if (size >= 3.0f)
             boxObject.occluder = true;
     }
+   
     
-    // Create Jack node for visual representation of the detour crowd agents
-    Node@ jackNode = scene_.CreateChild("Jack");
-    jackNode.position=Vector3(-5.0f, 0.0f, 20.0f);
-    AnimatedModel@ modelObject = jackNode.CreateComponent("AnimatedModel");
-    modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
-    modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
-    modelObject.castShadows=true;
 
     // Create a NavigationMesh component to the scene root
     NavigationMesh@ navMesh = scene_.CreateComponent("NavigationMesh");
@@ -159,27 +185,13 @@ void CreateScene()
     // Now build the crowd.
     if(crowdMng_.CreateCrowd())
     {
-        playerAgent=jackNode.CreateComponent("NavigationAgent");
-        playerAgent.maxAccel=200.0;
-        playerAgent.navigationPushiness=PUSHINESS_LOW;
-        playerAgent.navigationQuality=NAVIGATIONQUALITY_LOW;
-        jackNode.position=Vector3(40,0,-20);
+        // Create the player object
+        player=CreatePlayer(Vector3(0, 0, 0), NAVIGATIONQUALITY_HIGH, PUSHINESS_LOW, 10, 200.0f);
         
         for(uint i=0; i<100; ++i)
         {
-            Node@ n=jackNode.Clone();
-            NavigationAgent@ a=n.GetOrCreateComponent("NavigationAgent");
-            a.SetMoveTarget(playerAgent.GetPosition());
-            
-            //ScriptInstance@ updater=n.CreateComponent("ScriptInstance");
-            //updater.CreateObject(scriptFile, "Chaser");
-            Chaser@ c=cast<Chaser>(n.CreateScriptObject(scriptFile, "Chaser", LOCAL));
-            c.SetTarget(jackNode);
+            CreateChaser(player, Vector3(Random(80.0f)-40.0f, 0, Random(80.0f)-40.0f), NAVIGATIONQUALITY_HIGH, PUSHINESS_LOW, Random(5)+5, 200.0f);
         }
-        
-        playerAgent.navigationPushiness=PUSHINESS_HIGH;
-        playerAgent.navigationQuality=NAVIGATIONQUALITY_HIGH;
-        playerAgent.maxSpeed=10;
     }
 }
 
@@ -286,7 +298,7 @@ void SetPathPoint()
     if (Raycast(250.0f, hitPos, hitDrawable))
     {
         Vector3 pathPos = navMesh.FindNearestPoint(hitPos, Vector3(1.0f, 1.0f, 1.0f));
-        
+        NavigationAgent@ playerAgent=player.GetComponent("NavigationAgent");
         playerAgent.SetMoveTarget(pathPos);
     }
 }
@@ -319,8 +331,6 @@ void AddOrRemoveObject()
         // Rebuild part of the navigation mesh, then rebuild the path if applicable
         NavigationMesh@ navMesh = scene_.GetComponent("NavigationMesh");
         navMesh.Build(updateBox);
-        if (currentPath.length > 0)
-            currentPath = navMesh.FindPath(jackNode.position, endPos);
     }
 }
 
@@ -360,27 +370,6 @@ bool Raycast(float maxDistance, Vector3& hitPos, Drawable@& hitDrawable)
     }
 
     return false;
-}
-
-void FollowPath(float timeStep)
-{
-    if (currentPath.length > 0)
-    {
-        Vector3 nextWaypoint = currentPath[0]; // NB: currentPath[0] is the next waypoint in order
-
-        // Rotate Jack toward next waypoint to reach and move. Check for not overshooting the target
-        float move = 5.0f * timeStep;
-        float distance = (jackNode.position - nextWaypoint).length;
-        if (move > distance)
-            move = distance;
-
-        jackNode.LookAt(nextWaypoint, Vector3(0.0f, 1.0f, 0.0f));
-        jackNode.Translate(Vector3(0.0f, 0.0f, 1.0f) * move);
-
-        // Remove waypoint if reached it
-        if ((jackNode.position - nextWaypoint).length < 0.1)
-            currentPath.Erase(0);
-    }
 }
 
 void HandleUpdate(StringHash eventType, VariantMap& eventData)
