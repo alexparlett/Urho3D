@@ -45,6 +45,20 @@ class Chaser : ScriptObject
     {
         target=t;
     }
+    
+    void Start()
+    {
+        SubscribeToEvent(node, "NavigationAgentReposition", "HandleReposition");
+    }
+    
+    void HandleReposition(StringHash eventType, VariantMap& eventData)
+    {
+        Vector3 velocity=eventData["Velocity"].GetVector3();
+        Vector3 facing=Vector3(velocity.x, 0, velocity.z);
+        facing.Normalize();
+        float angle=Atan2(facing.z, facing.x);
+        node.rotation=Quaternion(angle-90, Vector3(0,-1,0));
+    }
 }
 
 void Start()
@@ -89,6 +103,8 @@ Node@ CreateChaser(Node@ target, Vector3 position, NavigationAvoidanceQuality qu
     modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
     modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
     modelObject.castShadows=true;
+    AnimationController@ ac=n.CreateComponent("AnimationController");
+    ac.Play("Models/Jack_Walk.ani", 0, true, 0.0f);
     NavigationAgent @agent=n.CreateComponent("NavigationAgent");
     agent.maxAccel=accel;
     agent.navigationPushiness=pushiness;
@@ -188,7 +204,7 @@ void CreateScene()
         // Create the player object
         player=CreatePlayer(Vector3(0, 0, 0), NAVIGATIONQUALITY_HIGH, PUSHINESS_LOW, 10, 200.0f);
         
-        for(uint i=0; i<100; ++i)
+        for(uint i=0; i<20; ++i)
         {
             CreateChaser(player, Vector3(Random(80.0f)-40.0f, 0, Random(80.0f)-40.0f), NAVIGATIONQUALITY_HIGH, PUSHINESS_LOW, Random(5)+5, 200.0f);
         }

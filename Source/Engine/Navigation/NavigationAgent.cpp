@@ -302,6 +302,7 @@ void NavigationAgent::OnNavigationAgentReposition(const Vector3& newPos)
         // Notify parent node of the reposition
         VariantMap map;
         map[NavigationAgentReposition::P_POSITION]=newPos;
+        map[NavigationAgentReposition::P_VELOCITY]=GetActualVelocity();
         node_->SendEvent(E_NAVIGATION_AGENT_REPOSITION, map);
         
         if (updateNodePosition_)

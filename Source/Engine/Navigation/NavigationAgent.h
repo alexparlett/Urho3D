@@ -53,6 +53,7 @@ enum NavigationAgentState
 EVENT(E_NAVIGATION_AGENT_REPOSITION, NavigationAgentReposition)
 {
     PARAM(P_POSITION, Position); // Vector3
+    PARAM(P_VELOCITY, Velocity); // Vector3
 }
 
 /// Root scene node must have an DetourCrowdManager Component!
