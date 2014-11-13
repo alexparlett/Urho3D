@@ -29,16 +29,16 @@
 namespace Urho3D
 {
     class DebugRenderer;
-/// DetourDebugRenderer
-class URHO3D_API DetourDebugRenderer : public Object, public duDebugDraw
+/// NavigationDebugRenderer
+class URHO3D_API NavigationDebugRenderer : public Object, public duDebugDraw
 {
-    OBJECT(DetourDebugRenderer);
+    OBJECT(NavigationDebugRenderer);
 
 public:
     /// Construct.
-    DetourDebugRenderer(Context* context);
+    NavigationDebugRenderer(Context* context);
     /// Destruct.
-    virtual ~DetourDebugRenderer();
+    virtual ~NavigationDebugRenderer();
     /// Register object factory.
     static void RegisterObject(Context* context);
 

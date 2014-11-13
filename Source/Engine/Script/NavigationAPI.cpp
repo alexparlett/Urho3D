@@ -26,7 +26,7 @@
 #include "Navigable.h"
 #include "NavigationMesh.h"
 #include "OffMeshConnection.h"
-#include "DetourCrowdManager.h"
+#include "NavigationCrowdManager.h"
 #include "NavigationAgent.h"
 
 namespace Urho3D
@@ -117,12 +117,12 @@ void RegisterDetourCrowdManager(asIScriptEngine *engine)
     engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_MEDIUM", PUSHINESS_MEDIUM);
     engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_HIGH", PUSHINESS_HIGH);
     
-    RegisterComponent<DetourCrowdManager>(engine, "DetourCrowdManager");
-    engine->RegisterObjectMethod("DetourCrowdManager", "void set_navigationMesh(NavigationMesh@+)", asMETHOD(DetourCrowdManager, SetNavigationMesh), asCALL_THISCALL);
-    engine->RegisterObjectMethod("DetourCrowdManager", "NavigationMesh@+ get_navigationMesh()", asMETHOD(DetourCrowdManager, GetNavigationMesh), asCALL_THISCALL);
-    engine->RegisterObjectMethod("DetourCrowdManager", "bool CreateCrowd()", asMETHOD(DetourCrowdManager, CreateCrowd), asCALL_THISCALL);
-    engine->RegisterObjectMethod("DetourCrowdManager", "void DrawDebug(DebugRenderer@+,bool)", asMETHOD(DetourCrowdManager, DrawDebug), asCALL_THISCALL);
-    engine->RegisterObjectMethod("DetourCrowdManager", "Vector3 GetClosestWalkablePosition(Vector3)", asMETHOD(DetourCrowdManager, GetClosestWalkablePosition), asCALL_THISCALL);
+    RegisterComponent<NavigationCrowdManager>(engine, "NavigationCrowdManager");
+    engine->RegisterObjectMethod("NavigationCrowdManager", "void set_navigationMesh(NavigationMesh@+)", asMETHOD(NavigationCrowdManager, SetNavigationMesh), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationCrowdManager", "NavigationMesh@+ get_navigationMesh()", asMETHOD(NavigationCrowdManager, GetNavigationMesh), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationCrowdManager", "bool CreateCrowd()", asMETHOD(NavigationCrowdManager, CreateCrowd), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationCrowdManager", "void DrawDebug(DebugRenderer@+,bool)", asMETHOD(NavigationCrowdManager, DrawDebug), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationCrowdManager", "Vector3 GetClosestWalkablePosition(Vector3)", asMETHOD(NavigationCrowdManager, GetClosestWalkablePosition), asCALL_THISCALL);
     
 }
 

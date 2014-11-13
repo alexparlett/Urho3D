@@ -28,19 +28,18 @@
 #include "Component.h"
 #include "Node.h"
 #include "Log.h"
-#include "DetourCrowdManager.h"
+#include "NavigationCrowdManager.h"
+#include "NavigationEvents.h"
 #include "Profiler.h"
 #include "Serializable.h"
 #include "Variant.h"
+#include "CollisionShape.h"
+#include "StaticModel.h"
 
 #include <DetourCommon.h>
 #include <DetourCrowd.h>
 
 #include "DebugNew.h"
-
-
-
-
 
 namespace Urho3D
 {
@@ -49,8 +48,8 @@ extern const char* NAVIGATION_CATEGORY;
 
 static const float DEFAULT_AGENT_MAX_SPEED = 5.0f;
 static const float DEFAULT_AGENT_MAX_ACCEL = 3.6f;
-static const NavigationAvoidanceQuality DEFAULT_AGENT_AVOIDANCE_QUALITY=NAVIGATIONQUALITY_HIGH;
-static const NavigationPushiness DEFAULT_AGENT_NAVIGATION_PUSHINESS=PUSHINESS_MEDIUM;
+static const NavigationAvoidanceQuality DEFAULT_AGENT_AVOIDANCE_QUALITY = NAVIGATIONQUALITY_HIGH;
+static const NavigationPushiness DEFAULT_AGENT_NAVIGATION_PUSHINESS = PUSHINESS_MEDIUM;
 
 
 NavigationAgent::NavigationAgent(Context* context) :
@@ -59,6 +58,7 @@ NavigationAgent::NavigationAgent(Context* context) :
     agentCrowdId_(-1),
     targetRef_(-1),
     updateNodePosition_(true),
+    flags_(PolyFlags_Walk | PolyFlags_Swim | PolyFlags_Jump | PolyFlags_Door),
     maxAccel_(DEFAULT_AGENT_MAX_ACCEL),
     maxSpeed_(DEFAULT_AGENT_MAX_SPEED),
     navQuality_(DEFAULT_AGENT_AVOIDANCE_QUALITY),
@@ -87,14 +87,28 @@ void NavigationAgent::OnNodeSet(Node* node)
         if (scene)
         {
             if (scene == node)
-                LOGWARNING(GetTypeName() + " should not be created to the root scene node");		
-                /// \todo error handling if no DetourCrowdManager component was created
-                crowdManager_ = scene->GetOrCreateComponent<DetourCrowdManager>();
-                // 
-                //crowdManager_ = scene->GetOrCreateComponent<DetourCrowdManager>();
-                //crowdManager_->AddAgent(this);
+            {
+                LOGERROR(GetTypeName() + " should not be created to the root scene node");
+                return;
+            }
 
-                AddAgentToCrowd();
+            CollisionShape* cs = GetComponent<CollisionShape>();
+            if (cs)
+            {
+                height_ = cs->GetWorldBoundingBox().Size().y_;
+                radius_ = Max(cs->GetWorldBoundingBox().HalfSize().x_, cs->GetWorldBoundingBox().HalfSize().z_);
+            }
+
+            StaticModel* sm = GetComponent<StaticModel>();
+            if (sm)
+            {
+                height_ = sm->GetWorldBoundingBox().Size().y_;
+                radius_ = Max(sm->GetWorldBoundingBox().HalfSize().x_, sm->GetWorldBoundingBox().HalfSize().z_);
+            }
+            
+            crowdManager_ = scene->GetOrCreateComponent<NavigationCrowdManager>();
+
+            AddAgentToCrowd();
         }
         else
             LOGERROR("Node is detached from scene, can not create navigation agent.");
@@ -120,12 +134,12 @@ void NavigationAgent::AddAgentToCrowd()
 
     PROFILE(AddAgentToCrowd);
 
-    if (agentCrowdId_ !=-1)
+    if (agentCrowdId_ != -1)
         RemoveAgentFromCrowd();
     else
     {
         inCrowd_ = true;
-        agentCrowdId_ = crowdManager_->AddAgent(node_->GetPosition(), maxAccel_, maxSpeed_);
+        agentCrowdId_ = crowdManager_->AddAgent(node_->GetWorldPosition(), maxAccel_, maxSpeed_, radius_, height_, flags_);
         if (agentCrowdId_ == -1)
         {
             inCrowd_ = false;
@@ -191,7 +205,7 @@ void NavigationAgent::SetMaxAccel(float accel)
 
 void NavigationAgent::SetNavigationQuality(NavigationAvoidanceQuality val)
 {
-    navQuality_=val;
+    navQuality_ = val;
     if(crowdManager_ && inCrowd_)
     {
         crowdManager_->UpdateAgentNavigationQuality(agentCrowdId_, navQuality_);
@@ -200,7 +214,7 @@ void NavigationAgent::SetNavigationQuality(NavigationAvoidanceQuality val)
 
 void NavigationAgent::SetNavigationPushiness(NavigationPushiness val)
 {
-    navPushiness_=val;
+    navPushiness_ = val;
     if(crowdManager_ && inCrowd_)
     {
         crowdManager_->UpdateAgentPushiness(agentCrowdId_, navPushiness_);
@@ -213,7 +227,7 @@ Vector3 NavigationAgent::GetPosition() const
     {
         return crowdManager_->GetAgentPosition(agentCrowdId_);
     }
-    return node_->GetPosition();// or return ZERO ??
+    return node_->GetWorldPosition();// or return ZERO ??
 }
 
 Vector3 NavigationAgent::GetDesiredVelocity() const
@@ -300,15 +314,13 @@ void NavigationAgent::OnNavigationAgentReposition(const Vector3& newPos)
     if(node_)
     {
         // Notify parent node of the reposition
-        VariantMap map;
-        map[NavigationAgentReposition::P_POSITION]=newPos;
-        map[NavigationAgentReposition::P_VELOCITY]=GetActualVelocity();
+        VariantMap map = GetEventDataMap();
+        map[NavigationAgentReposition::P_POSITION] =  newPos;
+        map[NavigationAgentReposition::P_VELOCITY] = GetActualVelocity();
         node_->SendEvent(E_NAVIGATION_AGENT_REPOSITION, map);
         
         if (updateNodePosition_)
-        {
-            node_->SetPosition(newPos);
-        }
+            node_->SetWorldPosition(newPos);
     }
 }
 

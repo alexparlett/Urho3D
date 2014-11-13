@@ -24,12 +24,12 @@
 #include "Precompiled.h"
 #include "Context.h"
 #include "AnnotationBuilder.h"
-#include "DetourCrowdManager.h"
+#include "NavigationCrowdManager.h"
 #include "NavigationMesh.h"
 #include "Log.h"
 #include "Profiler.h"
 #include <Recast.h>
-#include "DetourDebugRenderer.h"
+#include "NavigationDebugRenderer.h"
 /// \todo use urho3d functions 
 #include "vecmath.h"
 
@@ -220,7 +220,7 @@ namespace Urho3D
 		if (debug)
 		{
 			PROFILE(DrawDebugAnnotationBuilder);
-			DetourDebugRenderer dd(context_);
+			NavigationDebugRenderer dd(context_);
 			dd.SetDebugRenderer(debug);
 			dd.depthMask(depthTest);
 

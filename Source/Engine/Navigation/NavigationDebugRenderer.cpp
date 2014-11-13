@@ -22,7 +22,7 @@
 
 #include "Precompiled.h"
 #include "Context.h"
-#include "DetourDebugRenderer.h"
+#include "NavigationDebugRenderer.h"
 #include "DebugRenderer.h"
 
 #include "DebugNew.h"
@@ -34,34 +34,34 @@ namespace Urho3D
 
 extern const char* NAVIGATION_CATEGORY;
 
-DetourDebugRenderer::DetourDebugRenderer(Context* context) :
+NavigationDebugRenderer::NavigationDebugRenderer(Context* context) :
 Object(context),
 type_(DU_DRAW_POINTS),
 depthTest_(false)
 {
 }
 
-DetourDebugRenderer::~DetourDebugRenderer()
+NavigationDebugRenderer::~NavigationDebugRenderer()
 {
 
 }
 
-void DetourDebugRenderer::RegisterObject(Context* context)
+void NavigationDebugRenderer::RegisterObject(Context* context)
 {
-    context->RegisterFactory<DetourDebugRenderer>(NAVIGATION_CATEGORY);
+    context->RegisterFactory<NavigationDebugRenderer>(NAVIGATION_CATEGORY);
 }
 
-void DetourDebugRenderer::depthMask(bool state)
+void NavigationDebugRenderer::depthMask(bool state)
 {
     depthTest_ = state;
 }
 
-void DetourDebugRenderer::texture(bool state)
+void NavigationDebugRenderer::texture(bool state)
 {
     
 }
 
-void DetourDebugRenderer::begin(duDebugDrawPrimitives prim, float size /*= 1.0f*/)
+void NavigationDebugRenderer::begin(duDebugDrawPrimitives prim, float size /*= 1.0f*/)
 {
     switch (prim)
     {
@@ -80,27 +80,27 @@ void DetourDebugRenderer::begin(duDebugDrawPrimitives prim, float size /*= 1.0f*
     };
 }
 
-void DetourDebugRenderer::vertex(const float* pos, unsigned int color)
+void NavigationDebugRenderer::vertex(const float* pos, unsigned int color)
 {
     vertices_.Push(DebugVertex(Vector3(pos[0], pos[1], pos[2]), color));
 }
 
-void DetourDebugRenderer::vertex(const float x, const float y, const float z, unsigned int color)
+void NavigationDebugRenderer::vertex(const float x, const float y, const float z, unsigned int color)
 {
     vertices_.Push(DebugVertex(Vector3(x, y, z), color));
 }
 
-void DetourDebugRenderer::vertex(const float* pos, unsigned int color, const float* uv)
+void NavigationDebugRenderer::vertex(const float* pos, unsigned int color, const float* uv)
 {
     vertices_.Push(DebugVertex(Vector3(pos[0], pos[1], pos[2]), color));
 }
 
-void DetourDebugRenderer::vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v)
+void NavigationDebugRenderer::vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v)
 {
     vertices_.Push(DebugVertex(Vector3(x, y, z), color));
 }
 
-void DetourDebugRenderer::end()
+void NavigationDebugRenderer::end()
 {
     if (debugRenderer_.Expired())
         return;
@@ -131,17 +131,17 @@ void DetourDebugRenderer::end()
 
 }
 
-void DetourDebugRenderer::SetDebugRenderer(DebugRenderer* debug)
+void NavigationDebugRenderer::SetDebugRenderer(DebugRenderer* debug)
 {
     debugRenderer_ = WeakPtr<DebugRenderer>(debug);
 }
 
-void DetourDebugRenderer::DrawPoints()
+void NavigationDebugRenderer::DrawPoints()
 {
     
 }
 
-void DetourDebugRenderer::DrawLines()
+void NavigationDebugRenderer::DrawLines()
 {
     for (unsigned i = 0; i < vertices_.Size(); i= i+2)
     {
@@ -153,7 +153,7 @@ void DetourDebugRenderer::DrawLines()
     
 }
 
-void DetourDebugRenderer::DrawTris()
+void NavigationDebugRenderer::DrawTris()
 {
     for (unsigned i = 0; i < vertices_.Size(); i = i + 3)
     {
@@ -163,7 +163,7 @@ void DetourDebugRenderer::DrawTris()
     }
 }
 
-void DetourDebugRenderer::DrawQuads()
+void NavigationDebugRenderer::DrawQuads()
 {
     for (unsigned i = 0; i < vertices_.Size(); i = i + 4)
     {

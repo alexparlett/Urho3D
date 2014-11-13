@@ -39,8 +39,8 @@
 #include "StaticModel.h"
 #include "TerrainPatch.h"
 #include "VectorBuffer.h"
-#include "DetourCrowdManager.h"
-#include "DetourDebugRenderer.h"
+#include "NavigationCrowdManager.h"
+#include "NavigationDebugRenderer.h"
 
 #include <cfloat>
 #include <DetourNavMesh.h>
@@ -1095,7 +1095,8 @@ namespace Urho3D
 			&build_.indices_[0], numTriangles, triAreas.Get());
 		rcRasterizeTriangles(build_.ctx_, &build_.vertices_[0].x_, build_.vertices_.Size(), &build_.indices_[0],
 			triAreas.Get(), numTriangles, *build_.heightField_, cfg.walkableClimb);
-
+
+
 		// Once all geometry is rasterized, we do initial pass of filtering to
 		// remove unwanted overhangs caused by the conservative rasterization
 		// as well as filter spans where the character cannot possibly stand.
@@ -1378,7 +1379,7 @@ namespace Urho3D
 			if (debug && navMesh_ && navMeshQuery_)
 			{
 				PROFILE(DrawDebugNavigationMesh);
-				DetourDebugRenderer dtd(context_);
+				NavigationDebugRenderer dtd(context_);
 				dtd.SetDebugRenderer(debug);
 				dtd.depthMask(depthTest);
 
@@ -1514,8 +1515,8 @@ namespace Urho3D
 		Navigable::RegisterObject(context);
 		NavigationMesh::RegisterObject(context);
 		OffMeshConnection::RegisterObject(context);
-		DetourCrowdManager::RegisterObject(context);
-		DetourDebugRenderer::RegisterObject(context);
+		NavigationCrowdManager::RegisterObject(context);
+		NavigationDebugRenderer::RegisterObject(context);
 		AnnotationBuilder::RegisterObject(context);
 		NavigationAgent::RegisterObject(context);
 	}

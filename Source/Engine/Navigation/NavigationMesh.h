@@ -43,7 +43,7 @@ namespace Urho3D
 {
 
 class Geometry;
-class DetourCrowdManager;
+class NavigationCrowdManager;
 class AnnotationBuilder;
 struct FindPathData;
 
@@ -170,7 +170,7 @@ enum NavmeshPartitionType
 class URHO3D_API NavigationMesh : public Component
 {
     OBJECT(NavigationMesh);
-	friend class DetourCrowdManager;
+	friend class NavigationCrowdManager;
 	friend class AnnotationBuilder;
 public:
     /// Construct.

@@ -23,13 +23,13 @@
 #pragma once
 
 #include "Component.h"
-#include "DetourCrowdManager.h"
+#include "NavigationCrowdManager.h"
 
 namespace Urho3D
 {
 
 
-class DetourCrowdManager;
+class NavigationCrowdManager;
 
 enum NavigationTargetState
 {
@@ -50,13 +50,8 @@ enum NavigationAgentState
     NAV_AGENT_TRAVERSINGLINK	///< The agent is traversing an off-mesh connection.
 };
 
-EVENT(E_NAVIGATION_AGENT_REPOSITION, NavigationAgentReposition)
-{
-    PARAM(P_POSITION, Position); // Vector3
-    PARAM(P_VELOCITY, Velocity); // Vector3
-}
 
-/// Root scene node must have an DetourCrowdManager Component!
+/// Root scene node must have an NavigationCrowdManager Component!
 /// Do not create to the root scene node!
 /// Agents radius and height is set through the navigation mesh.
 /// 
@@ -105,18 +100,25 @@ public:
     /// Returns if the nodes position is updating because of the crowd.
     bool GetUpdateNodePosition();
     /// Returns the agent id.
-    int GetAgentCrowdId()	const	{ return agentCrowdId_; }
+    int GetAgentCrowdId() const	{ return agentCrowdId_; }
     /// Gets the agents max velocity.
-    float GetMaxSpeed()		const	{ return maxSpeed_; }
+    float GetMaxSpeed()	const { return maxSpeed_; }
     /// Gets the agents max acceleration.
-    float GetMaxAccel()		const	{ return maxAccel_; }
+    float GetMaxAccel() const { return maxAccel_; }
+    /// Gets the agents radius.
+    float GetRadius() const { return radius_; }
+    /// Gets the agents height.
+    float GetHeight() const { return height_; }
+    /// Gets the agents flags.
+    unsigned GetFlags() const { return flags_; }
+
     /// Gets the agent's navigation quality
     NavigationAvoidanceQuality GetNavigationQuality() const {return navQuality_; }
     /// Gets the agent's navigation pushiness
     NavigationPushiness GetNavigationPushiness() const {return navPushiness_; }
     
 
-    /// Updates the nodes position if updateNodePosition is set. Is called in DetourCrowdManager::Update().
+    /// Updates the nodes position if updateNodePosition is set. Is called in NavigationCrowdManager::Update().
     virtual void OnNavigationAgentReposition(const Vector3& newPos);
 
 protected:
@@ -130,7 +132,7 @@ private:
     /// Remove 
     void RemoveAgentFromCrowd();
 
-    WeakPtr<DetourCrowdManager> crowdManager_;
+    WeakPtr<NavigationCrowdManager> crowdManager_;
     /// in DetourCrowd ? 
     bool inCrowd_;
     /// DetourCrowd reference to this agent.
@@ -145,6 +147,12 @@ private:
     float maxAccel_;
     /// Agents max Velocity.
     float maxSpeed_;
+    /// Agents height.
+    float height_;
+    /// Agents radius.
+    float radius_;
+    /// Agents flags.
+    unsigned flags_;
     /// Agent's NavigationAvoidanceQuality
     NavigationAvoidanceQuality navQuality_;
     /// Agent's Navigation Pushiness

@@ -30,8 +30,10 @@ struct dtCrowdAgentDebugInfo;
 
 namespace Urho3D
 {
+
 class NavigationMesh;
 class NavigationAgent;
+
 enum NavigationRegionType
 {
     RegionType_Ground = 0,
@@ -41,6 +43,7 @@ enum NavigationRegionType
     RegionType_Grass,
     RegionType_Jump
 };
+
 enum NavigationPolyFlags
 {
     PolyFlags_Walk = 0x01,		// Ability to walk (ground, grass, road)
@@ -50,12 +53,14 @@ enum NavigationPolyFlags
     PolyFlags_Disabled = 0x10,		// Disabled polygon
     PolyFlags_All = 0xffff	// All abilities.
 };
+
 enum NavigationAvoidanceQuality
 {
     NAVIGATIONQUALITY_LOW = 0,
     NAVIGATIONQUALITY_MEDIUM = 1,
     NAVIGATIONQUALITY_HIGH = 2
 };
+
 enum NavigationPushiness
 {
     PUSHINESS_LOW,
@@ -67,34 +72,37 @@ enum NavigationPushiness
 /// Detour Crowd Simulation Scene Component. Should be added only to the root scene node.
 /// Agents radius and height is set through the navigation mesh.
 /// \todo support multiple agents radii and heights
-class URHO3D_API DetourCrowdManager : public Component
+class URHO3D_API NavigationCrowdManager : public Component
 {
-        OBJECT(DetourCrowdManager);
+        OBJECT(NavigationCrowdManager);
         friend class NavigationAgent;
               
 public:
     /// Construct.
-    DetourCrowdManager(Context* context);
+    NavigationCrowdManager(Context* context);
     /// Destruct.
-    virtual ~DetourCrowdManager();
+    virtual ~NavigationCrowdManager();
     /// Register object factory.
     static void RegisterObject(Context* context);
-
 
     /// Assigns the navigation mesh for the crowd.
     void SetNavigationMesh(NavigationMesh *navMesh);
     /// Get the Navigation mesh assigned to the crowd.
     NavigationMesh* GetNavigationMesh();
+    /// Gets all agents.
+    const PODVector<NavigationAgent*>& GetNavigationAgents() const;
 
     /// Create detour crowd component for the specified navigation mesh.
     bool CreateCrowd();
+    /// Draw the agents debug data. 
+    void DrawDebug(DebugRenderer* debug, bool depthTest);
 
+protected:
     /// Update the crowd simulation
     void Update(float delta);
 
     /// Create and adds an detour crowd agent.
-    /// Agents radius and height is set through the navigation mesh!
-    int AddAgent(const Vector3 &pos,  float maxaccel, float maxSpeed);
+    int AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, unsigned avoidenceType = 3);
     /// Removes the detour crowd agent.
     void RemoveAgent(int agent);
 
@@ -124,12 +132,6 @@ public:
     /// Gets the closest walkable position.
     Vector3 GetClosestWalkablePosition(Vector3 pos);
 
-    /// Gets all agents.
-    const PODVector<NavigationAgent*>& GetNavigationAgents() const;
-    /// \todo add flags to specify what to show. path line , Velocity, Paths corridor polys ...
-    /// Draw the agents debug data. 
-    void DrawDebug(DebugRenderer* debug, bool depthTest);
-protected:
     /// Handle node being assigned.
     virtual void OnNodeSet(Node* node);
     /// Gets the detour crowd agent.
