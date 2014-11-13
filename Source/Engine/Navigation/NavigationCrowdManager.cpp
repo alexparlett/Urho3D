@@ -203,36 +203,25 @@ namespace Urho3D
         {
         case NAVIGATIONQUALITY_LOW:
         {
-            params.updateFlags &= ~0
-                & ~DT_CROWD_ANTICIPATE_TURNS
-                & ~DT_CROWD_OPTIMIZE_VIS
-                & ~DT_CROWD_OPTIMIZE_TOPO
-                & ~DT_CROWD_OBSTACLE_AVOIDANCE
-                ;
+            params.obstacleAvoidanceType = 0;
         }
             break;
 
         case NAVIGATIONQUALITY_MEDIUM:
         {
-            params.updateFlags |= 0;
-            params.updateFlags &= ~0
-                & ~DT_CROWD_OBSTACLE_AVOIDANCE
-                & ~DT_CROWD_ANTICIPATE_TURNS
-                & ~DT_CROWD_OPTIMIZE_VIS
-                & ~DT_CROWD_OPTIMIZE_TOPO
-                ;
+            params.obstacleAvoidanceType = 1;
         }
             break;
 
         case NAVIGATIONQUALITY_HIGH:
         {
+            params.obstacleAvoidanceType = 2;
+        }
+            break;
+
+        case NAVIGATIONQUALITY_EXTRA_HIGH:
+        {
             params.obstacleAvoidanceType = 3;
-            params.updateFlags |= 0
-                | DT_CROWD_ANTICIPATE_TURNS
-                | DT_CROWD_OPTIMIZE_VIS
-                | DT_CROWD_OPTIMIZE_TOPO
-                | DT_CROWD_OBSTACLE_AVOIDANCE
-                ;
         }
             break;
         }
@@ -448,6 +437,12 @@ namespace Urho3D
     void NavigationCrowdManager::AddAgentComponent(NavigationAgent* agent)
     {
         agentComponents_.Push(agent);
+
+
+        dtCrowdAgentParams params = crowd_->getEditableAgent(agentCrowdId_)->params;
+        params.userData = this;
+
+        crowd_->updateAgentParameters(agentCrowdId_, &params);
     }
 
     void NavigationCrowdManager::RemoveAgentComponent(NavigationAgent* agent)

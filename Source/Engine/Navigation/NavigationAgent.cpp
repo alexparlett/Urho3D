@@ -92,19 +92,27 @@ void NavigationAgent::OnNodeSet(Node* node)
                 return;
             }
 
+#ifdef URHO3D_PHYSICS
             CollisionShape* cs = GetComponent<CollisionShape>();
+            StaticModel* sm = GetComponent<StaticModel>();
             if (cs)
             {
                 height_ = cs->GetWorldBoundingBox().Size().y_;
                 radius_ = Max(cs->GetWorldBoundingBox().HalfSize().x_, cs->GetWorldBoundingBox().HalfSize().z_);
             }
-
+            else if (sm)
+            {
+                height_ = sm->GetWorldBoundingBox().Size().y_;
+                radius_ = Max(sm->GetWorldBoundingBox().HalfSize().x_, sm->GetWorldBoundingBox().HalfSize().z_);
+            }
+#else
             StaticModel* sm = GetComponent<StaticModel>();
             if (sm)
             {
                 height_ = sm->GetWorldBoundingBox().Size().y_;
                 radius_ = Max(sm->GetWorldBoundingBox().HalfSize().x_, sm->GetWorldBoundingBox().HalfSize().z_);
             }
+#endif
             
             crowdManager_ = scene->GetOrCreateComponent<NavigationCrowdManager>();
 
@@ -136,23 +144,21 @@ void NavigationAgent::AddAgentToCrowd()
 
     if (agentCrowdId_ != -1)
         RemoveAgentFromCrowd();
-    else
+
+    inCrowd_ = true;
+    agentCrowdId_ = crowdManager_->AddAgent(node_->GetPosition(), maxAccel_, maxSpeed_, radius_, height_, flags_);
+    if (agentCrowdId_ == -1)
     {
-        inCrowd_ = true;
-        agentCrowdId_ = crowdManager_->AddAgent(node_->GetWorldPosition(), maxAccel_, maxSpeed_, radius_, height_, flags_);
-        if (agentCrowdId_ == -1)
-        {
-            inCrowd_ = false;
-            LOGERROR("AddAgentToCrowd: Could not add agent to crowd!");
-            return;
-        }
-        crowdManager_->AddAgentComponent(this);
-        dtCrowdAgentParams params = crowdManager_->GetCrowd()->getEditableAgent(agentCrowdId_)->params;
-        //  add this component as a userpointer in dtCrowdAgentParams ? 
-        params.userData = this;
-        crowdManager_->UpdateAgentNavigationQuality(agentCrowdId_, navQuality_);
-        crowdManager_->UpdateAgentPushiness(agentCrowdId_, navPushiness_);
+        inCrowd_ = false;
+        LOGERROR("AddAgentToCrowd: Could not add agent to crowd!");
+        return;
     }
+
+    crowdManager_->GetNavigationMesh()->navMesh_->
+
+    crowdManager_->AddAgentComponent(this);
+    crowdManager_->UpdateAgentNavigationQuality(agentCrowdId_, navQuality_);
+    crowdManager_->UpdateAgentPushiness(agentCrowdId_, navPushiness_);
 }
 
 void NavigationAgent::RemoveAgentFromCrowd()
@@ -227,7 +233,7 @@ Vector3 NavigationAgent::GetPosition() const
     {
         return crowdManager_->GetAgentPosition(agentCrowdId_);
     }
-    return node_->GetWorldPosition();// or return ZERO ??
+    return node_->GetPosition();// or return ZERO ??
 }
 
 Vector3 NavigationAgent::GetDesiredVelocity() const
@@ -320,14 +326,13 @@ void NavigationAgent::OnNavigationAgentReposition(const Vector3& newPos)
         node_->SendEvent(E_NAVIGATION_AGENT_REPOSITION, map);
         
         if (updateNodePosition_)
-            node_->SetWorldPosition(newPos);
+            node_->SetPosition(newPos);
     }
 }
 
 void NavigationAgent::OnMarkedDirty(Node* node)
 {
-
+    AddAgentToCrowd();
 }
-
 
 }

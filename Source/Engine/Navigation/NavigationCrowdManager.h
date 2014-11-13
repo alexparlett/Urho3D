@@ -58,7 +58,8 @@ enum NavigationAvoidanceQuality
 {
     NAVIGATIONQUALITY_LOW = 0,
     NAVIGATIONQUALITY_MEDIUM = 1,
-    NAVIGATIONQUALITY_HIGH = 2
+    NAVIGATIONQUALITY_HIGH = 2,
+    NAVIGATIONQUALITY_EXTRA_HIGH = 3
 };
 
 enum NavigationPushiness
