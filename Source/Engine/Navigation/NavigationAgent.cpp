@@ -154,8 +154,6 @@ void NavigationAgent::AddAgentToCrowd()
         return;
     }
 
-    crowdManager_->GetNavigationMesh()->navMesh_->
-
     crowdManager_->AddAgentComponent(this);
     crowdManager_->UpdateAgentNavigationQuality(agentCrowdId_, navQuality_);
     crowdManager_->UpdateAgentPushiness(agentCrowdId_, navPushiness_);

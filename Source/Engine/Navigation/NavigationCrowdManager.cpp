@@ -66,6 +66,7 @@ namespace Urho3D
     NavigationCrowdManager::~NavigationCrowdManager()
     {
         dtFreeCrowd(crowd_);
+
         if (agentDebug_)
             delete agentDebug_;
     }
@@ -78,6 +79,7 @@ namespace Urho3D
     void NavigationCrowdManager::SetNavigationMesh(NavigationMesh *navMesh)
     {
         navigationMesh_ = WeakPtr<NavigationMesh>(navMesh);
+
         if (navigationMesh_ && !navigationMesh_->navMeshQuery_)
             navigationMesh_->InitializeQuery();
     }
@@ -157,8 +159,9 @@ namespace Urho3D
 
     int NavigationCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, unsigned avoidenceType)
     {
-        if (crowd_ == 0 && navigationMesh_.Expired())
+        if (!crowd_ && navigationMesh_.Expired())
             return -1;
+
         dtCrowdAgentParams params;
         params.radius = radius;
         params.height = height;
@@ -173,6 +176,7 @@ namespace Urho3D
 
         dtPolyRef polyRef;
         float nearestPos[3];
+
         dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
             pos.Data(),
             crowd_->getQueryExtents(),
@@ -187,15 +191,16 @@ namespace Urho3D
 
     void NavigationCrowdManager::RemoveAgent(int agent)
     {
-        if (crowd_ == 0)
+        if (!crowd_ )
             return;
+
         crowd_->removeAgent(agent);
         MarkNetworkUpdate();
     }
 
     void NavigationCrowdManager::UpdateAgentNavigationQuality(int agent, NavigationAvoidanceQuality nq)
     {
-        if (crowd_ == 0)
+        if (!crowd_ )
             return;
 
         dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
@@ -233,7 +238,7 @@ namespace Urho3D
 
     void NavigationCrowdManager::UpdateAgentPushiness(int agent, NavigationPushiness pushiness)
     {
-        if (crowd_ == 0)
+        if (!crowd_ )
             return;
 
         dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
@@ -261,8 +266,9 @@ namespace Urho3D
 
     void NavigationCrowdManager::UpdateAgentMaxSpeed(int agent, float maxSpeed)
     {
-        if (crowd_ == 0)
+        if (!crowd_ )
             return;
+
         dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
         params.maxSpeed = maxSpeed;
         crowd_->updateAgentParameters(agent, &params);
@@ -272,10 +278,12 @@ namespace Urho3D
 
     void NavigationCrowdManager::UpdateAgentMaxAcceleration(int agent, float accel)
     {
-        if (crowd_ == 0)
+        if (!crowd_ )
             return;
+
         dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
         params.maxAcceleration = accel;
+
         crowd_->updateAgentParameters(agent, &params);
 
         MarkNetworkUpdate();
@@ -283,10 +291,12 @@ namespace Urho3D
 
     bool NavigationCrowdManager::SetAgentTarget(int agent, Vector3 target)
     {
-        if (crowd_ == 0)
+        if (!crowd_ )
             return false;
+
         dtPolyRef polyRef;
         float nearestPos[3];
+
         dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
             target.Data(),
             crowd_->getQueryExtents(),
@@ -312,9 +322,11 @@ namespace Urho3D
 
     bool NavigationCrowdManager::SetAgentTarget(int agent, Vector3 target, unsigned int & targetRef)
     {
-        if (crowd_ == 0)
+        if (!crowd_ )
             return false;
+
         float nearestPos[3];
+
         dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
             target.Data(),
             crowd_->getQueryExtents(),
@@ -340,53 +352,62 @@ namespace Urho3D
 
     Vector3 NavigationCrowdManager::GetAgentPosition(int agent)
     {
-        if (crowd_ == 0)
-            return Vector3();
+        if (!crowd_)
+            return Vector3::ZERO;
 
         if (!crowd_->getAgent(agent) || !crowd_->getAgent(agent)->active)
-            return Vector3();
+            return Vector3::ZERO;
+
         return FloatToVec3(crowd_->getAgent(agent)->npos);
     }
 
     Vector3 NavigationCrowdManager::GetAgentCurrentVelocity(int agent)
     {
-        if (crowd_ == 0)
-            return Vector3();
+        if (!crowd_)
+            return Vector3::ZERO;
+
         if (!crowd_->getAgent(agent) || !crowd_->getAgent(agent)->active)
-            return Vector3();
+            return Vector3::ZERO;
+
         return FloatToVec3(crowd_->getAgent(agent)->vel);
     }
 
     Vector3 NavigationCrowdManager::GetAgentDesiredVelocity(int agent)
     {
-        if (crowd_ == 0)
-            return Vector3();
+        if (!crowd_)
+            return Vector3::ZERO;
+
         if (!crowd_->getAgent(agent) || !crowd_->getAgent(agent)->active)
             return Vector3();
+
         return FloatToVec3(crowd_->getAgent(agent)->dvel);
     }
 
     Vector3 NavigationCrowdManager::GetClosestWalkablePosition(Vector3 pos)
     {
-        if (crowd_ == 0)
-            return Vector3();
+        if (!crowd_)
+            return Vector3::ZERO;
+
         float closest[3];
         const static float extents[] = { 1.0f, 20.0f, 1.0f };
         dtPolyRef closestPoly;
         dtQueryFilter filter;
+
         dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
             pos.Data(),
             extents,
             &filter,
             &closestPoly,
             closest);
+
         return FloatToVec3(closest);
     }
 
     bool NavigationCrowdManager::SetMoveVelocity(int agent, const Vector3 & velocity)
     {
-        if (crowd_ == 0)
+        if (!crowd_)
             return false;
+
         // Request that we navigate to this position.
         if (crowd_->getAgent(agent) && crowd_->getAgent(agent)->active)
             return crowd_->requestMoveVelocity(agent, velocity.Data());
@@ -397,40 +418,23 @@ namespace Urho3D
 
     void NavigationCrowdManager::Update(float delta)
     {
-        if (crowd_ == 0)
+        if (!crowd_ )
             return;
 
         crowd_->update(delta, agentDebug_);
 
-        /// \todo  use this ?
         PODVector<NavigationAgent*>::Iterator it;
         for (it = agentComponents_.Begin(); it != agentComponents_.End(); it++)
         {
             (*it)->OnNavigationAgentReposition(FloatToVec3(crowd_->getAgent((*it)->GetAgentCrowdId())->npos));
         }
-        /// or use events ?
-        /// or use this
-        /// but there is a problem if you dont use NavigationAgent components ...
-        // 		dtCrowdAgent* _agents[MAX_AGENTS] = { NULL };
-        // 		//memset(_agents, 0, MAX_AGENTS * sizeof(*_agents));
-        // 		int count = crowd_->getActiveAgents(_agents, MAX_AGENTS);
-        // 		for (int i = 0; i < count; i++)
-        // 		{
-        // 			if (_agents[i])
-        // 			{
-        // 				NavigationAgent* a = static_cast<NavigationAgent*>(_agents[i]->params.userData);
-        // 				if (a)
-        // 				{
-        // 					a->OnNavigationAgentReposition(FloatToVec3(_agents[i]->npos));
-        // 				}
-        // 			}
-        // 		}
     }
 
     const dtCrowdAgent * NavigationCrowdManager::GetCrowdAgent(int agent)
     {
         if (!crowd_)
-            return NULL;
+            return 0;
+
         return crowd_->getAgent(agent);
     }
 
@@ -439,10 +443,10 @@ namespace Urho3D
         agentComponents_.Push(agent);
 
 
-        dtCrowdAgentParams params = crowd_->getEditableAgent(agentCrowdId_)->params;
-        params.userData = this;
+        dtCrowdAgentParams params = crowd_->getAgent(agent->GetAgentCrowdId())->params;
+        params.userData = agent;
 
-        crowd_->updateAgentParameters(agentCrowdId_, &params);
+        crowd_->updateAgentParameters(agent->GetAgentCrowdId(), &params);
     }
 
     void NavigationCrowdManager::RemoveAgentComponent(NavigationAgent* agent)
@@ -459,18 +463,6 @@ namespace Urho3D
             dd.SetDebugRenderer(debug);
             dd.depthMask(depthTest);
 
-            // Paths corridor polys
-            // 			for (int i = 0; i < crowd_->getAgentCount(); i++)
-            // 			{
-            // 				const dtCrowdAgent* ag = crowd_->getAgent(i);
-            // 				if (!ag->active)
-            // 					continue;
-            // 				const dtPolyRef* path = ag->corridor.getPath();
-            // 				const int npath = ag->corridor.getPathCount();
-            // 				// Draw path corridor polys
-            // 				for (int j = 0; j < npath; ++j)
-            // 					duDebugDrawNavMeshPoly(&dd, *navMesh_->navMesh_, path[j], duRGBA(255, 255, 255, 5));
-            // 			}
 
             // Current position-to-target line
             for (int i = 0; i < crowd_->getAgentCount(); i++)
