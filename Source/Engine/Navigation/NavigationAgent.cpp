@@ -30,10 +30,13 @@
 #include "Log.h"
 #include "NavigationCrowdManager.h"
 #include "NavigationEvents.h"
+#include "NavigationMesh.h"
 #include "Profiler.h"
 #include "Serializable.h"
 #include "Variant.h"
+#ifdef URHO3D_PHYSICS
 #include "CollisionShape.h"
+#endif
 #include "StaticModel.h"
 
 #include <DetourCommon.h>
@@ -58,7 +61,7 @@ NavigationAgent::NavigationAgent(Context* context) :
     agentCrowdId_(-1),
     targetRef_(-1),
     updateNodePosition_(true),
-    flags_(PolyFlags_Walk | PolyFlags_Swim | PolyFlags_Jump | PolyFlags_Door),
+    flags_(PolyFlags_Walk | PolyFlags_Jump | PolyFlags_Door),
     maxAccel_(DEFAULT_AGENT_MAX_ACCEL),
     maxSpeed_(DEFAULT_AGENT_MAX_SPEED),
     navQuality_(DEFAULT_AGENT_AVOIDANCE_QUALITY),
@@ -77,6 +80,9 @@ void NavigationAgent::RegisterObject(Context* context)
 
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Accel", GetMaxAccel, SetMaxAccel, float, DEFAULT_AGENT_MAX_ACCEL, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Speed", GetMaxSpeed, SetMaxSpeed, float, DEFAULT_AGENT_MAX_SPEED, AM_DEFAULT);
+    ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Height", GetHeight, SetHeight, float, DEFAULT_AGENT_HEIGHT, AM_DEFAULT);
+    ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Radius", GetRadius, SetRadius, float, DEFAULT_AGENT_RADIUS, AM_DEFAULT);
+
 }
 
 void NavigationAgent::OnNodeSet(Node* node)
@@ -91,6 +97,8 @@ void NavigationAgent::OnNodeSet(Node* node)
                 LOGERROR(GetTypeName() + " should not be created to the root scene node");
                 return;
             }
+
+            crowdManager_ = scene->GetOrCreateComponent<NavigationCrowdManager>();
 
 #ifdef URHO3D_PHYSICS
             CollisionShape* cs = GetComponent<CollisionShape>();
@@ -113,8 +121,11 @@ void NavigationAgent::OnNodeSet(Node* node)
                 radius_ = Max(sm->GetWorldBoundingBox().HalfSize().x_, sm->GetWorldBoundingBox().HalfSize().z_);
             }
 #endif
-            
-            crowdManager_ = scene->GetOrCreateComponent<NavigationCrowdManager>();
+            else
+            {
+                height_ = crowdManager_->GetNavigationMesh()->GetAgentHeight();
+                radius_ = crowdManager_->GetNavigationMesh()->GetAgentRadius();
+            }
 
             AddAgentToCrowd();
         }

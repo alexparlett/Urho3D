@@ -218,7 +218,7 @@ public:
 	void SetKeepInterResults(bool val);
 
     /// Rebuild the navigation mesh. Return true if successful.
-    bool Build();
+    bool Build(); 
     /// Rebuild part of the navigation mesh contained by the world-space bounding box. Return true if successful.
     bool Build(const BoundingBox& boundingBox);
     /// Find the nearest point on the navigation mesh to a given point. Extens specifies how far out from the specified point to check along each axis.
