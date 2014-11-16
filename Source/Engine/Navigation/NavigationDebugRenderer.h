@@ -28,7 +28,26 @@
 
 namespace Urho3D
 {
-    class DebugRenderer;
+
+class DebugRenderer;
+
+/// Debug rendering line.
+struct DebugVertex
+{
+    /// Construct undefined.
+    DebugVertex()
+    {
+    }
+    /// Construct with start and end positions and color.
+    DebugVertex(const Vector3& vert, unsigned color) :
+        vert_(vert),
+        color_(color)
+    {
+    }
+    Vector3 vert_;
+    unsigned color_;
+};
+
 /// NavigationDebugRenderer
 class URHO3D_API NavigationDebugRenderer : public Object, public duDebugDraw
 {
@@ -76,25 +95,10 @@ private:
     void DrawLines();
     void DrawTris();
     void DrawQuads();
+
     duDebugDrawPrimitives type_;
     WeakPtr<DebugRenderer> debugRenderer_;
     bool depthTest_;
-    /// Debug rendering line.
-    struct DebugVertex
-    {
-        /// Construct undefined.
-        DebugVertex()
-        {
-        }
-        /// Construct with start and end positions and color.
-        DebugVertex(const Vector3& vert, unsigned color) :
-            vert_(vert),
-            color_(color)
-        {
-        }
-        Vector3 vert_;
-        unsigned color_;
-    };
     PODVector<DebugVertex> vertices_;
 };
 

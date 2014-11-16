@@ -27,10 +27,15 @@
 namespace Urho3D
 {
 
-EVENT(E_NAVIGATION_AGENT_REPOSITION, NavigationAgentReposition)
+EVENT(E_NAVIGATION_AGENT_MOVEMENT, NavigationAgentMovement)
 {
     PARAM(P_POSITION, Position); // Vector3
     PARAM(P_VELOCITY, Velocity); // Vector3
+}
+
+EVENT(E_NAVIGATION_AGENT_REACHED_TARGET, NavigationAgentReachedTarget)
+{
+    PARAM(P_AGENT, Agent); //NavigationAgent
 }
 
 }

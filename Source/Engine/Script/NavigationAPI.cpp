@@ -105,7 +105,7 @@ void RegisterOffMeshConnection(asIScriptEngine* engine)
 }
 
 
-void RegisterDetourCrowdManager(asIScriptEngine *engine)
+void RegisterNavigationCrowdManager(asIScriptEngine *engine)
 {
     engine->RegisterEnum("NavigationAvoidanceQuality");
     engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_LOW", NAVIGATIONQUALITY_LOW);
@@ -116,9 +116,16 @@ void RegisterDetourCrowdManager(asIScriptEngine *engine)
     engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_LOW", PUSHINESS_LOW);
     engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_MEDIUM", PUSHINESS_MEDIUM);
     engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_HIGH", PUSHINESS_HIGH);
-    
+
+    engine->RegisterEnum("NavigationFlags");
+    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_WALK", NAVIGATIONFLAGS_WALK);
+    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_SWIM", NAVIGATIONFLAGS_SWIM);
+    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_JUMP", NAVIGATIONFLAGS_JUMP);
+    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_DOOR", NAVIGATIONFLAGS_DOOR);
+    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_DISABLED", NAVIGATIONFLAGS_DISABLED);
+    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_ALL", NAVIGATIONFLAGS_ALL);
+
     RegisterComponent<NavigationCrowdManager>(engine, "NavigationCrowdManager");
-    engine->RegisterObjectMethod("NavigationCrowdManager", "void set_navigationMesh(NavigationMesh@+)", asMETHOD(NavigationCrowdManager, SetNavigationMesh), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationCrowdManager", "NavigationMesh@+ get_navigationMesh()", asMETHOD(NavigationCrowdManager, GetNavigationMesh), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationCrowdManager", "bool CreateCrowd()", asMETHOD(NavigationCrowdManager, CreateCrowd), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationCrowdManager", "void DrawDebug(DebugRenderer@+,bool)", asMETHOD(NavigationCrowdManager, DrawDebug), asCALL_THISCALL);
@@ -147,21 +154,27 @@ void RegisterNavigationAgent(asIScriptEngine *engine)
     engine->RegisterObjectMethod("NavigationAgent", "bool SetMoveTarget(const Vector3&in)", asMETHOD(NavigationAgent, SetMoveTarget), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "bool SetMoveVelocity(const Vector3&in)", asMETHOD(NavigationAgent, SetMoveVelocity), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "void set_updateNodePosition(bool)", asMETHOD(NavigationAgent, SetUpdateNodePosition), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "bool get_updateNodePosition()", asMETHOD(NavigationAgent, GetUpdateNodePosition), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "bool get_updateNodePosition() const", asMETHOD(NavigationAgent, GetUpdateNodePosition), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "void set_maxAccel(float)", asMETHOD(NavigationAgent, SetMaxAccel), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "float get_maxAccel()", asMETHOD(NavigationAgent, GetMaxAccel), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "float get_maxAccel() const", asMETHOD(NavigationAgent, GetMaxAccel), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "void set_maxSpeed(float)", asMETHOD(NavigationAgent, SetMaxSpeed), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "float get_maxSpeed()", asMETHOD(NavigationAgent, GetMaxSpeed), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "float get_maxSpeed() const", asMETHOD(NavigationAgent, GetMaxSpeed), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_height(float)", asMETHOD(NavigationAgent, SetHeight), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "float get_height() const", asMETHOD(NavigationAgent, GetHeight), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_radius(float)", asMETHOD(NavigationAgent, SetRadius), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "float get_radius() const", asMETHOD(NavigationAgent, GetRadius), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_flags(uint)", asMETHOD(NavigationAgent, SetFlags), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "uint get_flags() const", asMETHOD(NavigationAgent, GetFlags), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "void set_navigationQuality(NavigationAvoidanceQuality)", asMETHOD(NavigationAgent, SetNavigationQuality), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "NavigationAvoidanceQuality get_navigationQuality()", asMETHOD(NavigationAgent, GetNavigationQuality), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationAvoidanceQuality get_navigationQuality() const", asMETHOD(NavigationAgent, GetNavigationQuality), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "void set_navigationPushiness(NavigationPushiness)", asMETHOD(NavigationAgent, SetNavigationPushiness), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "NavigationPushiness get_navigationPushiness()", asMETHOD(NavigationAgent, GetNavigationPushiness), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetDesiredVelocity() const", asMETHOD(NavigationAgent, GetDesiredVelocity), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetActualVelocity() const", asMETHOD(NavigationAgent, GetActualVelocity), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetTargetPosition() const", asMETHOD(NavigationAgent, GetTargetPosition), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "NavigationAgentState GetAgentState() const", asMETHOD(NavigationAgent, GetAgentState), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "NavigationTargetState GetTargetState() const", asMETHOD(NavigationAgent, GetTargetState), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "Vector3 GetPosition() const", asMETHOD(NavigationAgent, GetPosition), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationPushiness get_navigationPushiness() const", asMETHOD(NavigationAgent, GetNavigationPushiness), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "Vector3 get_desiredVelocity() const", asMETHOD(NavigationAgent, GetDesiredVelocity), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "Vector3 get_actualVelocity() const", asMETHOD(NavigationAgent, GetActualVelocity), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "Vector3 get_targetPosition() const", asMETHOD(NavigationAgent, GetTargetPosition), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationAgentState get_agentState() const", asMETHOD(NavigationAgent, GetAgentState), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationTargetState get_targetState() const", asMETHOD(NavigationAgent, GetTargetState), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "Vector3 get_position() const", asMETHOD(NavigationAgent, GetPosition), asCALL_THISCALL);
 }
 
 void RegisterNavigationAPI(asIScriptEngine* engine)
@@ -169,7 +182,7 @@ void RegisterNavigationAPI(asIScriptEngine* engine)
     RegisterNavigable(engine);
     RegisterNavigationMesh(engine);
     RegisterOffMeshConnection(engine);
-    RegisterDetourCrowdManager(engine);
+    RegisterNavigationCrowdManager(engine);
     RegisterNavigationAgent(engine);
 }
 

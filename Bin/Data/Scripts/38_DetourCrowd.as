@@ -8,7 +8,7 @@
 
 Vector3 endPos;
 Node@ player;
-DetourCrowdManager@ crowdMng_;
+NavigationCrowdManager@ crowdMng_;
 
 class RandomWalker : ScriptObject
 {
@@ -48,7 +48,7 @@ class Chaser : ScriptObject
     
     void Start()
     {
-        SubscribeToEvent(node, "NavigationAgentReposition", "HandleReposition");
+        SubscribeToEvent(node, "NavigationAgentMovement", "HandleReposition");
     }
     
     void HandleReposition(StringHash eventType, VariantMap& eventData)
@@ -87,6 +87,8 @@ Node@ CreatePlayer(Vector3 position, NavigationAvoidanceQuality quality, Navigat
     modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
     modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
     modelObject.castShadows=true;
+    AnimationController@ ac=n.CreateComponent("AnimationController");
+    ac.Play("Models/Jack_Walk.ani", 0, true, 0.0f);
     NavigationAgent @agent=n.CreateComponent("NavigationAgent");
     agent.maxAccel=accel;
     agent.navigationPushiness=pushiness;
@@ -193,10 +195,10 @@ void CreateScene()
     camera.farClip = 300.0f;
 
     // Set an initial position for the camera scene node above the plane
-    cameraNode.position = Vector3(0.0f, 5.0f, 0.0f);
+    cameraNode.position = Vector3(0.0f, 25.0f, 0.0f);
 
     // Create a DetourCrowdManager component to the scene root
-    crowdMng_ = scene_.CreateComponent("DetourCrowdManager");
+    crowdMng_ = scene_.CreateComponent("NavigationCrowdManager");
     
     // Now build the crowd.
     if(crowdMng_.CreateCrowd())
@@ -206,7 +208,7 @@ void CreateScene()
         
         for(uint i=0; i<20; ++i)
         {
-            CreateChaser(player, Vector3(Random(80.0f)-40.0f, 0, Random(80.0f)-40.0f), NAVIGATIONQUALITY_HIGH, PUSHINESS_LOW, Random(5)+5, 200.0f);
+            CreateChaser(player, Vector3(Random(80.0f)-40.0f, 0, Random(80.0f)-40.0f), NAVIGATIONQUALITY_HIGH, PUSHINESS_LOW, 5.f, 100.0f);
         }
     }
 }
@@ -294,7 +296,7 @@ void MoveCamera(float timeStep)
         cameraNode.Translate(Vector3(1.0f, 0.0f, 0.0f) * MOVE_SPEED * timeStep);
 
     // Set destination or teleport with left mouse button
-    if (input.mouseButtonPress[MOUSEB_LEFT])
+    if (input.mouseButtonDown[MOUSEB_LEFT])
         SetPathPoint();
     // Add or remove objects with middle mouse button, then rebuild navigation mesh partially
     if (input.mouseButtonPress[MOUSEB_MIDDLE])

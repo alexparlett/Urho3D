@@ -46,12 +46,12 @@ enum NavigationRegionType
 
 enum NavigationPolyFlags
 {
-    PolyFlags_Walk = 0x01,		// Ability to walk (ground, grass, road)
-    PolyFlags_Swim = 0x02,		// Ability to swim (water).
-    PolyFlags_Door = 0x04,		// Ability to move through doors.
-    PolyFlags_Jump = 0x08,		// Ability to jump.
-    PolyFlags_Disabled = 0x10,		// Disabled polygon
-    PolyFlags_All = 0xffff	// All abilities.
+    NAVIGATIONFLAGS_WALK = 0x01,		// Ability to walk (ground, grass, road)
+    NAVIGATIONFLAGS_SWIM = 0x02,		// Ability to swim (water).
+    NAVIGATIONFLAGS_DOOR = 0x04,		// Ability to move through doors.
+    NAVIGATIONFLAGS_JUMP = 0x08,		// Ability to jump.
+    NAVIGATIONFLAGS_DISABLED = 0x10,		// Disabled polygon
+    NAVIGATIONFLAGS_ALL = 0xffff	// All abilities.
 };
 
 enum NavigationAvoidanceQuality
@@ -75,8 +75,9 @@ enum NavigationPushiness
 /// \todo support multiple agents radii and heights
 class URHO3D_API NavigationCrowdManager : public Component
 {
-        OBJECT(NavigationCrowdManager);
-        friend class NavigationAgent;
+    friend class NavigationAgent;
+
+    OBJECT(NavigationCrowdManager);
               
 public:
     /// Construct.
@@ -86,12 +87,12 @@ public:
     /// Register object factory.
     static void RegisterObject(Context* context);
 
-    /// Assigns the navigation mesh for the crowd.
-    void SetNavigationMesh(NavigationMesh *navMesh);
     /// Get the Navigation mesh assigned to the crowd.
     NavigationMesh* GetNavigationMesh();
     /// Gets all agents.
     const PODVector<NavigationAgent*>& GetNavigationAgents() const;
+    /// Gets the closest walkable position.
+    Vector3 GetClosestWalkablePosition(Vector3 pos);
 
     /// Create detour crowd component for the specified navigation mesh.
     bool CreateCrowd();
@@ -99,13 +100,14 @@ public:
     void DrawDebug(DebugRenderer* debug, bool depthTest);
 
 protected:
-    /// Update the crowd simulation
-    void Update(float delta);
-
     /// Create and adds an detour crowd agent.
-    int AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, unsigned avoidenceType = 3);
+    int AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, unsigned avoidanceType = 3);
     /// Removes the detour crowd agent.
     void RemoveAgent(int agent);
+    /// Adds the agent scene component to the list. Called from NavigationAgent.
+    void AddAgentComponent(NavigationAgent* agent);
+    /// Removes the agent scene component from the list. Called from NavigationAgent.
+    void RemoveAgentComponent(NavigationAgent* agent);
 
     /// Update the Navigation Agents Avoidance Quality for the specified agent.
     void UpdateAgentNavigationQuality(int agent, NavigationAvoidanceQuality nq);
@@ -115,6 +117,12 @@ protected:
     void UpdateAgentMaxSpeed(int agent, float maxSpeed);
     /// Update the Navigation Agents MaxAcceleration for the specified agent.
     void UpdateAgentMaxAcceleration(int agent, float accel);
+    /// Update the Navigation Agents Radius for the specified agent.
+    void UpdateAgentRadius(int agent, float radius);
+    /// Update the Navigation Agents Height for the specified agent.
+    void UpdateAgentHeight(int agent, float height);
+    /// Update the Navigation Agents Flags for the specified agent.
+    void UpdateAgentFlags(int agent, unsigned flags);
 
     /// Sets the move target for the specified agent.
     bool SetAgentTarget(int agent, Vector3 target);
@@ -130,28 +138,24 @@ protected:
     /// Gets the agents desired velocity for the specified agent.
     Vector3 GetAgentDesiredVelocity(int agent);
 
-    /// Gets the closest walkable position.
-    Vector3 GetClosestWalkablePosition(Vector3 pos);
+    /// Gets the detour crowd agent.
+    const dtCrowdAgent * GetCrowdAgent(int agent);
+    /// Gets the internal detour crowd component.
+    dtCrowd * GetCrowd();
 
     /// Handle node being assigned.
     virtual void OnNodeSet(Node* node);
-    /// Gets the detour crowd agent.
-    const dtCrowdAgent * GetCrowdAgent(int agent);
-    /// Adds the agent scene component to the list. Called from NavigationAgent.
-    void AddAgentComponent(NavigationAgent* agent);
-    /// Removes the agent scene component from the list. Called from NavigationAgent.
-    void RemoveAgentComponent(NavigationAgent* agent);
-    /// Gets the internal detour crowd component.
-    dtCrowd * GetCrowd();
+
 private:
     /// Handle the scene subsystem update event, step simulation here.
     void HandleSceneSubsystemUpdate(StringHash eventType, VariantMap& eventData);
+    /// Update the crowd simulation
+    void Update(float delta);
 
     /// internal crowd component
     dtCrowd* crowd_;
     /// NavigationMesh for which the crowd was created
     WeakPtr<NavigationMesh> navigationMesh_;
-    /// \todo add an check if max agents reached to addagent /addagentcomponent ... ?
     /// max agents for the crowd 
     int maxAgents_;	
     /// Agent Components 

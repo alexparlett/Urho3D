@@ -57,7 +57,7 @@ enum NavigationAgentState
 /// 
 class URHO3D_API NavigationAgent : public Component
 {
-        OBJECT(NavigationAgent);
+    OBJECT(NavigationAgent);
     
 public:
     /// Construct.
@@ -76,13 +76,19 @@ public:
     /// Update the nodes position.
     void SetUpdateNodePosition(bool unodepos);
     /// Sets the agents max acceleration.
-    void SetMaxAccel( float val);
+    void SetMaxAccel(float val);
     /// Sets the agents max velocity.
-    void SetMaxSpeed( float val);
-    /// Sets the agent's navigation quality
+    void SetMaxSpeed(float val);
+    /// Sets the agents radius.
+    void SetRadius(float radius);
+    /// Sets the agents height.
+    void SetHeight(float height);
+    /// Sets the agent's navigation quality.
     void SetNavigationQuality(NavigationAvoidanceQuality val);
-    /// Sets the agent's navigation pushiness
+    /// Sets the agent's navigation pushiness.
     void SetNavigationPushiness(NavigationPushiness val);
+    /// Sets the agent's navigation flags.
+    void SetFlags(unsigned flags);
 
 
     /// Returns the agents position.
@@ -117,15 +123,20 @@ public:
     /// Gets the agent's navigation pushiness
     NavigationPushiness GetNavigationPushiness() const {return navPushiness_; }
     
-
     /// Updates the nodes position if updateNodePosition is set. Is called in NavigationCrowdManager::Update().
     virtual void OnNavigationAgentReposition(const Vector3& newPos);
 
+    void SetFlagsAttr(VariantVector value);
+    VariantVector GetFlagsAttr() const;
+
 protected:
+    /// Handle attributes being applied.
+    virtual void ApplyAttributes();
     /// Handle node being assigned.
     virtual void OnNodeSet(Node* node);
-    /// \todo Handle node transform being dirtied.
+    /// Handle node transform being dirtied.
     virtual void OnMarkedDirty(Node* node);
+
 private:
     /// Create or re-add 
     void AddAgentToCrowd();
@@ -157,6 +168,8 @@ private:
     NavigationAvoidanceQuality navQuality_;
     /// Agent's Navigation Pushiness
     NavigationPushiness navPushiness_;
+    /// Agent's velocity attribute.
+    Vector3 velocityAttr_;
 };
 
 }

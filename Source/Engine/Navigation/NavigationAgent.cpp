@@ -21,6 +21,7 @@
 //
 
 #include "Precompiled.h"
+#include "AnimatedModel.h"
 #include "Context.h"
 #include "DebugRenderer.h"
 #include "NavigationAgent.h"
@@ -51,19 +52,57 @@ extern const char* NAVIGATION_CATEGORY;
 
 static const float DEFAULT_AGENT_MAX_SPEED = 5.0f;
 static const float DEFAULT_AGENT_MAX_ACCEL = 3.6f;
+static const float DEFAULT_AGENT_HEIGHT = 2.0f;
+static const float DEFAULT_AGENT_RADIUS = 0.6f;
 static const NavigationAvoidanceQuality DEFAULT_AGENT_AVOIDANCE_QUALITY = NAVIGATIONQUALITY_HIGH;
 static const NavigationPushiness DEFAULT_AGENT_NAVIGATION_PUSHINESS = PUSHINESS_MEDIUM;
+static const unsigned DEFAULT_AGENT_FLAGS = NAVIGATIONFLAGS_WALK | NAVIGATIONFLAGS_JUMP | NAVIGATIONFLAGS_DOOR;
 
+static const char* navigationQualityNames[] =
+{
+    "Low",
+    "Medium",
+    "High",
+    "Extra",
+    0
+};
+
+static const char* navigationPushinessNames[] =
+{
+    "Low",
+    "Medium",
+    "High",
+    0
+};
+
+template<> NavigationAvoidanceQuality Variant::Get<NavigationAvoidanceQuality>() const
+{
+    return (NavigationAvoidanceQuality) GetInt();
+}
+
+template<> NavigationPushiness Variant::Get<NavigationPushiness>() const
+{
+    return (NavigationPushiness) GetInt();
+}
+
+template<> NavigationPolyFlags Variant::Get<NavigationPolyFlags>() const
+{
+    return (NavigationPolyFlags) GetInt();
+}
 
 NavigationAgent::NavigationAgent(Context* context) :
     Component(context),
     inCrowd_(false),
     agentCrowdId_(-1),
     targetRef_(-1),
+    targetPosition_(Vector3::ZERO),
+    velocityAttr_(Vector3::ZERO),
     updateNodePosition_(true),
-    flags_(PolyFlags_Walk | PolyFlags_Jump | PolyFlags_Door),
+    flags_(DEFAULT_AGENT_FLAGS),
     maxAccel_(DEFAULT_AGENT_MAX_ACCEL),
     maxSpeed_(DEFAULT_AGENT_MAX_SPEED),
+    height_(DEFAULT_AGENT_HEIGHT),
+    radius_(DEFAULT_AGENT_RADIUS),
     navQuality_(DEFAULT_AGENT_AVOIDANCE_QUALITY),
     navPushiness_(DEFAULT_AGENT_NAVIGATION_PUSHINESS)
 {
@@ -78,11 +117,15 @@ void NavigationAgent::RegisterObject(Context* context)
 {
     context->RegisterFactory<NavigationAgent>(NAVIGATION_CATEGORY);
 
+    ATTRIBUTE(NavigationAgent, VAR_VECTOR3, "Target", targetPosition_, Vector3::ZERO, AM_DEFAULT);
+    ATTRIBUTE(NavigationAgent, VAR_VECTOR3, "Velocity", velocityAttr_, Vector3::ZERO, AM_DEFAULT | AM_NOEDIT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Accel", GetMaxAccel, SetMaxAccel, float, DEFAULT_AGENT_MAX_ACCEL, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Speed", GetMaxSpeed, SetMaxSpeed, float, DEFAULT_AGENT_MAX_SPEED, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Height", GetHeight, SetHeight, float, DEFAULT_AGENT_HEIGHT, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Radius", GetRadius, SetRadius, float, DEFAULT_AGENT_RADIUS, AM_DEFAULT);
-
+    ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Avoidance Quality", GetNavigationQuality, SetNavigationQuality, NavigationAvoidanceQuality, navigationQualityNames, DEFAULT_AGENT_AVOIDANCE_QUALITY, AM_DEFAULT);
+    ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Pushiness", GetNavigationPushiness, SetNavigationPushiness, NavigationPushiness, navigationPushinessNames, DEFAULT_AGENT_NAVIGATION_PUSHINESS, AM_DEFAULT);
+    ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_VARIANTVECTOR, "Flags", GetFlagsAttr, SetFlagsAttr, VariantVector, Variant::emptyVariantVector, AM_DEFAULT);
 }
 
 void NavigationAgent::OnNodeSet(Node* node)
@@ -98,10 +141,11 @@ void NavigationAgent::OnNodeSet(Node* node)
                 return;
             }
 
-            crowdManager_ = scene->GetOrCreateComponent<NavigationCrowdManager>();
+            crowdManager_ = scene->GetComponent<NavigationCrowdManager>();
 
 #ifdef URHO3D_PHYSICS
             CollisionShape* cs = GetComponent<CollisionShape>();
+            AnimatedModel* am = GetComponent<AnimatedModel>();
             StaticModel* sm = GetComponent<StaticModel>();
             if (cs)
             {
@@ -113,12 +157,23 @@ void NavigationAgent::OnNodeSet(Node* node)
                 height_ = sm->GetWorldBoundingBox().Size().y_;
                 radius_ = Max(sm->GetWorldBoundingBox().HalfSize().x_, sm->GetWorldBoundingBox().HalfSize().z_);
             }
+            else if (am)
+            {
+                height_ = am->GetWorldBoundingBox().Size().y_;
+                radius_ = Max(am->GetWorldBoundingBox().HalfSize().x_, am->GetWorldBoundingBox().HalfSize().z_);
+            }
 #else
+            AnimatedModel* am = GetComponent<AnimatedModel>();
             StaticModel* sm = GetComponent<StaticModel>();
             if (sm)
             {
                 height_ = sm->GetWorldBoundingBox().Size().y_;
                 radius_ = Max(sm->GetWorldBoundingBox().HalfSize().x_, sm->GetWorldBoundingBox().HalfSize().z_);
+            }
+            else if (am)
+            {
+                height_ = am->GetWorldBoundingBox().Size().y_;
+                radius_ = Max(am->GetWorldBoundingBox().HalfSize().x_, am->GetWorldBoundingBox().HalfSize().z_);
             }
 #endif
             else
@@ -136,6 +191,15 @@ void NavigationAgent::OnNodeSet(Node* node)
     }
 }
 
+void NavigationAgent::ApplyAttributes()
+{
+    if (targetPosition_ != Vector3::ZERO)
+        SetMoveTarget(targetPosition_);
+
+    if (velocityAttr_ != Vector3::ZERO)
+        SetMoveVelocity(velocityAttr_);
+}
+
 void NavigationAgent::OnSetEnabled()
 {
     bool enabled = IsEnabledEffective();
@@ -148,7 +212,7 @@ void NavigationAgent::OnSetEnabled()
 
 void NavigationAgent::AddAgentToCrowd()
 {
-    if (!crowdManager_)
+    if (!crowdManager_ || !crowdManager_->GetNavigationMesh())
         return;
 
     PROFILE(AddAgentToCrowd);
@@ -209,10 +273,28 @@ void NavigationAgent::SetMaxSpeed(float speed)
     }
 }
 
+void NavigationAgent::SetRadius(float radius)
+{
+    radius_ = radius;
+    if(crowdManager_ && inCrowd_)
+    {
+        crowdManager_->UpdateAgentRadius(agentCrowdId_, radius_);
+    }
+}
+
+void NavigationAgent::SetHeight(float height)
+{
+    height_ = height;
+    if (crowdManager_ && inCrowd_)
+    {
+        crowdManager_->UpdateAgentHeight(agentCrowdId_, height_);
+    }
+}
+
 void NavigationAgent::SetMaxAccel(float accel)
 {
-    maxAccel_=accel;
-    if(crowdManager_ && inCrowd_)
+    maxAccel_ = accel;
+    if (crowdManager_ && inCrowd_)
     {
         crowdManager_->UpdateAgentMaxAcceleration(agentCrowdId_, maxAccel_);
     }
@@ -236,13 +318,23 @@ void NavigationAgent::SetNavigationPushiness(NavigationPushiness val)
     }
 }
 
+void NavigationAgent::SetFlags(unsigned flags)
+{
+    flags_ = flags;
+    if (crowdManager_ && inCrowd_)
+    {
+        crowdManager_->UpdateAgentFlags(agentCrowdId_, flags_);
+    }
+}
+
 Vector3 NavigationAgent::GetPosition() const
 {
     if (crowdManager_ && inCrowd_)
     {
         return crowdManager_->GetAgentPosition(agentCrowdId_);
     }
-    return node_->GetPosition();// or return ZERO ??
+
+    return Vector3::ZERO;
 }
 
 Vector3 NavigationAgent::GetDesiredVelocity() const
@@ -326,22 +418,74 @@ bool NavigationAgent::GetUpdateNodePosition()
 
 void NavigationAgent::OnNavigationAgentReposition(const Vector3& newPos)
 {
-    if(node_)
+    if (node_)
     {
-        // Notify parent node of the reposition
-        VariantMap map = GetEventDataMap();
-        map[NavigationAgentReposition::P_POSITION] =  newPos;
-        map[NavigationAgentReposition::P_VELOCITY] = GetActualVelocity();
-        node_->SendEvent(E_NAVIGATION_AGENT_REPOSITION, map);
-        
         if (updateNodePosition_)
             node_->SetPosition(newPos);
+
+        velocityAttr_ = GetActualVelocity();
+
+        VariantMap map = GetEventDataMap();
+        map[NavigationAgentMovement::P_POSITION] = newPos;
+        map[NavigationAgentMovement::P_VELOCITY] = velocityAttr_;
+        node_->SendEvent(E_NAVIGATION_AGENT_MOVEMENT, map);
+
+        if (GetTargetState() == NAV_AGENT_TARGET_ARRIVED)
+        {
+            VariantMap map = GetEventDataMap();
+            map[NavigationAgentReachedTarget::P_AGENT] = this;
+
+            node_->SendEvent(E_NAVIGATION_AGENT_REACHED_TARGET, map);
+        }
     }
 }
 
 void NavigationAgent::OnMarkedDirty(Node* node)
 {
-    AddAgentToCrowd();
+    Vector3 crowdPos = crowdManager_->GetAgentPosition(agentCrowdId_);
+    Vector3 nodePos = node->GetPosition();
+
+    if (crowdPos != Vector3::ZERO && crowdPos != nodePos)
+        AddAgentToCrowd();
+}
+
+void NavigationAgent::SetFlagsAttr(VariantVector value)
+{
+    if (!value.Empty())
+    {
+        unsigned flags = 0;
+
+        VariantVector::Iterator iter = value.Begin();
+        for (iter; iter != value.End(); iter++)
+            flags |= iter->Get<NavigationPolyFlags>();
+
+        SetFlags(flags);
+    }
+}
+
+Urho3D::VariantVector NavigationAgent::GetFlagsAttr() const
+{
+    VariantVector value;
+
+    if ((flags_ & NAVIGATIONFLAGS_WALK) == 0)
+        value.Push(NAVIGATIONFLAGS_WALK);
+
+    if ((flags_ & NAVIGATIONFLAGS_JUMP) == 0)
+        value.Push(NAVIGATIONFLAGS_JUMP);
+
+    if ((flags_ & NAVIGATIONFLAGS_SWIM) == 0)
+        value.Push(NAVIGATIONFLAGS_SWIM);
+
+    if ((flags_ & NAVIGATIONFLAGS_DOOR) == 0)
+        value.Push(NAVIGATIONFLAGS_DOOR);
+
+    if ((flags_ & NAVIGATIONFLAGS_DISABLED) == 0)
+        value.Push(NAVIGATIONFLAGS_DISABLED);
+
+    if ((flags_ & NAVIGATIONFLAGS_ALL) == 0)
+        value.Push(NAVIGATIONFLAGS_ALL);
+
+    return value;
 }
 
 }

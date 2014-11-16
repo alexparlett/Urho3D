@@ -50,74 +50,74 @@ struct FindPathData;
 /// Temporary data for building one tile of the navigation mesh.
 struct NavigationBuildData
 {
-	/// Construct.
-	NavigationBuildData();
+    /// Construct.
+    NavigationBuildData();
 
-	void Init();
+    void Init();
 
-	/// Destruct.
-	~NavigationBuildData();
+    /// Destruct.
+    ~NavigationBuildData();
 
-	void Clear();
+    void Clear();
 
-	/// World-space bounding box of the navigation mesh tile.
-	BoundingBox worldBoundingBox_;
-	/// Vertices from geometries.
-	PODVector<Vector3> vertices_;
-	/// Triangle indices from geometries.
-	PODVector<int> indices_;
-	/// Offmesh connection vertices.
-	PODVector<Vector3> offMeshVertices_;
-	/// Offmesh connection radii.
-	PODVector<float> offMeshRadii_;
-	/// Offmesh connection flags.
-	PODVector<unsigned short> offMeshFlags_;
-	/// Offmesh connection areas.
-	PODVector<unsigned char> offMeshAreas_;
-	/// Offmesh connection direction.
-	PODVector<unsigned char> offMeshDir_;
-	/// Recast context.
-	rcContext* ctx_;
-	/// Recast heightfield.
-	rcHeightfield* heightField_;
-	/// Recast compact heightfield.
-	rcCompactHeightfield* compactHeightField_;
-	/// Recast contour set.
-	rcContourSet* contourSet_;
-	/// Recast poly mesh.
-	rcPolyMesh* polyMesh_;
-	/// Recast detail poly mesh.
-	rcPolyMeshDetail* polyMeshDetail_;
+    /// World-space bounding box of the navigation mesh tile.
+    BoundingBox worldBoundingBox_;
+    /// Vertices from geometries.
+    PODVector<Vector3> vertices_;
+    /// Triangle indices from geometries.
+    PODVector<int> indices_;
+    /// Offmesh connection vertices.
+    PODVector<Vector3> offMeshVertices_;
+    /// Offmesh connection radii.
+    PODVector<float> offMeshRadii_;
+    /// Offmesh connection flags.
+    PODVector<unsigned short> offMeshFlags_;
+    /// Offmesh connection areas.
+    PODVector<unsigned char> offMeshAreas_;
+    /// Offmesh connection direction.
+    PODVector<unsigned char> offMeshDir_;
+    /// Recast context.
+    rcContext* ctx_;
+    /// Recast heightfield.
+    rcHeightfield* heightField_;
+    /// Recast compact heightfield.
+    rcCompactHeightfield* compactHeightField_;
+    /// Recast contour set.
+    rcContourSet* contourSet_;
+    /// Recast poly mesh.
+    rcPolyMesh* polyMesh_;
+    /// Recast detail poly mesh.
+    rcPolyMeshDetail* polyMeshDetail_;
 };
 
 enum NavMeshDrawFlags
 {
-	DRAWFLAG_OFFMESHCONS = 0x01,
-	DRAWFLAG_CLOSEDLIST = 0x02,
-	DRAWFLAG_COLOR_TILES = 0x04,
+    DRAWFLAG_OFFMESHCONS = 0x01,
+    DRAWFLAG_CLOSEDLIST = 0x02,
+    DRAWFLAG_COLOR_TILES = 0x04,
 };
 
 enum NavMeshDebugDrawMode
 {
-	DRAWMODE_NAVMESH,
-	DRAWMODE_NAVMESH_TRANS,
-	DRAWMODE_NAVMESH_BVTREE,
-	DRAWMODE_NAVMESH_NODES,
-	DRAWMODE_NAVMESH_PORTALS,
-	DRAWMODE_NAVMESH_INVIS, 
-	DRAWMODE_MESH, // needs keepInterResults set to true
-	DRAWMODE_VOXELS, // needs keepInterResults set to true
-	DRAWMODE_VOXELS_WALKABLE, // needs keepInterResults set to true
-	DRAWMODE_COMPACT, // needs keepInterResults set to true
-	DRAWMODE_COMPACT_DISTANCE, // needs keepInterResults set to true
-	DRAWMODE_COMPACT_REGIONS, // needs keepInterResults set to true
-	DRAWMODE_REGION_CONNECTIONS, // needs keepInterResults set to true
-	DRAWMODE_RAW_CONTOURS, // needs keepInterResults set to true
-	DRAWMODE_BOTH_CONTOURS, // needs keepInterResults set to true
-	DRAWMODE_CONTOURS, // needs keepInterResults set to true
-	DRAWMODE_POLYMESH, // needs keepInterResults set to true
-	DRAWMODE_POLYMESH_DETAIL, // needs keepInterResults set to true
-	MAX_DRAWMODE
+    DRAWMODE_NAVMESH,
+    DRAWMODE_NAVMESH_TRANS,
+    DRAWMODE_NAVMESH_BVTREE,
+    DRAWMODE_NAVMESH_NODES,
+    DRAWMODE_NAVMESH_PORTALS,
+    DRAWMODE_NAVMESH_INVIS,
+    DRAWMODE_MESH, // needs keepInterResults set to true
+    DRAWMODE_VOXELS, // needs keepInterResults set to true
+    DRAWMODE_VOXELS_WALKABLE, // needs keepInterResults set to true
+    DRAWMODE_COMPACT, // needs keepInterResults set to true
+    DRAWMODE_COMPACT_DISTANCE, // needs keepInterResults set to true
+    DRAWMODE_COMPACT_REGIONS, // needs keepInterResults set to true
+    DRAWMODE_REGION_CONNECTIONS, // needs keepInterResults set to true
+    DRAWMODE_RAW_CONTOURS, // needs keepInterResults set to true
+    DRAWMODE_BOTH_CONTOURS, // needs keepInterResults set to true
+    DRAWMODE_CONTOURS, // needs keepInterResults set to true
+    DRAWMODE_POLYMESH, // needs keepInterResults set to true
+    DRAWMODE_POLYMESH_DETAIL, // needs keepInterResults set to true
+    MAX_DRAWMODE
 };
 
 /// Description of a navigation mesh geometry component, with transform and bounds information.
@@ -161,22 +161,22 @@ struct NavigationGeometryInfo
 //   * good choice to use for tiled navmesh with medium and small sized tiles
 enum NavmeshPartitionType
 {
-	NAVMESH_PARTITION_WATERSHED,
-	NAVMESH_PARTITION_MONOTONE,
-	NAVMESH_PARTITION_LAYERS,
+    NAVMESH_PARTITION_WATERSHED,
+    NAVMESH_PARTITION_MONOTONE,
+    NAVMESH_PARTITION_LAYERS,
 };
 
 /// Navigation mesh component. Collects the navigation geometry from child nodes with the Navigable component and responds to path queries.
 class URHO3D_API NavigationMesh : public Component
 {
     OBJECT(NavigationMesh);
-	friend class NavigationCrowdManager;
-	friend class AnnotationBuilder;
-public:
-    /// Construct.
-    NavigationMesh(Context* context);
-    /// Destruct.
-    virtual ~NavigationMesh();
+    friend class NavigationCrowdManager;
+    friend class AnnotationBuilder;
+    public:
+        /// Construct.
+        NavigationMesh(Context* context);
+        /// Destruct.
+        virtual ~NavigationMesh();
     /// Register object factory.
     static void RegisterObject(Context* context);
     
@@ -211,18 +211,18 @@ public:
     void SetDetailSampleMaxError(float error);
     /// Set padding of the navigation mesh bounding box. Having enough padding allows to add geometry on the extremities of the navigation mesh when doing partial rebuilds.
     void SetPadding(const Vector3& padding);
-	/// Set Partition Type.
-	void SetPartitionType(NavmeshPartitionType ptype);
-	/// Set keepInterResults used for drawing additional debug info.
-	/// if set to false and debug data is already created, it will be deleted!
-	void SetKeepInterResults(bool val);
+    /// Set Partition Type.
+    void SetPartitionType(NavmeshPartitionType ptype);
+    /// Set keepInterResults used for drawing additional debug info.
+    /// if set to false and debug data is already created, it will be deleted!
+    void SetKeepInterResults(bool val);
 
     /// Rebuild the navigation mesh. Return true if successful.
-    bool Build(); 
+    bool Build();
     /// Rebuild part of the navigation mesh contained by the world-space bounding box. Return true if successful.
     bool Build(const BoundingBox& boundingBox);
     /// Find the nearest point on the navigation mesh to a given point. Extens specifies how far out from the specified point to check along each axis.
-    Vector3 FindNearestPoint(const Vector3& point, const Vector3& extents=Vector3::ONE);
+    Vector3 FindNearestPoint(const Vector3& point, const Vector3& extents = Vector3::ONE);
     /// Try to move along the surface from one point to another
     Vector3 MoveAlongSurface(const Vector3& start, const Vector3& end, const Vector3& extents=Vector3::ONE, int maxVisited=3);
     /// Find a path between world space points. Return non-empty list of points if successful. Extents specifies how far off the navigation mesh the points can be.
@@ -238,9 +238,9 @@ public:
     /// Add debug geometry to the debug renderer.
     void DrawDebugGeometry(bool depthTest);
 
-	/// \todo create custom geometry and update only if dirty ... to increase speed ??
-	/// Add debug geometry to the debug renderer. flag of type DrawNavMeshFlags in DetourDebugDraw.h 
-	void DrawDebug(NavMeshDebugDrawMode drawmode, bool depthTest, unsigned char flag = DRAWFLAG_OFFMESHCONS);
+    /// \todo create custom geometry and update only if dirty ... to increase speed ??
+    /// Add debug geometry to the debug renderer. flag of type DrawNavMeshFlags in DetourDebugDraw.h 
+    void DrawDebug(NavMeshDebugDrawMode drawmode, bool depthTest, unsigned char flag = DRAWFLAG_OFFMESHCONS);
 
     /// Return tile size.
     int GetTileSize() const { return tileSize_; }
@@ -278,11 +278,11 @@ public:
     BoundingBox GetWorldBoundingBox() const;
     /// Return number of tiles.
     IntVector2 GetNumTiles() const { return IntVector2(numTilesX_, numTilesZ_); }
-	/// Return Partition Type.
-	NavmeshPartitionType GetPartitionType() const;
-	/// Return keepInterResults.
-	bool GetKeepInterResults() const;
-	
+    /// Return Partition Type.
+    NavmeshPartitionType GetPartitionType() const;
+    /// Return keepInterResults.
+    bool GetKeepInterResults() const;
+
     /// Set navigation data attribute.
     void SetNavigationDataAttr(PODVector<unsigned char> value);
     /// Return navigation data attribute.
@@ -346,12 +346,12 @@ private:
     int numTilesZ_;
     /// Whole navigation mesh bounding box.
     BoundingBox boundingBox_;
-	/// Type of the heightfield partitioning.
-	NavmeshPartitionType partitionType_;
-	/// keep internal build resources for debug draw modes.
-	bool keepInterResults_;
-	/// internal build resources for creating the navmesh.
-	HashMap<Pair<int,int>,NavigationBuildData*> builds_;
+    /// Type of the heightfield partitioning.
+    NavmeshPartitionType partitionType_;
+    /// keep internal build resources for debug draw modes.
+    bool keepInterResults_;
+    /// internal build resources for creating the navmesh.
+    HashMap<Pair<int, int>, NavigationBuildData*> builds_;
 };
 
 /// Register Navigation library objects.
