@@ -360,7 +360,7 @@ const Vector3& NavigationAgent::GetTargetPosition() const
     return targetPosition_;
 }
 
-Urho3D::NavigationAgentState NavigationAgent::GetAgentState() const
+NavigationAgentState NavigationAgent::GetAgentState() const
 {
     if (crowdManager_ && inCrowd_)
     {
@@ -374,11 +374,11 @@ Urho3D::NavigationAgentState NavigationAgent::GetAgentState() const
 
 }
 
-Urho3D::NavigationTargetState NavigationAgent::GetTargetState() const
+NavigationTargetState NavigationAgent::GetTargetState() const
 {
     if (crowdManager_ && inCrowd_)
     {
-        const dtCrowdAgent * agent = crowdManager_->GetCrowdAgent(agentCrowdId_);
+        const dtCrowdAgent* agent = crowdManager_->GetCrowdAgent(agentCrowdId_);
         if (!agent || !agent->active)
             return NAV_AGENT_TARGET_NONE;
 
@@ -463,7 +463,7 @@ void NavigationAgent::SetFlagsAttr(VariantVector value)
     }
 }
 
-Urho3D::VariantVector NavigationAgent::GetFlagsAttr() const
+VariantVector NavigationAgent::GetFlagsAttr() const
 {
     VariantVector value;
 

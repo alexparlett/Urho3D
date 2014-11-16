@@ -202,24 +202,28 @@ void NavigationCrowdManager::UpdateAgentNavigationQuality(int agent, NavigationA
     case NAVIGATIONQUALITY_LOW:
     {
         params.obstacleAvoidanceType = 0;
+        params.pathOptimizationRange = params.radius * 2.0f;
     }
         break;
 
     case NAVIGATIONQUALITY_MEDIUM:
     {
         params.obstacleAvoidanceType = 1;
+        params.pathOptimizationRange = params.radius * 15.0f;
     }
         break;
 
     case NAVIGATIONQUALITY_HIGH:
     {
         params.obstacleAvoidanceType = 2;
+        params.pathOptimizationRange = params.radius * 30.0f;
     }
         break;
 
     case NAVIGATIONQUALITY_EXTRA_HIGH:
     {
         params.obstacleAvoidanceType = 3;
+        params.pathOptimizationRange = params.radius * 60.0f;
     }
         break;
     }
@@ -349,6 +353,7 @@ bool NavigationCrowdManager::SetAgentTarget(int agent, Vector3 target)
         // TODO: Handle failure (Couldn't find nearest polygon.)
         return false;
     }
+
     return true;
 }
 

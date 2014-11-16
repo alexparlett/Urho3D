@@ -17,7 +17,7 @@ class RandomWalker : ScriptObject
         NavigationAgent@ a=node.GetComponent("NavigationAgent");
         if(a !is null)
         {
-            if(a.GetTargetState()==NAV_AGENT_TARGET_ARRIVED)
+            if(a.targetState == NAV_AGENT_TARGET_ARRIVED)
             {
                 Vector3 pos=crowdMng_.navigationMesh.GetRandomPoint();
                 a.SetMoveTarget(pos);
@@ -204,7 +204,7 @@ void CreateScene()
     if(crowdMng_.CreateCrowd())
     {
         // Create the player object
-        player=CreatePlayer(Vector3(0, 0, 0), NAVIGATIONQUALITY_HIGH, PUSHINESS_LOW, 10, 200.0f);
+        player=CreatePlayer(Vector3(0, 0, 0), NAVIGATIONQUALITY_HIGH, PUSHINESS_HIGH, 10, 100.0f);
         
         for(uint i=0; i<20; ++i)
         {

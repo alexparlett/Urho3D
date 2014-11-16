@@ -68,6 +68,8 @@ public:
     static void RegisterObject(Context* context);
     /// Handle enabled/disabled state change.
     virtual void OnSetEnabled();
+    /// Handle attributes being applied.
+    virtual void ApplyAttributes();
 
     /// Submits a new move request for the this agent.
     bool SetMoveTarget(const Vector3& position);
@@ -90,7 +92,6 @@ public:
     /// Sets the agent's navigation flags.
     void SetFlags(unsigned flags);
 
-
     /// Returns the agents position.
     Vector3 GetPosition() const;
     /// Returns the agents desired velocity.
@@ -100,9 +101,9 @@ public:
     /// Returns the agents target position.
     const Vector3& GetTargetPosition() const;
     /// Returns the agents  state.
-    NavigationAgentState   GetAgentState() const;
+    NavigationAgentState GetAgentState() const;
     /// Returns the agents target state.
-    NavigationTargetState  GetTargetState() const;
+    NavigationTargetState GetTargetState() const;
     /// Returns if the nodes position is updating because of the crowd.
     bool GetUpdateNodePosition();
     /// Returns the agent id.
@@ -130,8 +131,6 @@ public:
     VariantVector GetFlagsAttr() const;
 
 protected:
-    /// Handle attributes being applied.
-    virtual void ApplyAttributes();
     /// Handle node being assigned.
     virtual void OnNodeSet(Node* node);
     /// Handle node transform being dirtied.
