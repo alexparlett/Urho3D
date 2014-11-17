@@ -222,7 +222,7 @@ void NavigationAgent::AddAgentToCrowd()
     if (agentCrowdId_ != -1)
         RemoveAgentFromCrowd();
 
-    inCrowd_ = true;
+
     agentCrowdId_ = crowdManager_->AddAgent(node_->GetWorldPosition(), maxAccel_, maxSpeed_, radius_, height_, flags_, filterQuery_);
     if (agentCrowdId_ == -1)
     {
@@ -230,6 +230,8 @@ void NavigationAgent::AddAgentToCrowd()
         LOGERROR("AddAgentToCrowd: Could not add agent to crowd!");
         return;
     }
+
+    inCrowd_ = true;
 
     crowdManager_->AddAgentComponent(this);
     crowdManager_->UpdateAgentAvoidanceQuality(agentCrowdId_, avoidanceQuality_);

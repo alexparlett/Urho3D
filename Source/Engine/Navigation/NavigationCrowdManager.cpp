@@ -81,9 +81,6 @@ void NavigationCrowdManager::RegisterObject(Context* context)
 
 void NavigationCrowdManager::ApplyAttributes()
 {
-    if (!crowd_)
-        CreateCrowd();
-
     PODVector<NavigationFilterQuery>::Iterator iter = filterQueries_.Begin();
     for (iter; iter != filterQueries_.End(); iter++)
         UpdateFilterQuery(iter->idx, iter->excludeFlags);
@@ -188,7 +185,7 @@ void NavigationCrowdManager::UpdateFilterQuery(int idx, unsigned excludedPolyFla
 
 int NavigationCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, int filterQuery)
 {
-    if (!crowd_ && navigationMesh_.Expired())
+    if (!crowd_ || navigationMesh_.Expired())
         return -1;
 
     dtCrowdAgentParams params;
@@ -597,6 +594,8 @@ void NavigationCrowdManager::OnNodeSet(Node* node)
         navigationMesh_ = GetComponent<NavigationMesh>();
         if (navigationMesh_ && !navigationMesh_->navMeshQuery_)
             navigationMesh_->InitializeQuery();
+        if (navigationMesh_ && !crowd_)
+            CreateCrowd();
     }
 }
 
