@@ -10,34 +10,33 @@ Vector3 endPos;
 Node@ player;
 NavigationCrowdManager@ crowdMng_;
 
-class RandomWalker : ScriptObject
+class Player : ScriptObject
 {
-    void Update(float timestep)
+    void Start()
     {
-        NavigationAgent@ a=node.GetComponent("NavigationAgent");
-        if(a !is null)
-        {
-            if(a.targetState == NAV_AGENT_TARGET_ARRIVED)
-            {
-                Vector3 pos=crowdMng_.navigationMesh.GetRandomPoint();
-                a.SetMoveTarget(pos);
-            }
-        }
+        SubscribeToEvent(node, "NavigationAgentMovement", "HandleReposition");
+    }
+    
+    void HandleReposition(StringHash eventType, VariantMap& eventData)
+    {
+        Vector3 velocity=eventData["Velocity"].GetVector3();
+        Vector3 facing=Vector3(velocity.x, 0, velocity.z);
+        facing.Normalize();
+        float angle=Atan2(facing.z, facing.x);
+        node.rotation=Quaternion(angle-90, Vector3(0,-1,0));
     }
 }
 
 class Chaser : ScriptObject
 {
-    Node@ target=null;
+    Node@ target;
+    
     void Update(float timestep)
     {
         NavigationAgent@ a=node.GetComponent("NavigationAgent");
-        if(a !is null)
+        if(a !is null && target !is null)
         {
-            if(target !is null)
-            {
-                a.SetMoveTarget(target.position);
-            }
+            a.SetMoveTarget(target.position);
         }
     }
     
@@ -83,17 +82,23 @@ Node@ CreatePlayer(Vector3 position, NavigationAvoidanceQuality quality, Navigat
 {
     Node@ n = scene_.CreateChild("Jack");
     n.position=position;
+    
     AnimatedModel@ modelObject = n.CreateComponent("AnimatedModel");
     modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
     modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
     modelObject.castShadows=true;
+    
     AnimationController@ ac=n.CreateComponent("AnimationController");
     ac.Play("Models/Jack_Walk.ani", 0, true, 0.0f);
+    
     NavigationAgent @agent=n.CreateComponent("NavigationAgent");
     agent.maxAccel=accel;
     agent.navigationPushiness=pushiness;
-    agent.navigationQuality=quality;
+    agent.navigationAvoidanceQuality=quality;
     agent.maxSpeed=speed;
+    
+    n.CreateScriptObject(scriptFile, "Player", LOCAL);
+    
     return n;
 }
 
@@ -101,19 +106,24 @@ Node@ CreateChaser(Node@ target, Vector3 position, NavigationAvoidanceQuality qu
 {
     Node@ n = scene_.CreateChild("Jack");
     n.position=position;
+    
     AnimatedModel@ modelObject = n.CreateComponent("AnimatedModel");
     modelObject.model=cache.GetResource("Model", "Models/Jack.mdl");
     modelObject.material=cache.GetResource("Material", "Materials/Jack.xml");
     modelObject.castShadows=true;
+    
     AnimationController@ ac=n.CreateComponent("AnimationController");
     ac.Play("Models/Jack_Walk.ani", 0, true, 0.0f);
+    
     NavigationAgent @agent=n.CreateComponent("NavigationAgent");
     agent.maxAccel=accel;
     agent.navigationPushiness=pushiness;
-    agent.navigationQuality=quality;
+    agent.navigationAvoidanceQuality=quality;
     agent.maxSpeed=speed;
+    
     Chaser@ c=cast<Chaser>(n.CreateScriptObject(scriptFile, "Chaser", LOCAL));
     c.SetTarget(target);
+    
     return n;
 }
 
@@ -204,11 +214,11 @@ void CreateScene()
     if(crowdMng_.CreateCrowd())
     {
         // Create the player object
-        player=CreatePlayer(Vector3(0, 0, 0), NAVIGATIONQUALITY_HIGH, PUSHINESS_HIGH, 10, 100.0f);
+        player=CreatePlayer(Vector3(0, 0, 0), NAQ_HIGH, NP_HIGH, 10, 100.0f);
         
         for(uint i=0; i<20; ++i)
         {
-            CreateChaser(player, Vector3(Random(80.0f)-40.0f, 0, Random(80.0f)-40.0f), NAVIGATIONQUALITY_HIGH, PUSHINESS_LOW, 5.f, 100.0f);
+            CreateChaser(player, Vector3(Random(80.0f)-40.0f, 0, Random(80.0f)-40.0f), NAQ_HIGH, NP_LOW, 5.f, 100.0f);
         }
     }
 }

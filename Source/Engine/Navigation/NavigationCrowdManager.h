@@ -78,6 +78,20 @@ enum NavigationUpdateFlags
     NUF_OPTIMIZE_TOPO = 16
 };
 
+static const int MAX_NAVIGATION_FILTER_QUERY = 16;
+
+struct NavigationFilterQuery
+{
+    NavigationFilterQuery() :
+        idx(-1),
+        excludeFlags(0)
+    {
+    }
+
+    int idx;
+    unsigned excludeFlags;
+};
+
 
 /// Detour Crowd Simulation Scene Component. Should be added only to the root scene node.
 /// Agents radius and height is set through the navigation mesh.
@@ -95,6 +109,8 @@ public:
     virtual ~NavigationCrowdManager();
     /// Register object factory.
     static void RegisterObject(Context* context);
+    /// Apply attributes.
+    virtual void ApplyAttributes();
 
     /// Get the Navigation mesh assigned to the crowd.
     NavigationMesh* GetNavigationMesh();
@@ -106,13 +122,18 @@ public:
     /// Create detour crowd component for the specified navigation mesh.
     bool CreateCrowd();
     /// Create filter query with the specified NavigationPolyFlags. Index can be between 0 (inclusive) and 16.
-    bool CreateQuery(int index, unsigned excludedPolyFlags);
+    int CreateFilterQuery(unsigned excludedPolyFlags);
+    /// Update the filter query at the specified index with the specified NavigationPolyFlags. Index can be between 0 (inclusive) and 16.
+    void UpdateFilterQuery(int idx, unsigned excludedPolyFlags);
     /// Draw the agents debug data. 
     void DrawDebug(DebugRenderer* debug, bool depthTest);
 
+    VariantVector GetFiltersAttr() const;
+    void SetFiltersAttr(VariantVector value);
+
 protected:
     /// Create and adds an detour crowd agent.
-    int AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, unsigned avoidanceType = 3);
+    int AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, int filterQuery);
     /// Removes the detour crowd agent.
     void RemoveAgent(int agent);
     /// Adds the agent scene component to the list. Called from NavigationAgent.
@@ -135,7 +156,7 @@ protected:
     /// Update the Navigation Agents Flags for the specified agent.
     void UpdateAgentFlags(int agent, unsigned flags);
     /// Update the Navigation Agents Query for the specified agent.
-    void UpdateAgentQuery(int agent, int query);
+    void UpdateAgentFilterQuery(int agent, int query);
 
     /// Sets the move target for the specified agent.
     bool SetAgentTarget(int agent, Vector3 target);
@@ -175,6 +196,8 @@ private:
     PODVector<NavigationAgent*> agentComponents_;
     /// internal debug information 
     dtCrowdAgentDebugInfo* agentDebug_;
+    /// Internal Navigation Filter Query Attributes.
+    PODVector<NavigationFilterQuery> filterQueries_;
 };
 
 }

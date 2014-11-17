@@ -99,6 +99,7 @@ NavigationAgent::NavigationAgent(Context* context) :
     velocity_(Vector3::ZERO),
     updateNodePosition_(true),
     flags_(DEFAULT_AGENT_FLAGS),
+    filterQuery_(0),
     maxAccel_(DEFAULT_AGENT_MAX_ACCEL),
     maxSpeed_(DEFAULT_AGENT_MAX_SPEED),
     height_(DEFAULT_AGENT_HEIGHT),
@@ -123,7 +124,8 @@ void NavigationAgent::RegisterObject(Context* context)
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Speed", GetMaxSpeed, SetMaxSpeed, float, DEFAULT_AGENT_MAX_SPEED, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Height", GetHeight, SetHeight, float, DEFAULT_AGENT_HEIGHT, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Radius", GetRadius, SetRadius, float, DEFAULT_AGENT_RADIUS, AM_DEFAULT);
-    ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Avoidance Quality", GetNavigationQuality, SetNavigationAvoidanceQuality, NavigationAvoidanceQuality, navigationQualityNames, DEFAULT_AGENT_AVOIDANCE_QUALITY, AM_DEFAULT);
+    ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_INT, "Filter Query", GetFilterQuery, SetFilterQuery, int, 0, AM_DEFAULT);
+    ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Avoidance Quality", GetNavigationAvoidanceQuality, SetNavigationAvoidanceQuality, NavigationAvoidanceQuality, navigationQualityNames, DEFAULT_AGENT_AVOIDANCE_QUALITY, AM_DEFAULT);
     ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Pushiness", GetNavigationPushiness, SetNavigationPushiness, NavigationPushiness, navigationPushinessNames, DEFAULT_AGENT_PUSHINESS, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_VARIANTVECTOR, "Flags", GetFlagsAttr, SetFlagsAttr, VariantVector, Variant::emptyVariantVector, AM_DEFAULT);
 }
@@ -221,7 +223,7 @@ void NavigationAgent::AddAgentToCrowd()
         RemoveAgentFromCrowd();
 
     inCrowd_ = true;
-    agentCrowdId_ = crowdManager_->AddAgent(node_->GetWorldPosition(), maxAccel_, maxSpeed_, radius_, height_, flags_);
+    agentCrowdId_ = crowdManager_->AddAgent(node_->GetWorldPosition(), maxAccel_, maxSpeed_, radius_, height_, flags_, filterQuery_);
     if (agentCrowdId_ == -1)
     {
         inCrowd_ = false;
@@ -232,12 +234,6 @@ void NavigationAgent::AddAgentToCrowd()
     crowdManager_->AddAgentComponent(this);
     crowdManager_->UpdateAgentAvoidanceQuality(agentCrowdId_, avoidanceQuality_);
     crowdManager_->UpdateAgentPushiness(agentCrowdId_, pushiness_);
-
-    if (velocity_ == Vector3::ZERO)
-    {
-        velocity_ = node_->GetWorldDirection();
-        SetMoveVelocity(velocity_);
-    }
 }
 
 void NavigationAgent::RemoveAgentFromCrowd()
@@ -330,6 +326,15 @@ void NavigationAgent::SetFlags(unsigned flags)
     if (crowdManager_ && inCrowd_)
     {
         crowdManager_->UpdateAgentFlags(agentCrowdId_, flags_);
+    }
+}
+
+void NavigationAgent::SetFilterQuery(int query)
+{
+    filterQuery_ = query;
+    if (crowdManager_ && inCrowd_)
+    {
+        crowdManager_->UpdateAgentFilterQuery(agentCrowdId_, filterQuery_);
     }
 }
 
@@ -438,9 +443,6 @@ void NavigationAgent::OnNavigationAgentReposition(const Vector3& newPos)
 
         if (GetTargetState() == NAV_AGENT_TARGET_ARRIVED)
         {
-            velocity_ = node_->GetWorldDirection();
-            SetMoveVelocity(velocity_);
-
             VariantMap map = GetEventDataMap();
             map[NavigationAgentReachedTarget::P_AGENT] = this;
             node_->SendEvent(E_NAVIGATION_AGENT_REACHED_TARGET, map);

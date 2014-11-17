@@ -91,6 +91,8 @@ public:
     void SetNavigationPushiness(NavigationPushiness val);
     /// Sets the agent's navigation flags.
     void SetFlags(unsigned flags);
+    /// Sets the agent's filter query.
+    void SetFilterQuery(int query);
 
     /// Returns the agents position.
     Vector3 GetPosition() const;
@@ -122,6 +124,8 @@ public:
     NavigationAvoidanceQuality GetNavigationAvoidanceQuality() const { return avoidanceQuality_; }
     /// Gets the agent's navigation pushiness
     NavigationPushiness GetNavigationPushiness() const {return pushiness_; }
+    /// Gets the agent's filter query.
+    int GetFilterQuery() const { return filterQuery_; }
     
     /// Updates the nodes position if updateNodePosition is set. Is called in NavigationCrowdManager::Update().
     virtual void OnNavigationAgentReposition(const Vector3& newPos);
@@ -162,6 +166,8 @@ private:
     float radius_;
     /// Agents flags.
     unsigned flags_;
+    /// Agents filter query.
+    int filterQuery_;
     /// Agent's NavigationAvoidanceQuality
     NavigationAvoidanceQuality avoidanceQuality_;
     /// Agent's Navigation Pushiness

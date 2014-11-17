@@ -75,6 +75,18 @@ NavigationCrowdManager::~NavigationCrowdManager()
 void NavigationCrowdManager::RegisterObject(Context* context)
 {
     context->RegisterFactory<NavigationCrowdManager>(NAVIGATION_CATEGORY);
+
+    ACCESSOR_ATTRIBUTE(NavigationCrowdManager, VAR_VARIANTVECTOR, "Filters", GetFiltersAttr, SetFiltersAttr, VariantVector, Variant::emptyVariantVector, AM_FILE);
+}
+
+void NavigationCrowdManager::ApplyAttributes()
+{
+    if (!crowd_)
+        CreateCrowd();
+
+    PODVector<NavigationFilterQuery>::Iterator iter = filterQueries_.Begin();
+    for (iter; iter != filterQueries_.End(); iter++)
+        UpdateFilterQuery(iter->idx, iter->excludeFlags);
 }
 
 NavigationMesh* NavigationCrowdManager::GetNavigationMesh()
@@ -113,7 +125,7 @@ bool NavigationCrowdManager::CreateCrowd()
     }
 
     // Make polygons with 'disabled' and 'swim' flag invalid.
-    crowd_->getEditableFilter(0)->setExcludeFlags(NPF_DISABLED | NPF_SWIM);
+    CreateFilterQuery(NPF_DISABLED | NPF_SWIM);
 
     // Setup local avoidance params to different qualities.
     dtObstacleAvoidanceParams params;
@@ -150,13 +162,31 @@ bool NavigationCrowdManager::CreateCrowd()
     return true;
 }
 
-bool NavigationCrowdManager::CreateQuery(int index, unsigned excludedPolyFlags)
+int NavigationCrowdManager::CreateFilterQuery(unsigned excludedPolyFlags)
 {
+    if (!crowd_ || filterQueries_.Size() >= MAX_NAVIGATION_FILTER_QUERY)
+        return -1;
 
+    NavigationFilterQuery nfq;
+    nfq.idx = filterQueries_.Size();
+    nfq.excludeFlags = excludedPolyFlags;
+    filterQueries_.Push(nfq);
+
+    crowd_->getEditableFilter(nfq.idx)->setExcludeFlags(nfq.excludeFlags);
+
+    return nfq.idx;
 }
 
+void NavigationCrowdManager::UpdateFilterQuery(int idx, unsigned excludedPolyFlags)
+{
+    if (!crowd_ || idx >= filterQueries_.Size())
+        return;
 
-int NavigationCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, unsigned avoidanceType)
+    filterQueries_[idx].excludeFlags = excludedPolyFlags;
+    crowd_->getEditableFilter(idx)->setExcludeFlags(excludedPolyFlags);
+}
+
+int NavigationCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, int filterQuery)
 {
     if (!crowd_ && navigationMesh_.Expired())
         return -1;
@@ -169,9 +199,9 @@ int NavigationCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float m
     params.collisionQueryRange = params.radius * 8.0f;
     params.pathOptimizationRange = params.radius * 30.0f;
     params.updateFlags = flags;
-    params.obstacleAvoidanceType = avoidanceType;
+    params.obstacleAvoidanceType = 3;
     params.separationWeight = 2.0f;
-    params.queryFilterType = 0;
+    params.queryFilterType = filterQuery;
 
     dtPolyRef polyRef;
     float nearestPos[3];
@@ -179,11 +209,9 @@ int NavigationCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float m
     dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
         pos.Data(),
         crowd_->getQueryExtents(),
-        crowd_->getFilter(0),
+        crowd_->getFilter(filterQuery),
         &polyRef,
         nearestPos);
-
-    MarkNetworkUpdate();
 
     return crowd_->addAgent(nearestPos, &params);
 }
@@ -194,7 +222,6 @@ void NavigationCrowdManager::RemoveAgent(int agent)
         return;
 
     crowd_->removeAgent(agent);
-    MarkNetworkUpdate();
 }
 
 void NavigationCrowdManager::UpdateAgentAvoidanceQuality(int agent, NavigationAvoidanceQuality nq)
@@ -206,8 +233,6 @@ void NavigationCrowdManager::UpdateAgentAvoidanceQuality(int agent, NavigationAv
     params.obstacleAvoidanceType = nq;
 
     crowd_->updateAgentParameters(agent, &params);
-
-    MarkNetworkUpdate();
 }
 
 void NavigationCrowdManager::UpdateAgentPushiness(int agent, NavigationPushiness pushiness)
@@ -234,8 +259,6 @@ void NavigationCrowdManager::UpdateAgentPushiness(int agent, NavigationPushiness
         break;
     }
     crowd_->updateAgentParameters(agent, &params);
-
-    MarkNetworkUpdate();
 }
 
 void NavigationCrowdManager::UpdateAgentMaxSpeed(int agent, float maxSpeed)
@@ -245,9 +268,8 @@ void NavigationCrowdManager::UpdateAgentMaxSpeed(int agent, float maxSpeed)
 
     dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
     params.maxSpeed = maxSpeed;
-    crowd_->updateAgentParameters(agent, &params);
 
-    MarkNetworkUpdate();
+    crowd_->updateAgentParameters(agent, &params);
 }
 
 void NavigationCrowdManager::UpdateAgentMaxAcceleration(int agent, float accel)
@@ -260,7 +282,7 @@ void NavigationCrowdManager::UpdateAgentMaxAcceleration(int agent, float accel)
 
     crowd_->updateAgentParameters(agent, &params);
 
-    MarkNetworkUpdate();
+
 }
 
 void NavigationCrowdManager::UpdateAgentRadius(int agent, float radius)
@@ -272,8 +294,6 @@ void NavigationCrowdManager::UpdateAgentRadius(int agent, float radius)
     params.radius = radius;
 
     crowd_->updateAgentParameters(agent, &params);
-
-    MarkNetworkUpdate();
 }
 
 void NavigationCrowdManager::UpdateAgentHeight(int agent, float height)
@@ -285,8 +305,6 @@ void NavigationCrowdManager::UpdateAgentHeight(int agent, float height)
     params.height = height;
 
     crowd_->updateAgentParameters(agent, &params);
-
-    MarkNetworkUpdate();
 }
 
 void NavigationCrowdManager::UpdateAgentFlags(int agent, unsigned flags)
@@ -298,8 +316,18 @@ void NavigationCrowdManager::UpdateAgentFlags(int agent, unsigned flags)
     params.updateFlags = flags;
 
     crowd_->updateAgentParameters(agent, &params);
+}
 
-    MarkNetworkUpdate();
+
+void NavigationCrowdManager::UpdateAgentFilterQuery(int agent, int query)
+{
+    if (!crowd_ || query >= filterQueries_.Size())
+        return;
+
+    dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
+    params.queryFilterType = query;
+
+    crowd_->updateAgentParameters(agent, &params);
 }
 
 bool NavigationCrowdManager::SetAgentTarget(int agent, Vector3 target)
@@ -307,13 +335,15 @@ bool NavigationCrowdManager::SetAgentTarget(int agent, Vector3 target)
     if (!crowd_ )
         return false;
 
+    PROFILE(NavigationCrowdSetAgentTarget);
+
     dtPolyRef polyRef;
     float nearestPos[3];
 
     dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
         target.Data(),
         crowd_->getQueryExtents(),
-        crowd_->getFilter(0),
+        crowd_->getFilter(crowd_->getAgent(agent)->params.queryFilterType),
         &polyRef,
         nearestPos);
 
@@ -339,16 +369,18 @@ bool NavigationCrowdManager::SetAgentTarget(int agent, Vector3 target, unsigned 
     if (!crowd_ )
         return false;
 
+    PROFILE(NavigationCrowdSetAgentTarget);
+
     float nearestPos[3];
 
     dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
         target.Data(),
         crowd_->getQueryExtents(),
-        crowd_->getFilter(0),
+        crowd_->getFilter(crowd_->getAgent(agent)->params.queryFilterType),
         &targetRef,
         nearestPos);
 
-    if ((status & DT_FAILURE) == 0)
+    if (dtStatusSucceed(status))
     {
         if (!crowd_->requestMoveTarget(agent, targetRef, nearestPos))
         {
@@ -405,12 +437,11 @@ Vector3 NavigationCrowdManager::GetClosestWalkablePosition(Vector3 pos)
     float closest[3];
     const static float extents[] = { 1.0f, 20.0f, 1.0f };
     dtPolyRef closestPoly;
-    dtQueryFilter filter;
 
     dtStatus status = navigationMesh_->navMeshQuery_->findNearestPoly(
         pos.Data(),
         extents,
-        &filter,
+        crowd_->getFilter(0),
         &closestPoly,
         closest);
 
@@ -434,6 +465,8 @@ void NavigationCrowdManager::Update(float delta)
 {
     if (!crowd_ )
         return;
+
+    PROFILE(NavigationCrowdUpdate);
 
     crowd_->update(delta, agentDebug_);
 
@@ -466,7 +499,6 @@ void NavigationCrowdManager::DrawDebug(DebugRenderer* debug, bool depthTest)
 {
     if (debug && navigationMesh_.NotNull())
     {
-        PROFILE(DrawDebugNavigationCrowdManager);
         NavigationDebugRenderer dd(context_);
         dd.SetDebugRenderer(debug);
         dd.depthMask(depthTest);
@@ -565,6 +597,31 @@ void NavigationCrowdManager::OnNodeSet(Node* node)
         navigationMesh_ = GetComponent<NavigationMesh>();
         if (navigationMesh_ && !navigationMesh_->navMeshQuery_)
             navigationMesh_->InitializeQuery();
+    }
+}
+
+Urho3D::VariantVector NavigationCrowdManager::GetFiltersAttr() const
+{
+    VariantVector ret;
+    
+    PODVector<NavigationFilterQuery>::ConstIterator iter = filterQueries_.Begin();
+    for (iter; iter != filterQueries_.End(); iter++)
+       ret.Push(iter->excludeFlags);
+
+    return ret;
+}
+
+void NavigationCrowdManager::SetFiltersAttr(VariantVector value)
+{
+    filterQueries_.Clear();
+    filterQueries_.Resize(value.Size());
+
+    for (unsigned i = 0; i < value.Size(); i++)
+    {
+        NavigationFilterQuery nvq;
+        nvq.idx = i;
+        nvq.excludeFlags = value[i].GetUInt();
+        filterQueries_.Push(nvq);
     }
 }
 
