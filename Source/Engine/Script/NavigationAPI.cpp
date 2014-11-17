@@ -108,22 +108,29 @@ void RegisterOffMeshConnection(asIScriptEngine* engine)
 void RegisterNavigationCrowdManager(asIScriptEngine *engine)
 {
     engine->RegisterEnum("NavigationAvoidanceQuality");
-    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_LOW", NAVIGATIONQUALITY_LOW);
-    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_MEDIUM", NAVIGATIONQUALITY_MEDIUM);
-    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAVIGATIONQUALITY_HIGH", NAVIGATIONQUALITY_HIGH);
+    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAQ_LOW", NAQ_LOW);
+    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAQ_MEDIUM", NAQ_MEDIUM);
+    engine->RegisterEnumValue("NavigationAvoidanceQuality", "NAQ_HIGH", NAQ_HIGH);
     
     engine->RegisterEnum("NavigationPushiness");
-    engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_LOW", PUSHINESS_LOW);
-    engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_MEDIUM", PUSHINESS_MEDIUM);
-    engine->RegisterEnumValue("NavigationPushiness", "PUSHINESS_HIGH", PUSHINESS_HIGH);
+    engine->RegisterEnumValue("NavigationPushiness", "NP_LOW", NP_LOW);
+    engine->RegisterEnumValue("NavigationPushiness", "NP_MEDIUM", NP_MEDIUM);
+    engine->RegisterEnumValue("NavigationPushiness", "NP_HIGH", NP_HIGH);
 
-    engine->RegisterEnum("NavigationFlags");
-    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_WALK", NAVIGATIONFLAGS_WALK);
-    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_SWIM", NAVIGATIONFLAGS_SWIM);
-    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_JUMP", NAVIGATIONFLAGS_JUMP);
-    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_DOOR", NAVIGATIONFLAGS_DOOR);
-    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_DISABLED", NAVIGATIONFLAGS_DISABLED);
-    engine->RegisterEnumValue("NavigationFlags", "NAVIGATIONFLAGS_ALL", NAVIGATIONFLAGS_ALL);
+    engine->RegisterEnum("NavigationPolyFlags");
+    engine->RegisterEnumValue("NavigationPolyFlags", "NPF_WALK", NPF_WALK);
+    engine->RegisterEnumValue("NavigationPolyFlags", "NPF_SWIM", NPF_SWIM);
+    engine->RegisterEnumValue("NavigationPolyFlags", "NPF_JUMP", NPF_JUMP);
+    engine->RegisterEnumValue("NavigationPolyFlags", "NPF_DOOR", NPF_DOOR);
+    engine->RegisterEnumValue("NavigationPolyFlags", "NPF_DISABLED", NPF_DISABLED);
+    engine->RegisterEnumValue("NavigationPolyFlags", "NPF_ALL", NPF_ALL);
+
+    engine->RegisterEnum("NavigationUpdateFlags");
+    engine->RegisterEnumValue("NavigationUpdateFlags", "NUF_ANTICIPATE_TURNS", NUF_ANTICIPATE_TURNS);
+    engine->RegisterEnumValue("NavigationUpdateFlags", "NUF_OBSTACLE_AVOIDANCE", NUF_OBSTACLE_AVOIDANCE);
+    engine->RegisterEnumValue("NavigationUpdateFlags", "NUF_SEPARATION", NUF_SEPARATION);
+    engine->RegisterEnumValue("NavigationUpdateFlags", "NUF_OPTIMIZE_VIS", NUF_OPTIMIZE_VIS);
+    engine->RegisterEnumValue("NavigationUpdateFlags", "NUF_OPTIMIZE_TOPO", NUF_OPTIMIZE_TOPO);
 
     RegisterComponent<NavigationCrowdManager>(engine, "NavigationCrowdManager");
     engine->RegisterObjectMethod("NavigationCrowdManager", "NavigationMesh@+ get_navigationMesh()", asMETHOD(NavigationCrowdManager, GetNavigationMesh), asCALL_THISCALL);
@@ -165,8 +172,8 @@ void RegisterNavigationAgent(asIScriptEngine *engine)
     engine->RegisterObjectMethod("NavigationAgent", "float get_radius() const", asMETHOD(NavigationAgent, GetRadius), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "void set_flags(uint)", asMETHOD(NavigationAgent, SetFlags), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "uint get_flags() const", asMETHOD(NavigationAgent, GetFlags), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "void set_navigationQuality(NavigationAvoidanceQuality)", asMETHOD(NavigationAgent, SetNavigationQuality), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationAgent", "NavigationAvoidanceQuality get_navigationQuality() const", asMETHOD(NavigationAgent, GetNavigationQuality), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "void set_navigationAvoidanceQuality(NavigationAvoidanceQuality)", asMETHOD(NavigationAgent, SetNavigationAvoidanceQuality), asCALL_THISCALL);
+    engine->RegisterObjectMethod("NavigationAgent", "NavigationAvoidanceAvoidanceQuality get_navigationQuality() const", asMETHOD(NavigationAgent, GetNavigationAvoidanceQuality), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "void set_navigationPushiness(NavigationPushiness)", asMETHOD(NavigationAgent, SetNavigationPushiness), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "NavigationPushiness get_navigationPushiness() const", asMETHOD(NavigationAgent, GetNavigationPushiness), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationAgent", "Vector3 get_desiredVelocity() const", asMETHOD(NavigationAgent, GetDesiredVelocity), asCALL_THISCALL);

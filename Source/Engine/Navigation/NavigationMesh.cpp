@@ -1248,15 +1248,15 @@ bool NavigationMesh::BuildTile(Vector<NavigationGeometryInfo>& geometryList, int
             build_.polyMesh_->areas[i] == RegionType_Grass ||
             build_.polyMesh_->areas[i] == RegionType_Road)
         {
-            build_.polyMesh_->flags[i] = NAVIGATIONFLAGS_WALK;
+            build_.polyMesh_->flags[i] = NPF_WALK;
         }
         else if (build_.polyMesh_->areas[i] == RegionType_Water)
         {
-            build_.polyMesh_->flags[i] = NAVIGATIONFLAGS_SWIM;
+            build_.polyMesh_->flags[i] = NPF_SWIM;
         }
         else if (build_.polyMesh_->areas[i] == RegionType_Door)
         {
-            build_.polyMesh_->flags[i] = NAVIGATIONFLAGS_WALK | NAVIGATIONFLAGS_DOOR;
+            build_.polyMesh_->flags[i] = NPF_WALK | NPF_DOOR;
         }
     }
 
@@ -1402,7 +1402,7 @@ void NavigationMesh::DrawDebug(NavMeshDebugDrawMode drawmode, bool depthTest, un
                 if (drawmode == DRAWMODE_NAVMESH_NODES)
                     duDebugDrawNavMeshNodes(&dtd, *navMeshQuery_);
 
-                duDebugDrawNavMeshPolysWithFlags(&dtd, *navMesh_, NAVIGATIONFLAGS_DISABLED, duRGBA(0, 0, 0, 128));
+                duDebugDrawNavMeshPolysWithFlags(&dtd, *navMesh_, NPF_DISABLED, duRGBA(0, 0, 0, 128));
             }
             if (keepInterResults_)
             {

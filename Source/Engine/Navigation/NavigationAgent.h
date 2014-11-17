@@ -86,7 +86,7 @@ public:
     /// Sets the agents height.
     void SetHeight(float height);
     /// Sets the agent's navigation quality.
-    void SetNavigationQuality(NavigationAvoidanceQuality val);
+    void SetNavigationAvoidanceQuality(NavigationAvoidanceQuality val);
     /// Sets the agent's navigation pushiness.
     void SetNavigationPushiness(NavigationPushiness val);
     /// Sets the agent's navigation flags.
@@ -118,11 +118,10 @@ public:
     float GetHeight() const { return height_; }
     /// Gets the agents flags.
     unsigned GetFlags() const { return flags_; }
-
     /// Gets the agent's navigation quality
-    NavigationAvoidanceQuality GetNavigationQuality() const {return navQuality_; }
+    NavigationAvoidanceQuality GetNavigationAvoidanceQuality() const { return avoidanceQuality_; }
     /// Gets the agent's navigation pushiness
-    NavigationPushiness GetNavigationPushiness() const {return navPushiness_; }
+    NavigationPushiness GetNavigationPushiness() const {return pushiness_; }
     
     /// Updates the nodes position if updateNodePosition is set. Is called in NavigationCrowdManager::Update().
     virtual void OnNavigationAgentReposition(const Vector3& newPos);
@@ -164,11 +163,11 @@ private:
     /// Agents flags.
     unsigned flags_;
     /// Agent's NavigationAvoidanceQuality
-    NavigationAvoidanceQuality navQuality_;
+    NavigationAvoidanceQuality avoidanceQuality_;
     /// Agent's Navigation Pushiness
-    NavigationPushiness navPushiness_;
+    NavigationPushiness pushiness_;
     /// Agent's velocity attribute.
-    Vector3 velocityAttr_;
+    Vector3 velocity_;
 };
 
 }

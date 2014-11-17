@@ -46,27 +46,36 @@ enum NavigationRegionType
 
 enum NavigationPolyFlags
 {
-    NAVIGATIONFLAGS_WALK = 0x01,		// Ability to walk (ground, grass, road)
-    NAVIGATIONFLAGS_SWIM = 0x02,		// Ability to swim (water).
-    NAVIGATIONFLAGS_DOOR = 0x04,		// Ability to move through doors.
-    NAVIGATIONFLAGS_JUMP = 0x08,		// Ability to jump.
-    NAVIGATIONFLAGS_DISABLED = 0x10,		// Disabled polygon
-    NAVIGATIONFLAGS_ALL = 0xffff	// All abilities.
+    NPF_WALK = 0x01,		// Ability to walk (ground, grass, road)
+    NPF_SWIM = 0x02,		// Ability to swim (water).
+    NPF_DOOR = 0x04,		// Ability to move through doors.
+    NPF_JUMP = 0x08,		// Ability to jump.
+    NPF_DISABLED = 0x10,		// Disabled polygon
+    NPF_ALL = 0xffff	// All abilities.
 };
 
 enum NavigationAvoidanceQuality
 {
-    NAVIGATIONQUALITY_LOW = 0,
-    NAVIGATIONQUALITY_MEDIUM = 1,
-    NAVIGATIONQUALITY_HIGH = 2,
-    NAVIGATIONQUALITY_EXTRA_HIGH = 3
+    NAQ_LOW = 0,
+    NAQ_MEDIUM = 1,
+    NAQ_HIGH = 2,
+    NAQ_EXTRA_HIGH = 3
 };
 
 enum NavigationPushiness
 {
-    PUSHINESS_LOW,
-    PUSHINESS_MEDIUM,
-    PUSHINESS_HIGH
+    NP_LOW,
+    NP_MEDIUM,
+    NP_HIGH
+};
+
+enum NavigationUpdateFlags
+{
+    NUF_ANTICIPATE_TURNS = 1,
+    NUF_OBSTACLE_AVOIDANCE = 2,
+    NUF_SEPARATION = 4,
+    NUF_OPTIMIZE_VIS = 8,
+    NUF_OPTIMIZE_TOPO = 16
 };
 
 
@@ -96,6 +105,8 @@ public:
 
     /// Create detour crowd component for the specified navigation mesh.
     bool CreateCrowd();
+    /// Create filter query with the specified NavigationPolyFlags. Index can be between 0 (inclusive) and 16.
+    bool CreateQuery(int index, unsigned excludedPolyFlags);
     /// Draw the agents debug data. 
     void DrawDebug(DebugRenderer* debug, bool depthTest);
 
@@ -110,7 +121,7 @@ protected:
     void RemoveAgentComponent(NavigationAgent* agent);
 
     /// Update the Navigation Agents Avoidance Quality for the specified agent.
-    void UpdateAgentNavigationQuality(int agent, NavigationAvoidanceQuality nq);
+    void UpdateAgentAvoidanceQuality(int agent, NavigationAvoidanceQuality nq);
     /// Update the Navigation Agents Pushiness for the specified agent.
     void UpdateAgentPushiness(int agent, NavigationPushiness pushiness);
     /// Update the Navigation Agents MaxSpeed for the specified agent.
@@ -123,6 +134,8 @@ protected:
     void UpdateAgentHeight(int agent, float height);
     /// Update the Navigation Agents Flags for the specified agent.
     void UpdateAgentFlags(int agent, unsigned flags);
+    /// Update the Navigation Agents Query for the specified agent.
+    void UpdateAgentQuery(int agent, int query);
 
     /// Sets the move target for the specified agent.
     bool SetAgentTarget(int agent, Vector3 target);

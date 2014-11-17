@@ -112,8 +112,8 @@ bool NavigationCrowdManager::CreateCrowd()
         return false;
     }
 
-    // Make polygons with 'disabled' flag invalid.
-    crowd_->getEditableFilter(0)->setExcludeFlags(NAVIGATIONFLAGS_DISABLED);
+    // Make polygons with 'disabled' and 'swim' flag invalid.
+    crowd_->getEditableFilter(0)->setExcludeFlags(NPF_DISABLED | NPF_SWIM);
 
     // Setup local avoidance params to different qualities.
     dtObstacleAvoidanceParams params;
@@ -149,6 +149,12 @@ bool NavigationCrowdManager::CreateCrowd()
 
     return true;
 }
+
+bool NavigationCrowdManager::CreateQuery(int index, unsigned excludedPolyFlags)
+{
+
+}
+
 
 int NavigationCrowdManager::AddAgent(const Vector3 &pos, float maxaccel, float maxSpeed, float radius, float height, unsigned flags, unsigned avoidanceType)
 {
@@ -191,42 +197,13 @@ void NavigationCrowdManager::RemoveAgent(int agent)
     MarkNetworkUpdate();
 }
 
-void NavigationCrowdManager::UpdateAgentNavigationQuality(int agent, NavigationAvoidanceQuality nq)
+void NavigationCrowdManager::UpdateAgentAvoidanceQuality(int agent, NavigationAvoidanceQuality nq)
 {
     if (!crowd_ )
         return;
 
     dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
-    switch (nq)
-    {
-    case NAVIGATIONQUALITY_LOW:
-    {
-        params.obstacleAvoidanceType = 0;
-        params.pathOptimizationRange = params.radius * 2.0f;
-    }
-        break;
-
-    case NAVIGATIONQUALITY_MEDIUM:
-    {
-        params.obstacleAvoidanceType = 1;
-        params.pathOptimizationRange = params.radius * 15.0f;
-    }
-        break;
-
-    case NAVIGATIONQUALITY_HIGH:
-    {
-        params.obstacleAvoidanceType = 2;
-        params.pathOptimizationRange = params.radius * 30.0f;
-    }
-        break;
-
-    case NAVIGATIONQUALITY_EXTRA_HIGH:
-    {
-        params.obstacleAvoidanceType = 3;
-        params.pathOptimizationRange = params.radius * 60.0f;
-    }
-        break;
-    }
+    params.obstacleAvoidanceType = nq;
 
     crowd_->updateAgentParameters(agent, &params);
 
@@ -241,17 +218,17 @@ void NavigationCrowdManager::UpdateAgentPushiness(int agent, NavigationPushiness
     dtCrowdAgentParams params = crowd_->getAgent(agent)->params;
     switch (pushiness)
     {
-    case PUSHINESS_LOW:
+    case NP_LOW:
         params.separationWeight = 4.0f;
         params.collisionQueryRange = params.radius * 16.0f;
         break;
 
-    case PUSHINESS_MEDIUM:
+    case NP_MEDIUM:
         params.separationWeight = 2.0f;
         params.collisionQueryRange = params.radius * 8.0f;
         break;
 
-    case PUSHINESS_HIGH:
+    case NP_HIGH:
         params.separationWeight = 0.5f;
         params.collisionQueryRange = params.radius * 1.0f;
         break;
@@ -340,7 +317,7 @@ bool NavigationCrowdManager::SetAgentTarget(int agent, Vector3 target)
         &polyRef,
         nearestPos);
 
-    if ((status & DT_FAILURE) == 0)
+    if (dtStatusSucceed(status))
     {
         if (!crowd_->requestMoveTarget(agent, polyRef, nearestPos))
         {

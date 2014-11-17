@@ -54,9 +54,9 @@ static const float DEFAULT_AGENT_MAX_SPEED = 5.0f;
 static const float DEFAULT_AGENT_MAX_ACCEL = 3.6f;
 static const float DEFAULT_AGENT_HEIGHT = 2.0f;
 static const float DEFAULT_AGENT_RADIUS = 0.6f;
-static const NavigationAvoidanceQuality DEFAULT_AGENT_AVOIDANCE_QUALITY = NAVIGATIONQUALITY_HIGH;
-static const NavigationPushiness DEFAULT_AGENT_NAVIGATION_PUSHINESS = PUSHINESS_MEDIUM;
-static const unsigned DEFAULT_AGENT_FLAGS = NAVIGATIONFLAGS_WALK | NAVIGATIONFLAGS_JUMP | NAVIGATIONFLAGS_DOOR;
+static const NavigationAvoidanceQuality DEFAULT_AGENT_AVOIDANCE_QUALITY = NAQ_HIGH;
+static const NavigationPushiness DEFAULT_AGENT_PUSHINESS = NP_MEDIUM;
+static const unsigned DEFAULT_AGENT_FLAGS = NUF_ANTICIPATE_TURNS | NUF_OBSTACLE_AVOIDANCE | NUF_SEPARATION;
 
 static const char* navigationQualityNames[] =
 {
@@ -85,9 +85,9 @@ template<> NavigationPushiness Variant::Get<NavigationPushiness>() const
     return (NavigationPushiness) GetInt();
 }
 
-template<> NavigationPolyFlags Variant::Get<NavigationPolyFlags>() const
+template<> NavigationUpdateFlags Variant::Get<NavigationUpdateFlags>() const
 {
-    return (NavigationPolyFlags) GetInt();
+    return (NavigationUpdateFlags)GetInt();
 }
 
 NavigationAgent::NavigationAgent(Context* context) :
@@ -96,15 +96,15 @@ NavigationAgent::NavigationAgent(Context* context) :
     agentCrowdId_(-1),
     targetRef_(-1),
     targetPosition_(Vector3::ZERO),
-    velocityAttr_(Vector3::ZERO),
+    velocity_(Vector3::ZERO),
     updateNodePosition_(true),
     flags_(DEFAULT_AGENT_FLAGS),
     maxAccel_(DEFAULT_AGENT_MAX_ACCEL),
     maxSpeed_(DEFAULT_AGENT_MAX_SPEED),
     height_(DEFAULT_AGENT_HEIGHT),
     radius_(DEFAULT_AGENT_RADIUS),
-    navQuality_(DEFAULT_AGENT_AVOIDANCE_QUALITY),
-    navPushiness_(DEFAULT_AGENT_NAVIGATION_PUSHINESS)
+    avoidanceQuality_(DEFAULT_AGENT_AVOIDANCE_QUALITY),
+    pushiness_(DEFAULT_AGENT_PUSHINESS)
 {
 
 }
@@ -118,13 +118,13 @@ void NavigationAgent::RegisterObject(Context* context)
     context->RegisterFactory<NavigationAgent>(NAVIGATION_CATEGORY);
 
     ATTRIBUTE(NavigationAgent, VAR_VECTOR3, "Target", targetPosition_, Vector3::ZERO, AM_DEFAULT);
-    ATTRIBUTE(NavigationAgent, VAR_VECTOR3, "Velocity", velocityAttr_, Vector3::ZERO, AM_DEFAULT | AM_NOEDIT);
+    ATTRIBUTE(NavigationAgent, VAR_VECTOR3, "Velocity", velocity_, Vector3::ZERO, AM_DEFAULT | AM_NOEDIT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Accel", GetMaxAccel, SetMaxAccel, float, DEFAULT_AGENT_MAX_ACCEL, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Max Speed", GetMaxSpeed, SetMaxSpeed, float, DEFAULT_AGENT_MAX_SPEED, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Height", GetHeight, SetHeight, float, DEFAULT_AGENT_HEIGHT, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_FLOAT, "Radius", GetRadius, SetRadius, float, DEFAULT_AGENT_RADIUS, AM_DEFAULT);
-    ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Avoidance Quality", GetNavigationQuality, SetNavigationQuality, NavigationAvoidanceQuality, navigationQualityNames, DEFAULT_AGENT_AVOIDANCE_QUALITY, AM_DEFAULT);
-    ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Pushiness", GetNavigationPushiness, SetNavigationPushiness, NavigationPushiness, navigationPushinessNames, DEFAULT_AGENT_NAVIGATION_PUSHINESS, AM_DEFAULT);
+    ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Avoidance Quality", GetNavigationQuality, SetNavigationAvoidanceQuality, NavigationAvoidanceQuality, navigationQualityNames, DEFAULT_AGENT_AVOIDANCE_QUALITY, AM_DEFAULT);
+    ENUM_ACCESSOR_ATTRIBUTE(NavigationAgent, "Pushiness", GetNavigationPushiness, SetNavigationPushiness, NavigationPushiness, navigationPushinessNames, DEFAULT_AGENT_PUSHINESS, AM_DEFAULT);
     ACCESSOR_ATTRIBUTE(NavigationAgent, VAR_VARIANTVECTOR, "Flags", GetFlagsAttr, SetFlagsAttr, VariantVector, Variant::emptyVariantVector, AM_DEFAULT);
 }
 
@@ -196,8 +196,8 @@ void NavigationAgent::ApplyAttributes()
     if (targetPosition_ != Vector3::ZERO)
         SetMoveTarget(targetPosition_);
 
-    if (velocityAttr_ != Vector3::ZERO)
-        SetMoveVelocity(velocityAttr_);
+    if (velocity_ != Vector3::ZERO)
+        SetMoveVelocity(velocity_);
 }
 
 void NavigationAgent::OnSetEnabled()
@@ -221,7 +221,7 @@ void NavigationAgent::AddAgentToCrowd()
         RemoveAgentFromCrowd();
 
     inCrowd_ = true;
-    agentCrowdId_ = crowdManager_->AddAgent(node_->GetPosition(), maxAccel_, maxSpeed_, radius_, height_, flags_);
+    agentCrowdId_ = crowdManager_->AddAgent(node_->GetWorldPosition(), maxAccel_, maxSpeed_, radius_, height_, flags_);
     if (agentCrowdId_ == -1)
     {
         inCrowd_ = false;
@@ -230,8 +230,14 @@ void NavigationAgent::AddAgentToCrowd()
     }
 
     crowdManager_->AddAgentComponent(this);
-    crowdManager_->UpdateAgentNavigationQuality(agentCrowdId_, navQuality_);
-    crowdManager_->UpdateAgentPushiness(agentCrowdId_, navPushiness_);
+    crowdManager_->UpdateAgentAvoidanceQuality(agentCrowdId_, avoidanceQuality_);
+    crowdManager_->UpdateAgentPushiness(agentCrowdId_, pushiness_);
+
+    if (velocity_ == Vector3::ZERO)
+    {
+        velocity_ = node_->GetWorldDirection();
+        SetMoveVelocity(velocity_);
+    }
 }
 
 void NavigationAgent::RemoveAgentFromCrowd()
@@ -300,21 +306,21 @@ void NavigationAgent::SetMaxAccel(float accel)
     }
 }
 
-void NavigationAgent::SetNavigationQuality(NavigationAvoidanceQuality val)
+void NavigationAgent::SetNavigationAvoidanceQuality(NavigationAvoidanceQuality val)
 {
-    navQuality_ = val;
+    avoidanceQuality_ = val;
     if(crowdManager_ && inCrowd_)
     {
-        crowdManager_->UpdateAgentNavigationQuality(agentCrowdId_, navQuality_);
+        crowdManager_->UpdateAgentAvoidanceQuality(agentCrowdId_, avoidanceQuality_);
     }
 }
 
 void NavigationAgent::SetNavigationPushiness(NavigationPushiness val)
 {
-    navPushiness_ = val;
+    pushiness_ = val;
     if(crowdManager_ && inCrowd_)
     {
-        crowdManager_->UpdateAgentPushiness(agentCrowdId_, navPushiness_);
+        crowdManager_->UpdateAgentPushiness(agentCrowdId_, pushiness_);
     }
 }
 
@@ -421,20 +427,22 @@ void NavigationAgent::OnNavigationAgentReposition(const Vector3& newPos)
     if (node_)
     {
         if (updateNodePosition_)
-            node_->SetPosition(newPos);
+            node_->SetWorldPosition(newPos);
 
-        velocityAttr_ = GetActualVelocity();
+        velocity_ = GetActualVelocity();
 
         VariantMap map = GetEventDataMap();
         map[NavigationAgentMovement::P_POSITION] = newPos;
-        map[NavigationAgentMovement::P_VELOCITY] = velocityAttr_;
+        map[NavigationAgentMovement::P_VELOCITY] = velocity_;
         node_->SendEvent(E_NAVIGATION_AGENT_MOVEMENT, map);
 
         if (GetTargetState() == NAV_AGENT_TARGET_ARRIVED)
         {
+            velocity_ = node_->GetWorldDirection();
+            SetMoveVelocity(velocity_);
+
             VariantMap map = GetEventDataMap();
             map[NavigationAgentReachedTarget::P_AGENT] = this;
-
             node_->SendEvent(E_NAVIGATION_AGENT_REACHED_TARGET, map);
         }
     }
@@ -457,7 +465,7 @@ void NavigationAgent::SetFlagsAttr(VariantVector value)
 
         VariantVector::Iterator iter = value.Begin();
         for (iter; iter != value.End(); iter++)
-            flags |= iter->Get<NavigationPolyFlags>();
+            flags |= iter->Get<NavigationUpdateFlags>();
 
         SetFlags(flags);
     }
@@ -467,23 +475,20 @@ VariantVector NavigationAgent::GetFlagsAttr() const
 {
     VariantVector value;
 
-    if ((flags_ & NAVIGATIONFLAGS_WALK) == 0)
-        value.Push(NAVIGATIONFLAGS_WALK);
+    if ((flags_ & NUF_ANTICIPATE_TURNS) != 0)
+        value.Push(NUF_ANTICIPATE_TURNS);
 
-    if ((flags_ & NAVIGATIONFLAGS_JUMP) == 0)
-        value.Push(NAVIGATIONFLAGS_JUMP);
+    if ((flags_ & NUF_OBSTACLE_AVOIDANCE) != 0)
+        value.Push(NUF_OBSTACLE_AVOIDANCE);
 
-    if ((flags_ & NAVIGATIONFLAGS_SWIM) == 0)
-        value.Push(NAVIGATIONFLAGS_SWIM);
+    if ((flags_ & NUF_SEPARATION) != 0)
+        value.Push(NUF_SEPARATION);
 
-    if ((flags_ & NAVIGATIONFLAGS_DOOR) == 0)
-        value.Push(NAVIGATIONFLAGS_DOOR);
+    if ((flags_ & NUF_OPTIMIZE_VIS) != 0)
+        value.Push(NUF_OPTIMIZE_VIS);
 
-    if ((flags_ & NAVIGATIONFLAGS_DISABLED) == 0)
-        value.Push(NAVIGATIONFLAGS_DISABLED);
-
-    if ((flags_ & NAVIGATIONFLAGS_ALL) == 0)
-        value.Push(NAVIGATIONFLAGS_ALL);
+    if ((flags_ & NUF_OPTIMIZE_TOPO) != 0)
+        value.Push(NUF_OPTIMIZE_TOPO);
 
     return value;
 }
