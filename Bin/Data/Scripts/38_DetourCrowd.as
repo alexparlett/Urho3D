@@ -210,9 +210,6 @@ void CreateScene()
     // Create a DetourCrowdManager component to the scene root
     crowdMng_ = scene_.CreateComponent("NavigationCrowdManager");
     
-    // Now build the crowd.
-    if(crowdMng_.CreateCrowd())
-    {
         // Create the player object
         player=CreatePlayer(Vector3(0, 0, 0), NAQ_HIGH, NP_HIGH, 10, 100.0f);
         
@@ -220,7 +217,6 @@ void CreateScene()
         {
             CreateChaser(player, Vector3(Random(80.0f)-40.0f, 0, Random(80.0f)-40.0f), NAQ_HIGH, NP_LOW, 5.f, 100.0f);
         }
-    }
 }
 
 void CreateUI()

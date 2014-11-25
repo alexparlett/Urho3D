@@ -134,7 +134,6 @@ void RegisterNavigationCrowdManager(asIScriptEngine *engine)
 
     RegisterComponent<NavigationCrowdManager>(engine, "NavigationCrowdManager");
     engine->RegisterObjectMethod("NavigationCrowdManager", "NavigationMesh@+ get_navigationMesh()", asMETHOD(NavigationCrowdManager, GetNavigationMesh), asCALL_THISCALL);
-    engine->RegisterObjectMethod("NavigationCrowdManager", "bool CreateCrowd()", asMETHOD(NavigationCrowdManager, CreateCrowd), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationCrowdManager", "int CreateFilterQuery(uint excludedPolyFlags)", asMETHOD(NavigationCrowdManager, CreateFilterQuery), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationCrowdManager", "void UpdateFilterQuery(int idx, uint excludedPolyFlags)", asMETHOD(NavigationCrowdManager, UpdateFilterQuery), asCALL_THISCALL);
     engine->RegisterObjectMethod("NavigationCrowdManager", "void DrawDebug(DebugRenderer@+,bool)", asMETHOD(NavigationCrowdManager, DrawDebug), asCALL_THISCALL);

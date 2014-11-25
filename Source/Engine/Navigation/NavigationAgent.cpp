@@ -183,8 +183,6 @@ void NavigationAgent::OnNodeSet(Node* node)
                 height_ = crowdManager_->GetNavigationMesh()->GetAgentHeight();
                 radius_ = crowdManager_->GetNavigationMesh()->GetAgentRadius();
             }
-
-            AddAgentToCrowd();
         }
         else
             LOGERROR("Node is detached from scene, can not create navigation agent.");
@@ -251,8 +249,11 @@ void NavigationAgent::RemoveAgentFromCrowd()
 
 bool NavigationAgent::SetMoveTarget(const Vector3& position)
 {
-    if (crowdManager_ && inCrowd_)
+    if (crowdManager_)
     {
+        if (!inCrowd_)
+            AddAgentToCrowd();
+
         targetPosition_ = position;
         return crowdManager_->SetAgentTarget(agentCrowdId_, position, targetRef_);
     }
@@ -261,8 +262,11 @@ bool NavigationAgent::SetMoveTarget(const Vector3& position)
 
 bool NavigationAgent::SetMoveVelocity(const Vector3& velocity)
 {
-    if (crowdManager_ && inCrowd_)
-    {		
+    if (crowdManager_)
+    {
+        if (!inCrowd_)
+            AddAgentToCrowd();
+
         return crowdManager_->SetMoveVelocity(agentCrowdId_, velocity);
     }
     return false;

@@ -66,7 +66,8 @@ NavigationCrowdManager::NavigationCrowdManager(Context* context) :
 
 NavigationCrowdManager::~NavigationCrowdManager()
 {
-    dtFreeCrowd(crowd_);
+    if (crowd_)
+        dtFreeCrowd(crowd_);
 
     if (agentDebug_)
         delete agentDebug_;
@@ -81,6 +82,12 @@ void NavigationCrowdManager::RegisterObject(Context* context)
 
 void NavigationCrowdManager::ApplyAttributes()
 {
+    if (!crowd_ && !CreateCrowd())
+    {
+        LOGERROR("Failed creating Navigation Crowd");
+        return;
+    }
+
     PODVector<NavigationFilterQuery>::Iterator iter = filterQueries_.Begin();
     for (iter; iter != filterQueries_.End(); iter++)
         UpdateFilterQuery(iter->idx, iter->excludeFlags);
@@ -594,8 +601,6 @@ void NavigationCrowdManager::OnNodeSet(Node* node)
         navigationMesh_ = GetComponent<NavigationMesh>();
         if (navigationMesh_ && !navigationMesh_->navMeshQuery_)
             navigationMesh_->InitializeQuery();
-        if (navigationMesh_ && !crowd_)
-            CreateCrowd();
     }
 }
 
