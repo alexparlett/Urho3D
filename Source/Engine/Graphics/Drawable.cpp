@@ -132,12 +132,14 @@ void Drawable::UpdateBatches(const FrameInfo& frame)
 {
     const BoundingBox& worldBoundingBox = GetWorldBoundingBox();
     const Matrix3x4& worldTransform = node_->GetWorldTransform();
+    bool hasShaderParameters = HasShaderParameters();
     distance_ = frame.camera_->GetDistance(worldBoundingBox.Center());
 
     for (unsigned i = 0; i < batches_.Size(); ++i)
     {
         batches_[i].distance_ = distance_;
         batches_[i].worldTransform_ = &worldTransform;
+        batches_[i].shaderParameters_ = hasShaderParameters ? &shaderParameters_ : 0;
     }
 
     float scale = worldBoundingBox.Size().DotProduct(DOT_SCALE);
@@ -243,6 +245,27 @@ void Drawable::SetOccludee(bool enable)
             octant_->GetRoot()->QueueUpdate(this);
         MarkNetworkUpdate();
     }
+}
+
+void Drawable::SetShaderParameter(const String& name, const Variant& value)
+{
+    MaterialShaderParameter newParam;
+    newParam.name_ = name;
+    newParam.value_ = value;
+    StringHash nameHash(name);
+    shaderParameters_[nameHash] = newParam;
+}
+
+const Variant& Drawable::GetShaderParameter(const String& name) const
+{
+    HashMap<StringHash, MaterialShaderParameter>::ConstIterator i = shaderParameters_.Find(name);
+    return i != shaderParameters_.End() ? i->second_.value_ : Variant::EMPTY;
+}
+
+void Drawable::RemoveShaderParameter(const String& name)
+{
+    StringHash nameHash(name);
+    shaderParameters_.Erase(nameHash);
 }
 
 void Drawable::MarkForUpdate()

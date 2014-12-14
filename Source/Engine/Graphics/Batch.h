@@ -51,6 +51,7 @@ struct Batch
     /// Construct with defaults.
     Batch() :
         lightQueue_(0),
+        shaderParameters_(0),
         isBase_(false)
     {
     }
@@ -63,6 +64,7 @@ struct Batch
         worldTransform_(rhs.worldTransform_),
         numWorldTransforms_(rhs.numWorldTransforms_),
         lightQueue_(0),
+        shaderParameters_(rhs.shaderParameters_),
         geometryType_(rhs.geometryType_),
         overrideView_(rhs.overrideView_),
         isBase_(false)
@@ -100,6 +102,8 @@ struct Batch
     ShaderVariation* vertexShader_;
     /// Pixel shader.
     ShaderVariation* pixelShader_;
+    /// Shader parameters.
+    HashMap<StringHash, MaterialShaderParameter>* shaderParameters_;
     /// %Geometry type.
     GeometryType geometryType_;
     /// Override view transform flag. When set, the camera's view transform is replaced with an identity matrix.
@@ -121,7 +125,8 @@ struct InstanceData
     /// Construct with transform and distance.
     InstanceData(const Matrix3x4* worldTransform, float distance) :
         worldTransform_(worldTransform),
-        distance_(distance)
+        distance_(distance),
+        shaderParameters_()
     {
     }
     
@@ -129,6 +134,8 @@ struct InstanceData
     const Matrix3x4* worldTransform_;
     /// Distance from camera.
     float distance_;
+    /// Shader parameters.
+    HashMap<StringHash, MaterialShaderParameter>* shaderParameters_;
 };
 
 /// Instanced 3D geometry draw call.
@@ -136,14 +143,16 @@ struct BatchGroup : public Batch
 {
     /// Construct with defaults.
     BatchGroup() :
-        startIndex_(M_MAX_UNSIGNED)
+        startIndex_(M_MAX_UNSIGNED),
+        hasInstanceShaderParameters_(false)
     {
     }
     
     /// Construct from a batch.
     BatchGroup(const Batch& batch) :
         Batch(batch),
-        startIndex_(M_MAX_UNSIGNED)
+        startIndex_(M_MAX_UNSIGNED),
+        hasInstanceShaderParameters_(false)
     {
     }
 
@@ -152,11 +161,17 @@ struct BatchGroup : public Batch
     {
     }
     
-    /// Add world transform(s) from a batch.
-    void AddTransforms(const Batch& batch)
+    /// Add batch instance(s).
+    void AddBatchInstances(const Batch& batch)
     {
         InstanceData newInstance;
         newInstance.distance_ = batch.distance_;
+
+        if (batch.shaderParameters_)
+        {
+            newInstance.shaderParameters_ = batch.shaderParameters_;
+            hasInstanceShaderParameters_ = true;
+        }
         
         for (unsigned i = 0; i < batch.numWorldTransforms_; ++i)
         {
@@ -174,6 +189,8 @@ struct BatchGroup : public Batch
     PODVector<InstanceData> instances_;
     /// Instance stream start index, or M_MAX_UNSIGNED if transforms not pre-set.
     unsigned startIndex_;
+    /// Has instance shader parameters flag;
+    bool hasInstanceShaderParameters_;
 };
 
 /// Instanced draw call grouping key.
@@ -190,6 +207,7 @@ struct BatchGroupKey
         lightQueue_(batch.lightQueue_),
         pass_(batch.pass_),
         material_(batch.material_),
+        shaderParameters_(batch.shaderParameters_),
         geometry_(batch.geometry_)
     {
     }
@@ -202,13 +220,15 @@ struct BatchGroupKey
     Pass* pass_;
     /// Material.
     Material* material_;
+    /// Shader parameters.
+    HashMap<StringHash, MaterialShaderParameter>* shaderParameters_;
     /// Geometry.
     Geometry* geometry_;
     
     /// Test for equality with another batch group key.
-    bool operator == (const BatchGroupKey& rhs) const { return zone_ == rhs.zone_ && lightQueue_ == rhs.lightQueue_ && pass_ == rhs.pass_ && material_ == rhs.material_ && geometry_ == rhs.geometry_; }
+    bool operator == (const BatchGroupKey& rhs) const { return zone_ == rhs.zone_ && lightQueue_ == rhs.lightQueue_ && pass_ == rhs.pass_ && material_ == rhs.material_ && geometry_ == rhs.geometry_ && shaderParameters_ == rhs.shaderParameters_; }
     /// Test for inequality with another batch group key.
-    bool operator != (const BatchGroupKey& rhs) const { return zone_ != rhs.zone_ || lightQueue_ != rhs.lightQueue_ || pass_ != rhs.pass_ || material_ != rhs.material_ || geometry_ != rhs.geometry_; }
+    bool operator != (const BatchGroupKey& rhs) const { return zone_ != rhs.zone_ || lightQueue_ != rhs.lightQueue_ || pass_ != rhs.pass_ || material_ != rhs.material_ || geometry_ != rhs.geometry_ || shaderParameters_ != rhs.shaderParameters_; }
     
     /// Return hash value.
     unsigned ToHash() const;
